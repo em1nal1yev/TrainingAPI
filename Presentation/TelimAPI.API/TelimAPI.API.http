@@ -1,0 +1,6 @@
+@TelimAPI.API_HostAddress = http://localhost:5198
+
+GET {{TelimAPI.API_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

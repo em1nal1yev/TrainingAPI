@@ -1,0 +1,123 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\Emin\\Desktop\\mehkeme\\TelimAPI\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{04961C3C-DABA-49A6-B844-FC9295E74ED2}|Presentation\\TelimAPI.API\\TelimAPI.API.csproj|c:\\users\\emin\\desktop\\mehkeme\\telimapi\\presentation\\telimapi.api\\controllers\\trainingscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{04961C3C-DABA-49A6-B844-FC9295E74ED2}|Presentation\\TelimAPI.API\\TelimAPI.API.csproj|solutionrelative:presentation\\telimapi.api\\controllers\\trainingscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{070F825D-CC8A-433A-8E27-67A63821AC1D}|Infrastructure\\TelimAPI.Persistence\\TelimAPI.Persistence.csproj|c:\\users\\emin\\desktop\\mehkeme\\telimapi\\infrastructure\\telimapi.persistence\\services\\trainingservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{070F825D-CC8A-433A-8E27-67A63821AC1D}|Infrastructure\\TelimAPI.Persistence\\TelimAPI.Persistence.csproj|solutionrelative:infrastructure\\telimapi.persistence\\services\\trainingservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{983BB30C-A2B4-465C-8D17-8D2CB4DE119E}|Core\\TelimAPI.Domain\\TelimAPI.Domain.csproj|c:\\users\\emin\\desktop\\mehkeme\\telimapi\\core\\telimapi.domain\\entities\\trainingparticipant.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{983BB30C-A2B4-465C-8D17-8D2CB4DE119E}|Core\\TelimAPI.Domain\\TelimAPI.Domain.csproj|solutionrelative:core\\telimapi.domain\\entities\\trainingparticipant.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{983BB30C-A2B4-465C-8D17-8D2CB4DE119E}|Core\\TelimAPI.Domain\\TelimAPI.Domain.csproj|c:\\users\\emin\\desktop\\mehkeme\\telimapi\\core\\telimapi.domain\\entities\\training.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{983BB30C-A2B4-465C-8D17-8D2CB4DE119E}|Core\\TelimAPI.Domain\\TelimAPI.Domain.csproj|solutionrelative:core\\telimapi.domain\\entities\\training.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{0E24D8D5-B7F5-4614-A98B-14190715C68A}|Core\\TelimAPI.Application\\TelimAPI.Application.csproj|c:\\users\\emin\\desktop\\mehkeme\\telimapi\\core\\telimapi.application\\services\\itrainingservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{0E24D8D5-B7F5-4614-A98B-14190715C68A}|Core\\TelimAPI.Application\\TelimAPI.Application.csproj|solutionrelative:core\\telimapi.application\\services\\itrainingservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{0E24D8D5-B7F5-4614-A98B-14190715C68A}|Core\\TelimAPI.Application\\TelimAPI.Application.csproj|c:\\users\\emin\\desktop\\mehkeme\\telimapi\\core\\telimapi.application\\dtos\\training\\trainingcreatedto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{0E24D8D5-B7F5-4614-A98B-14190715C68A}|Core\\TelimAPI.Application\\TelimAPI.Application.csproj|solutionrelative:core\\telimapi.application\\dtos\\training\\trainingcreatedto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 1,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "TrainingService.cs",
+              "DocumentMoniker": "C:\\Users\\Emin\\Desktop\\mehkeme\\TelimAPI\\Infrastructure\\TelimAPI.Persistence\\Services\\TrainingService.cs",
+              "RelativeDocumentMoniker": "Infrastructure\\TelimAPI.Persistence\\Services\\TrainingService.cs",
+              "ToolTip": "C:\\Users\\Emin\\Desktop\\mehkeme\\TelimAPI\\Infrastructure\\TelimAPI.Persistence\\Services\\TrainingService.cs",
+              "RelativeToolTip": "Infrastructure\\TelimAPI.Persistence\\Services\\TrainingService.cs",
+              "ViewState": "AgIAAHIAAAAAAAAAAAAkwIYAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-30T06:21:24.503Z",
+              "IsPinned": true,
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "TrainingsController.cs",
+              "DocumentMoniker": "C:\\Users\\Emin\\Desktop\\mehkeme\\TelimAPI\\Presentation\\TelimAPI.API\\Controllers\\TrainingsController.cs",
+              "RelativeDocumentMoniker": "Presentation\\TelimAPI.API\\Controllers\\TrainingsController.cs",
+              "ToolTip": "C:\\Users\\Emin\\Desktop\\mehkeme\\TelimAPI\\Presentation\\TelimAPI.API\\Controllers\\TrainingsController.cs",
+              "RelativeToolTip": "Presentation\\TelimAPI.API\\Controllers\\TrainingsController.cs",
+              "ViewState": "AgIAACEAAAAAAAAAAAAiwDQAAAA3AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-30T08:30:22.305Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "TrainingParticipant.cs",
+              "DocumentMoniker": "C:\\Users\\Emin\\Desktop\\mehkeme\\TelimAPI\\Core\\TelimAPI.Domain\\Entities\\TrainingParticipant.cs",
+              "RelativeDocumentMoniker": "Core\\TelimAPI.Domain\\Entities\\TrainingParticipant.cs",
+              "ToolTip": "C:\\Users\\Emin\\Desktop\\mehkeme\\TelimAPI\\Core\\TelimAPI.Domain\\Entities\\TrainingParticipant.cs",
+              "RelativeToolTip": "Core\\TelimAPI.Domain\\Entities\\TrainingParticipant.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-30T08:13:52.717Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "ITrainingService.cs",
+              "DocumentMoniker": "C:\\Users\\Emin\\Desktop\\mehkeme\\TelimAPI\\Core\\TelimAPI.Application\\Services\\ITrainingService.cs",
+              "RelativeDocumentMoniker": "Core\\TelimAPI.Application\\Services\\ITrainingService.cs",
+              "ToolTip": "C:\\Users\\Emin\\Desktop\\mehkeme\\TelimAPI\\Core\\TelimAPI.Application\\Services\\ITrainingService.cs",
+              "RelativeToolTip": "Core\\TelimAPI.Application\\Services\\ITrainingService.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA8AAAAiAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-30T06:16:28.864Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "Training.cs",
+              "DocumentMoniker": "C:\\Users\\Emin\\Desktop\\mehkeme\\TelimAPI\\Core\\TelimAPI.Domain\\Entities\\Training.cs",
+              "RelativeDocumentMoniker": "Core\\TelimAPI.Domain\\Entities\\Training.cs",
+              "ToolTip": "C:\\Users\\Emin\\Desktop\\mehkeme\\TelimAPI\\Core\\TelimAPI.Domain\\Entities\\Training.cs",
+              "RelativeToolTip": "Core\\TelimAPI.Domain\\Entities\\Training.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-30T06:08:47.67Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "TrainingCreateDto.cs",
+              "DocumentMoniker": "C:\\Users\\Emin\\Desktop\\mehkeme\\TelimAPI\\Core\\TelimAPI.Application\\DTOs\\Training\\TrainingCreateDto.cs",
+              "RelativeDocumentMoniker": "Core\\TelimAPI.Application\\DTOs\\Training\\TrainingCreateDto.cs",
+              "ToolTip": "C:\\Users\\Emin\\Desktop\\mehkeme\\TelimAPI\\Core\\TelimAPI.Application\\DTOs\\Training\\TrainingCreateDto.cs",
+              "RelativeToolTip": "Core\\TelimAPI.Application\\DTOs\\Training\\TrainingCreateDto.cs",
+              "ViewState": "AgIAAA0AAAAAAAAAAAAiwCEAAAAFAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-30T06:08:30.902Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

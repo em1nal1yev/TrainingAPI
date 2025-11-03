@@ -1,0 +1,12 @@
+C:\Users\Emin\Desktop\mehkeme\TelimAPI\Core\TelimAPI.Domain\bin\Debug\net8.0\TelimAPI.Domain.deps.json
+C:\Users\Emin\Desktop\mehkeme\TelimAPI\Core\TelimAPI.Domain\bin\Debug\net8.0\TelimAPI.Domain.dll
+C:\Users\Emin\Desktop\mehkeme\TelimAPI\Core\TelimAPI.Domain\bin\Debug\net8.0\TelimAPI.Domain.pdb
+C:\Users\Emin\Desktop\mehkeme\TelimAPI\Core\TelimAPI.Domain\obj\Debug\net8.0\TelimAPI.Domain.csproj.AssemblyReference.cache
+C:\Users\Emin\Desktop\mehkeme\TelimAPI\Core\TelimAPI.Domain\obj\Debug\net8.0\TelimAPI.Domain.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Emin\Desktop\mehkeme\TelimAPI\Core\TelimAPI.Domain\obj\Debug\net8.0\TelimAPI.Domain.AssemblyInfoInputs.cache
+C:\Users\Emin\Desktop\mehkeme\TelimAPI\Core\TelimAPI.Domain\obj\Debug\net8.0\TelimAPI.Domain.AssemblyInfo.cs
+C:\Users\Emin\Desktop\mehkeme\TelimAPI\Core\TelimAPI.Domain\obj\Debug\net8.0\TelimAPI.Domain.csproj.CoreCompileInputs.cache
+C:\Users\Emin\Desktop\mehkeme\TelimAPI\Core\TelimAPI.Domain\obj\Debug\net8.0\TelimAPI.Domain.dll
+C:\Users\Emin\Desktop\mehkeme\TelimAPI\Core\TelimAPI.Domain\obj\Debug\net8.0\refint\TelimAPI.Domain.dll
+C:\Users\Emin\Desktop\mehkeme\TelimAPI\Core\TelimAPI.Domain\obj\Debug\net8.0\TelimAPI.Domain.pdb
+C:\Users\Emin\Desktop\mehkeme\TelimAPI\Core\TelimAPI.Domain\obj\Debug\net8.0\ref\TelimAPI.Domain.dll

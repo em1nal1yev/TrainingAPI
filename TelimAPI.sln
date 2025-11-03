@@ -1,0 +1,62 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.14.36109.1 d17.14
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Core", "Core", "{02EA681E-C7D8-13C7-8484-4AC65E1B71E8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TelimAPI.Domain", "Core\TelimAPI.Domain\TelimAPI.Domain.csproj", "{983BB30C-A2B4-465C-8D17-8D2CB4DE119E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TelimAPI.Application", "Core\TelimAPI.Application\TelimAPI.Application.csproj", "{0E24D8D5-B7F5-4614-A98B-14190715C68A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure", "Infrastructure", "{82121E15-43CB-4BC0-8D94-F6B22A8804A0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TelimAPI.Infrastructure", "Infrastructure\TelimAPI.Infrastructure\TelimAPI.Infrastructure.csproj", "{9E0B7374-4429-4054-8FA2-644A43D01DAF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TelimAPI.Persistence", "Infrastructure\TelimAPI.Persistence\TelimAPI.Persistence.csproj", "{070F825D-CC8A-433A-8E27-67A63821AC1D}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Presentation", "Presentation", "{59F8A154-8FD7-4A52-8234-6C4A77C271D6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TelimAPI.API", "Presentation\TelimAPI.API\TelimAPI.API.csproj", "{04961C3C-DABA-49A6-B844-FC9295E74ED2}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{983BB30C-A2B4-465C-8D17-8D2CB4DE119E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{983BB30C-A2B4-465C-8D17-8D2CB4DE119E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{983BB30C-A2B4-465C-8D17-8D2CB4DE119E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{983BB30C-A2B4-465C-8D17-8D2CB4DE119E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0E24D8D5-B7F5-4614-A98B-14190715C68A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0E24D8D5-B7F5-4614-A98B-14190715C68A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0E24D8D5-B7F5-4614-A98B-14190715C68A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0E24D8D5-B7F5-4614-A98B-14190715C68A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9E0B7374-4429-4054-8FA2-644A43D01DAF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9E0B7374-4429-4054-8FA2-644A43D01DAF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9E0B7374-4429-4054-8FA2-644A43D01DAF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9E0B7374-4429-4054-8FA2-644A43D01DAF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{070F825D-CC8A-433A-8E27-67A63821AC1D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{070F825D-CC8A-433A-8E27-67A63821AC1D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{070F825D-CC8A-433A-8E27-67A63821AC1D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{070F825D-CC8A-433A-8E27-67A63821AC1D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{04961C3C-DABA-49A6-B844-FC9295E74ED2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{04961C3C-DABA-49A6-B844-FC9295E74ED2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{04961C3C-DABA-49A6-B844-FC9295E74ED2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{04961C3C-DABA-49A6-B844-FC9295E74ED2}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{983BB30C-A2B4-465C-8D17-8D2CB4DE119E} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
+		{0E24D8D5-B7F5-4614-A98B-14190715C68A} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
+		{9E0B7374-4429-4054-8FA2-644A43D01DAF} = {82121E15-43CB-4BC0-8D94-F6B22A8804A0}
+		{070F825D-CC8A-433A-8E27-67A63821AC1D} = {82121E15-43CB-4BC0-8D94-F6B22A8804A0}
+		{04961C3C-DABA-49A6-B844-FC9295E74ED2} = {59F8A154-8FD7-4A52-8234-6C4A77C271D6}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {770DAEEC-8456-4991-A928-86631CC9C5BF}
+	EndGlobalSection
+EndGlobal
