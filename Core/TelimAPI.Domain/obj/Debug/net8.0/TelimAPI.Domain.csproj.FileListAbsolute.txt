@@ -10,3 +10,16 @@ C:\Users\Emin\Desktop\mehkeme\TelimAPI\Core\TelimAPI.Domain\obj\Debug\net8.0\Tel
 C:\Users\Emin\Desktop\mehkeme\TelimAPI\Core\TelimAPI.Domain\obj\Debug\net8.0\refint\TelimAPI.Domain.dll
 C:\Users\Emin\Desktop\mehkeme\TelimAPI\Core\TelimAPI.Domain\obj\Debug\net8.0\TelimAPI.Domain.pdb
 C:\Users\Emin\Desktop\mehkeme\TelimAPI\Core\TelimAPI.Domain\obj\Debug\net8.0\ref\TelimAPI.Domain.dll
+C:\Users\User.DESKTOP-U18JVHB\Desktop\Projects\TrainingAPI\Core\TelimAPI.Domain\bin\Debug\net8.0\TelimAPI.Domain.deps.json
+C:\Users\User.DESKTOP-U18JVHB\Desktop\Projects\TrainingAPI\Core\TelimAPI.Domain\bin\Debug\net8.0\TelimAPI.Domain.dll
+C:\Users\User.DESKTOP-U18JVHB\Desktop\Projects\TrainingAPI\Core\TelimAPI.Domain\bin\Debug\net8.0\TelimAPI.Domain.pdb
+C:\Users\User.DESKTOP-U18JVHB\Desktop\Projects\TrainingAPI\Core\TelimAPI.Domain\obj\Debug\net8.0\TelimAPI.Domain.csproj.AssemblyReference.cache
+C:\Users\User.DESKTOP-U18JVHB\Desktop\Projects\TrainingAPI\Core\TelimAPI.Domain\obj\Debug\net8.0\TelimAPI.Domain.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\User.DESKTOP-U18JVHB\Desktop\Projects\TrainingAPI\Core\TelimAPI.Domain\obj\Debug\net8.0\TelimAPI.Domain.AssemblyInfoInputs.cache
+C:\Users\User.DESKTOP-U18JVHB\Desktop\Projects\TrainingAPI\Core\TelimAPI.Domain\obj\Debug\net8.0\TelimAPI.Domain.AssemblyInfo.cs
+C:\Users\User.DESKTOP-U18JVHB\Desktop\Projects\TrainingAPI\Core\TelimAPI.Domain\obj\Debug\net8.0\TelimAPI.Domain.csproj.CoreCompileInputs.cache
+C:\Users\User.DESKTOP-U18JVHB\Desktop\Projects\TrainingAPI\Core\TelimAPI.Domain\obj\Debug\net8.0\TelimAPI.Domain.sourcelink.json
+C:\Users\User.DESKTOP-U18JVHB\Desktop\Projects\TrainingAPI\Core\TelimAPI.Domain\obj\Debug\net8.0\TelimAPI.Domain.dll
+C:\Users\User.DESKTOP-U18JVHB\Desktop\Projects\TrainingAPI\Core\TelimAPI.Domain\obj\Debug\net8.0\refint\TelimAPI.Domain.dll
+C:\Users\User.DESKTOP-U18JVHB\Desktop\Projects\TrainingAPI\Core\TelimAPI.Domain\obj\Debug\net8.0\TelimAPI.Domain.pdb
+C:\Users\User.DESKTOP-U18JVHB\Desktop\Projects\TrainingAPI\Core\TelimAPI.Domain\obj\Debug\net8.0\ref\TelimAPI.Domain.dll

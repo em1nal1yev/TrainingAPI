@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Identity;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -7,7 +8,7 @@ using TelimAPI.Domain.Entities.Common;
 
 namespace TelimAPI.Domain.Entities
 {
-    public class User:BaseEntity
+    public class User : IdentityUser<Guid>
     {
         public string? Name { get; set; }
         public string? Surname { get; set; }
@@ -19,5 +20,6 @@ namespace TelimAPI.Domain.Entities
         public Department? Department { get; set; }
 
         public ICollection<TrainingParticipant>? TrainingParticipants { get; set; }
+        public DateTime CreatedDate { get; set; } = DateTime.UtcNow;
     }
 }

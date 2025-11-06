@@ -27,6 +27,7 @@ namespace TelimAPI.Persistence
             services.AddScoped<ICourtRepository, CourtRepository>();
             services.AddScoped<IDepartmentRepository, DepartmentRepository>();
             services.AddScoped<ITrainingService, TrainingService>();
+            services.AddScoped<IAuthService, AuthService>();
 
         }
     }
