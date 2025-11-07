@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using TelimAPI.Application.DTOs.Training;
 using TelimAPI.Application.Services;
@@ -17,14 +18,14 @@ namespace TelimAPI.API.Controllers
         }
 
 
-        [HttpGet]
+        [HttpGet("get-all")]
         public async Task<IActionResult> GetAll()
         {
             var trainings = await _trainingService.GetAllAsync();
             return Ok(trainings);
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("get-by-{id}")]
         public async Task<IActionResult> GetById(Guid id)
         {
             var training = await _trainingService.GetByIdAsync(id);
@@ -32,21 +33,27 @@ namespace TelimAPI.API.Controllers
             return Ok(training);
         }
 
-        [HttpPost]
+        [HttpPost("create")]
+        [Authorize(Roles = "Trainer")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Create([FromBody] TrainingCreateDto dto)
         {
             await _trainingService.CreateAsync(dto);
             return Ok("Training created successfully");
         }
 
-        [HttpPut]
+        [HttpPut("update")]
+        [Authorize(Roles = "Trainer")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Update([FromBody] TrainingUpdateDto dto)
         {
             await _trainingService.UpdateAsync(dto);
             return Ok("Training uptaded successfuly");
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete("delete{id}")]
+        [Authorize(Roles = "Trainer")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(Guid id)
         {
             await _trainingService.DeleteAsync(id);

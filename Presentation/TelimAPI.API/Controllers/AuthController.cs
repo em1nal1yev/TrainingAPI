@@ -36,7 +36,19 @@ namespace TelimAPI.API.Controllers
 
             if (result.Succeeded)
             {
-                return Ok(new { Message = "Admin istifadəçisi uğurla yaradıldı." });
+                return Ok(new { Message = "Admin hesabi uğurla yaradıldı." });
+            }
+            return BadRequest(new { Errors = result.Errors });
+        }
+
+        [HttpPost("register-trainer")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> RegisterTrainer([FromBody] RegisterDto dto)
+        {
+            var result = await _authService.RegisterUserAsync(dto, "Trainer");
+            if (result.Succeeded)
+            {
+                return Ok(new {Message = "Trainer hesabi ugurla yaradildi"} );
             }
             return BadRequest(new { Errors = result.Errors });
         }

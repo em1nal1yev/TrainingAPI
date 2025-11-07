@@ -12,7 +12,7 @@ using TelimAPI.Persistence.Contexts;
 namespace TelimAPI.Persistence.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20251106082606_mig_1")]
+    [Migration("20251107080816_mig_1")]
     partial class mig_1
     {
         /// <inheritdoc />

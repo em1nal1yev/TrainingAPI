@@ -1,9 +1,10 @@
 ﻿
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using TelimAPI.Domain.Entities;
+using TelimAPI.Domain.Enums;
 using TelimAPI.Persistence;
 using TelimAPI.Persistence.Contexts;
-using TelimAPI.Persistence.Seed;
 namespace TelimAPI.API
 {
     public class Program
@@ -50,48 +51,75 @@ namespace TelimAPI.API
             });
 
             var app = builder.Build();
+            using (var scope = app.Services.CreateScope())
+            {
+                var services = scope.ServiceProvider;
+                await SeedAdminAsync(services);
+            }
 
-            // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
 
-            app.UseSession();
-
-            app.UseAuthentication();
-
             app.UseHttpsRedirection();
-
+            app.UseAuthentication();
             app.UseAuthorization();
+
+
 
 
             app.MapControllers();
 
 
-            using (var scope = app.Services.CreateScope())
-            {
-                var serviceProvider = scope.ServiceProvider;
-
-                // UserManager və RoleManager servislərini DI konteynerindən alırıq
-                var userManager = serviceProvider.GetRequiredService<UserManager<User>>();
-                var roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole<Guid>>>();
-
-                try
-                {
-                    // Seeding metodunu çağırırıq
-                    await ApplicationDbSeeder.SeedAsync(userManager, roleManager);
-                    Console.WriteLine("İlkin rollar və admin istifadəçisi uğurla yaradıldı.");
-                }
-                catch (Exception ex)
-                {
-                    var logger = serviceProvider.GetRequiredService<ILogger<Program>>();
-                    logger.LogError(ex, "Verilənlər bazasının ilkin doldurulması zamanı xəta baş verdi.");
-                }
-            }
+           
 
             app.Run();
+
+            static async Task SeedAdminAsync(IServiceProvider serviceProvider)
+            {
+                var roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole<Guid>>>();
+                var userManager = serviceProvider.GetRequiredService<UserManager<User>>();
+
+                string[] roles = Enum.GetNames(typeof(UserRole));
+
+                foreach (var role in roles)
+                {
+                    if (!await roleManager.RoleExistsAsync(role))
+                    {
+                        await roleManager.CreateAsync(new IdentityRole<Guid>
+                        {
+                            Id = Guid.NewGuid(),
+                            Name = role,
+                            NormalizedName = role.ToUpper()
+                        });
+                    }
+                }
+
+                string adminEmail = "eminal1y3v@gmail.com";
+                string adminPassword = "Admin123!";
+                var adminUser = await userManager.FindByEmailAsync(adminEmail);
+                if (adminUser == null)
+                {
+                    var user = new User
+                    {
+                        Name = "Admin",
+                        Surname = "System",
+                        Email = adminEmail,
+                        UserName = adminEmail,
+                        EmailConfirmed = true,
+                        CourtId = Guid.Parse("11111111-1111-1111-1111-111111111111"),
+                        DepartmentId = Guid.Parse("10000000-0000-0000-0000-000000000001")
+                    };
+
+                    var result = await userManager.CreateAsync(user, adminPassword);
+                    if (result.Succeeded)
+                    {
+                        await userManager.AddToRoleAsync(user, "Admin");
+                    }
+                }
+            }
         }
     }
 }

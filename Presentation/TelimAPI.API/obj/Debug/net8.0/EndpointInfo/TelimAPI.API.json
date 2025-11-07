@@ -67,6 +67,37 @@
         }
       }
     },
+    "/api/Auth/register-trainer": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RegisterDto"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RegisterDto"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/RegisterDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/api/Auth/login": {
       "post": {
         "tags": [
@@ -122,7 +153,7 @@
         }
       }
     },
-    "/api/Trainings": {
+    "/api/Trainings/get-all": {
       "get": {
         "tags": [
           "Trainings"
@@ -132,7 +163,32 @@
             "description": "OK"
           }
         }
-      },
+      }
+    },
+    "/api/Trainings/get-by-{id}": {
+      "get": {
+        "tags": [
+          "Trainings"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Trainings/create": {
       "post": {
         "tags": [
           "Trainings"
@@ -161,7 +217,9 @@
             "description": "OK"
           }
         }
-      },
+      }
+    },
+    "/api/Trainings/update": {
       "put": {
         "tags": [
           "Trainings"
@@ -192,28 +250,7 @@
         }
       }
     },
-    "/api/Trainings/{id}": {
-      "get": {
-        "tags": [
-          "Trainings"
-        ],
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "uuid"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      },
+    "/api/Trainings/delete{id}": {
       "delete": {
         "tags": [
           "Trainings"
