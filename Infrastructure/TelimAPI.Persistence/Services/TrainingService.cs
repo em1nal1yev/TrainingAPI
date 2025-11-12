@@ -63,17 +63,30 @@ namespace TelimAPI.Persistence.Services
                 Title = dto.Title,
                 Description = dto.Description,
                 SelectionDeadline = dto.SelectionDeadline,
-                CreatedDate = DateTime.UtcNow
+                CreatedDate = DateTime.UtcNow,
+                
             };
 
 
 
+            
             var allCourts = await _courtRepository.GetAllAsync();
 
-            var selectedCourts = dto.CourtIds == null || !dto.CourtIds.Any()
-                ? allCourts
-                : allCourts.Where(c => dto.CourtIds.Contains(c.Id)).ToList();
+            
+            List<Court> selectedCourts;
 
+            if (dto.CourtIds == null || dto.CourtIds.Count == 0)
+            {
+                
+                selectedCourts = allCourts;
+            }
+            else
+            {
+                
+                selectedCourts = allCourts.Where(c => dto.CourtIds.Contains(c.Id)).ToList();
+            }
+
+            
             training.TrainingCourts = selectedCourts.Select(c => new TrainingCourt
             {
                 CourtId = c.Id,
@@ -82,34 +95,51 @@ namespace TelimAPI.Persistence.Services
 
 
 
+            
             var allDepartments = await _departmentRepository.GetAllAsync();
+            List<Department> selectedDepartments;
 
-            var selectedDepartments = dto.DepartmentIds == null || !dto.DepartmentIds.Any()
-                ? allDepartments
-                : allDepartments.Where(d => dto.DepartmentIds.Contains(d.Id)).ToList();
+            if (dto.DepartmentIds == null || dto.DepartmentIds.Count == 0)
+            {
+                selectedDepartments = allDepartments;
+            }
+            else
+            {
+                selectedDepartments = allDepartments.Where(d => dto.DepartmentIds.Contains(d.Id)).ToList();
+            }
 
             training.TrainingDepartments = selectedDepartments.Select(d => new TrainingDepartment
             {
                 DepartmentId = d.Id,
-                TrainingId = d.Id
+                TrainingId = training.Id
             }).ToList();
 
 
 
+            
             var allUsers = await _userRepository.GetAllAsync();
 
-            var targetUsers = allUsers.Where(u =>
-                (dto.CourtIds == null || dto.CourtIds.Contains(u.CourtId)) &&
-                (dto.DepartmentIds == null || dto.DepartmentIds.Contains(u.DepartmentId))
-            ).ToList();
+            List<User> targetUsers = new List<User>();
 
-            training.Participants = targetUsers.Select(u => new TrainingParticipant()
+            foreach (var user in allUsers)
             {
-                TrainingId = training.Id,  
+                bool courtMatch = dto.CourtIds == null || dto.CourtIds.Contains(user.CourtId);
+                bool departmentMatch = dto.DepartmentIds == null || dto.DepartmentIds.Contains(user.DepartmentId);
+
+                if (courtMatch && departmentMatch)
+                {
+                    targetUsers.Add(user);
+                }
+            }
+
+            
+            training.Participants = targetUsers.Select(u => new TrainingParticipant
+            {
+                TrainingId = training.Id,
                 UserId = u.Id,
                 IsJoined = false
-            }
-            ).ToList();
+            }).ToList();
+
 
 
             await _trainingRepository.AddAsync(training);

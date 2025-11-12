@@ -11,7 +11,7 @@ namespace TelimAPI.Domain.Entities
     {
         public string? Title { get; set; }
         public string? Description { get; set; }
-        public DateTime? SelectionDeadline { get; set; } // qosulacam/qosulmayacam müddəti
+        public DateTime? SelectionDeadline { get; set; }
 
         public ICollection<TrainingCourt>? TrainingCourts { get; set; }
         public ICollection<TrainingDepartment>? TrainingDepartments { get; set; }

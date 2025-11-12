@@ -34,8 +34,7 @@ namespace TelimAPI.API.Controllers
         }
 
         [HttpPost("create")]
-        [Authorize(Roles = "Trainer")]
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Trainer, Admin")]
         public async Task<IActionResult> Create([FromBody] TrainingCreateDto dto)
         {
             await _trainingService.CreateAsync(dto);
@@ -43,8 +42,7 @@ namespace TelimAPI.API.Controllers
         }
 
         [HttpPut("update")]
-        [Authorize(Roles = "Trainer")]
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Trainer, Admin")]
         public async Task<IActionResult> Update([FromBody] TrainingUpdateDto dto)
         {
             await _trainingService.UpdateAsync(dto);
@@ -52,8 +50,7 @@ namespace TelimAPI.API.Controllers
         }
 
         [HttpDelete("delete{id}")]
-        [Authorize(Roles = "Trainer")]
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Trainer, Admin")]
         public async Task<IActionResult> Delete(Guid id)
         {
             await _trainingService.DeleteAsync(id);

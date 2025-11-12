@@ -18,5 +18,9 @@ namespace TelimAPI.Application.Repositories
         void Update(Training training);
 
         Task DeleteAsync(Guid id);
+
+        Task<TrainingParticipant?> GetParticipantByTrainingAndUserAsync(Guid trainingId, Guid userId);
+        Task AddParticipantAsync(TrainingParticipant participant);
+        Task UpdateParticipantAsync(TrainingParticipant participant);
     }
 }

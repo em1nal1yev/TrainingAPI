@@ -156,5 +156,31 @@
       }
     ],
     "ReturnTypes": []
+  },
+  {
+    "ContainingType": "TelimAPI.API.Controllers.UserController",
+    "Method": "GetUserTrainings",
+    "RelativePath": "api/User/trainings",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "TelimAPI.API.Controllers.UserController",
+    "Method": "JoinTraining",
+    "RelativePath": "api/User/trainings/join",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "request",
+        "Type": "TelimAPI.Application.DTOs.User.JoinTrainingRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
   }
 ]

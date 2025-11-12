@@ -21,11 +21,12 @@ namespace TelimAPI.Persistence.Repositories
         public async Task<List<Training>> GetAllAsync()
         {
             return await _context.Trainings
-               .Include(t => t.TrainingCourts)
-                   .ThenInclude(tc => tc.Court)
-               .Include(t => t.TrainingDepartments)
-                   .ThenInclude(td => td.Department)
-               .ToListAsync();
+         .Include(t => t.Participants)
+         .Include(t => t.TrainingCourts)
+             .ThenInclude(tc => tc.Court)
+         .Include(t => t.TrainingDepartments)
+             .ThenInclude(td => td.Department)
+         .ToListAsync();
         }
 
         public async Task<Training?> GetByIdAsync(Guid id)
@@ -58,6 +59,24 @@ namespace TelimAPI.Persistence.Repositories
                 _context.Trainings.Remove(training);
                 await _context.SaveChangesAsync();
             }
+        }
+
+        public async Task<TrainingParticipant?> GetParticipantByTrainingAndUserAsync(Guid trainingId, Guid userId)
+        {
+            return await _context.TrainingParticipants
+        .FirstOrDefaultAsync(p => p.TrainingId == trainingId && p.UserId == userId);
+        }
+
+        public async Task AddParticipantAsync(TrainingParticipant participant)
+        {
+            await _context.TrainingParticipants.AddAsync(participant);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task UpdateParticipantAsync(TrainingParticipant participant)
+        {
+            _context.TrainingParticipants.Update(participant);
+            await _context.SaveChangesAsync();
         }
 
 
