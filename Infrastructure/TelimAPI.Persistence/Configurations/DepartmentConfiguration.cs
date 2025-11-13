@@ -15,7 +15,7 @@ namespace TelimAPI.Persistence.Configurations
         {
             var fixedDate = new DateTime(2025, 1, 1, 0, 0, 0, DateTimeKind.Utc);
 
-            // Bütün Court ID-ləri (CourtConfiguration-dakı dəyərlərlə eyni olmalıdır)
+            
             var aliMehkemeId = Guid.Parse("11111111-1111-1111-1111-111111111111");
             var apellyasiyaMehkemesiId = Guid.Parse("22222222-2222-2222-2222-222222222222");
             var inzibatiMehkemeId = Guid.Parse("33333333-3333-3333-3333-333333333333");
@@ -55,7 +55,7 @@ namespace TelimAPI.Persistence.Configurations
             departments.Add(new Department { Id = Guid.Parse("70000000-0000-0000-0000-000000000002"), Name = "Ərazi İşləri Şöbəsi", CourtId = rayonSeherMehkemeleriId, CreatedDate = fixedDate });
 
 
-            // Department HasData-nı burada tətbiq edirik
+            
             builder.HasData(departments);
         }
     }

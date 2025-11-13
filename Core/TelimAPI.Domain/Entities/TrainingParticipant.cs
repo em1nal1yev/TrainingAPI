@@ -15,7 +15,6 @@ namespace TelimAPI.Domain.Entities
         public Guid UserId { get; set; }
         public User User { get; set; } = null!;
 
-        // İstifadəçi təlimə qoşulubmu (yes/no)
         public bool IsJoined { get; set; }
 
         

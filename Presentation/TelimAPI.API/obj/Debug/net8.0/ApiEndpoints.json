@@ -169,6 +169,22 @@
   },
   {
     "ContainingType": "TelimAPI.API.Controllers.UserController",
+    "Method": "SubmitFeedback",
+    "RelativePath": "api/User/trainings/feedback",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "request",
+        "Type": "TelimAPI.Application.DTOs.User.SubmitFeedbackRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "TelimAPI.API.Controllers.UserController",
     "Method": "JoinTraining",
     "RelativePath": "api/User/trainings/join",
     "HttpMethod": "POST",

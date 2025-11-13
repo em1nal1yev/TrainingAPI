@@ -11,5 +11,7 @@ namespace TelimAPI.Application.Services
     {
         Task<UserTrainingsDto> GetUserTrainingsAsync();
         Task JoinTrainingAsync(Guid trainingId, Guid userId);
+
+        Task SubmitTrainingFeedbackAsync(SubmitFeedbackRequest request, Guid userId);
     }
 }

@@ -16,16 +16,16 @@ namespace TelimAPI.API
             // Add services to the container.
             builder.Services.AddPersistenceServices(builder.Configuration);
 
-            builder.Services.AddDistributedMemoryCache(); // Session üçün lazım olan arxa yaddaşı təmin edir (sadə testlər üçün)
+            builder.Services.AddDistributedMemoryCache(); 
             builder.Services.AddSession(options =>
             {
-                options.IdleTimeout = TimeSpan.FromMinutes(30); // Sessionun ömrü
+                options.IdleTimeout = TimeSpan.FromMinutes(30); 
                 options.Cookie.HttpOnly = true;
                 options.Cookie.IsEssential = true;
             });
 
             builder.Services.AddControllers();
-            // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+            
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
             builder.Services.AddIdentity<User, IdentityRole<Guid>>(options =>
@@ -38,10 +38,10 @@ namespace TelimAPI.API
 
             builder.Services.ConfigureApplicationCookie(options =>
             {
-                options.LoginPath = "/Auth/Login"; // Login səhifənizin yolu
-                options.AccessDeniedPath = "/Auth/AccessDenied"; // Yetkisizlik səhifəsi
-                options.ExpireTimeSpan = TimeSpan.FromMinutes(30); // Cookie ömrü
-                options.SlidingExpiration = true; // Hər istifadədə yenilənmə
+                options.LoginPath = "/Auth/Login"; 
+                options.AccessDeniedPath = "/Auth/AccessDenied"; 
+                options.ExpireTimeSpan = TimeSpan.FromMinutes(30); 
+                options.SlidingExpiration = true; 
             });
 
             builder.Services.AddAuthorization(options =>

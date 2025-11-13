@@ -79,6 +79,16 @@ namespace TelimAPI.Persistence.Repositories
             await _context.SaveChangesAsync();
         }
 
+        public async Task<TrainingFeedback?> GetFeedbackByParticipantIdAsync(Guid participantId)
+        {
+            return await _context.TrainingFeedback
+                .FirstOrDefaultAsync(f => f.TrainingParticipantId == participantId);
+        }
 
+        public async Task AddFeedbackAsync(TrainingFeedback feedback)
+        {
+            await _context.TrainingFeedback.AddAsync(feedback);
+            await _context.SaveChangesAsync();
+        }
     }
 }

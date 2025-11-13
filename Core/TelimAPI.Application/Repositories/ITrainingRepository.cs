@@ -22,5 +22,8 @@ namespace TelimAPI.Application.Repositories
         Task<TrainingParticipant?> GetParticipantByTrainingAndUserAsync(Guid trainingId, Guid userId);
         Task AddParticipantAsync(TrainingParticipant participant);
         Task UpdateParticipantAsync(TrainingParticipant participant);
+
+        Task<TrainingFeedback?> GetFeedbackByParticipantIdAsync(Guid participantId);
+        Task AddFeedbackAsync(TrainingFeedback feedback);
     }
 }

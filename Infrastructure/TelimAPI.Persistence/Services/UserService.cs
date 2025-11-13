@@ -106,5 +106,39 @@ namespace TelimAPI.Persistence.Services
             
             await _trainingRepository.AddParticipantAsync(newParticipant);
         }
+        public async Task SubmitTrainingFeedbackAsync(SubmitFeedbackRequest request, Guid userId)
+        {
+            
+            var participant = await _trainingRepository.GetParticipantByTrainingAndUserAsync(request.TrainingId, userId);
+
+            if (participant == null || !participant.IsJoined)
+            {
+                
+                throw new Exception("You must be an active participant of this training to submit feedback.");
+            }
+
+
+            
+            var existingFeedback = await _trainingRepository.GetFeedbackByParticipantIdAsync(participant.Id);
+
+            if (existingFeedback != null)
+            {
+                throw new Exception("You have already submitted feedback for this training.");
+            }
+
+            
+            var newFeedback = new TrainingFeedback
+            {
+                
+                TrainingParticipantId = participant.Id,
+                TrainingRating = request.TrainingRating,
+                TrainerRating = request.TrainerRating,
+                Comment = request.Comment
+               
+            };
+
+            
+            await _trainingRepository.AddFeedbackAsync(newFeedback);
+        }
     }
 }

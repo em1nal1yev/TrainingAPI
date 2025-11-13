@@ -19,6 +19,7 @@ namespace TelimAPI.Persistence.Contexts
         public DbSet<Court> Courts { get; set; }
         public DbSet<Department> Departments { get; set; }
         public DbSet<TrainingParticipant> TrainingParticipants { get; set; }
+        public DbSet<TrainingFeedback> TrainingFeedback { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -95,8 +96,6 @@ namespace TelimAPI.Persistence.Contexts
                 .WithOne()
                 .HasForeignKey<TrainingFeedback>(tf => tf.TrainingParticipantId);
 
-            //-------------------------------------------------------
-
            
             
         }
@@ -119,21 +118,21 @@ namespace TelimAPI.Persistence.Contexts
         private void UpdateTimestamps()
         {
             var entries = ChangeTracker.Entries()
-                // İndi yalnız BaseEntity olanları seçirik, həmçinin yoxlama sadələşdi
+               
                 .Where(e => e.Entity.GetType().IsSubclassOf(typeof(TelimAPI.Domain.Entities.Common.BaseEntity)) ||
                             e.Entity.GetType() == typeof(TelimAPI.Domain.Entities.Common.BaseEntity))
-                .Where(e => e.State == EntityState.Added || e.State == EntityState.Modified); // Added və ya Modified
+                .Where(e => e.State == EntityState.Added || e.State == EntityState.Modified); 
 
             foreach (var entry in entries)
             {
-                // 'as' istifadə edərək təhlükəsiz çevrilmə aparırıq
+                
                 if (entry.Entity is TelimAPI.Domain.Entities.Common.BaseEntity baseEntity)
                 {
                     if (entry.State == EntityState.Added)
                     {
                         baseEntity.CreatedDate = DateTime.UtcNow;
                     }
-                    // Modified state üçün də update yazmaq olar, lakin sualınızda yoxdur.
+                    
                 }
             }
         }

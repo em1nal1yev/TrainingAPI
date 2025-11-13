@@ -14,10 +14,10 @@ namespace TelimAPI.Persistence.Configurations
         
             public void Configure(EntityTypeBuilder<Court> builder)
         {
-            // Sabit bir tarix təyin edirik
+            
             var fixedDate = new DateTime(2025, 1, 1, 0, 0, 0, DateTimeKind.Utc);
 
-            // Bütün Court ID-ləri
+            
             var aliMehkemeId = Guid.Parse("11111111-1111-1111-1111-111111111111");
             var apellyasiyaMehkemesiId = Guid.Parse("22222222-2222-2222-2222-222222222222");
             var inzibatiMehkemeId = Guid.Parse("33333333-3333-3333-3333-333333333333");
@@ -26,7 +26,7 @@ namespace TelimAPI.Persistence.Configurations
             var herbiMehkemeId = Guid.Parse("66666666-6666-6666-6666-666666666666");
             var rayonSeherMehkemeleriId = Guid.Parse("77777777-7777-7777-7777-777777777777");
 
-            // Court HasData-nı burada tətbiq edirik
+            
             builder.HasData(
                 new Court { Id = aliMehkemeId, Name = "Ali Məhkəmə", CreatedDate = fixedDate },
                 new Court { Id = apellyasiyaMehkemesiId, Name = "Apellyasiya Məhkəməsi", CreatedDate = fixedDate },

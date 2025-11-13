@@ -45,5 +45,27 @@ namespace TelimAPI.API.Controllers
                 return BadRequest(new { Message = ex.Message });
             }
         }
+        [HttpPost("trainings/feedback")]
+        public async Task<IActionResult> SubmitFeedback([FromBody] SubmitFeedbackRequest request)
+        {
+            
+            var userIdClaim = User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            if (userIdClaim == null)
+                return Unauthorized("User is not authenticated.");
+
+            Guid userId = Guid.Parse(userIdClaim);
+
+            try
+            {
+                await _userService.SubmitTrainingFeedbackAsync(request, userId);
+                return Ok(new { Message = "Feedback submitted successfully." });
+            }
+            catch (Exception ex)
+            {
+                
+                return BadRequest(new { Message = ex.Message });
+            }
+        }
     }
 }
