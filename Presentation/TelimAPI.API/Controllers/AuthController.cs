@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 using TelimAPI.Application.DTOs.Auth;
 using TelimAPI.Application.Services;
 
@@ -60,24 +61,79 @@ namespace TelimAPI.API.Controllers
 
             if (result.Succeeded)
             {
-                return Ok(new { Message = "Daxilolma uğurlu oldu." });
+
+                return Ok(new
+                {
+                    AccessToken = result.AccessToken, 
+                    RefreshToken = result.RefreshToken, 
+                    Message = "Daxilolma uğurlu oldu."
+                });
             }
             return Unauthorized(new { Errors = result.Errors });
         }
 
         [Authorize]
-        [HttpPost("logout")]
-        public async Task<IActionResult> logout()
+        [HttpGet("me")]
+        public IActionResult GetCurrentUser()
         {
-            await _authService.SignOutUserAsync();
-            return Ok(new { Message = "Çıxış uğurlu oldu." });
+
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var email = User.FindFirst(ClaimTypes.Email)?.Value;
+            var name = User.FindFirst(ClaimTypes.Name)?.Value;
+            var role = User.FindFirst(ClaimTypes.Role)?.Value;
+
+            if (userId == null)
+            {
+                
+                return NotFound(new { Message = "İstifadəçi ID tapılmadı." });
+            }
+
+            return Ok(new
+            {
+                UserId = userId,
+                Email = email,
+                FullName = name,
+                Role = role,
+                Message = "Cari istifadəçi məlumatları uğurla alındı."
+            });
         }
 
-        [HttpGet("admin-test")]
-        [Authorize(Roles = "Admin")]
-        public IActionResult AdminTest()
+        [HttpPost("refresh")]
+        public async Task<IActionResult> RefreshToken([FromBody] RefreshTokenRequest request)
         {
-            return Ok("Bu səhifəni yalnız Admin rolu görə bilər.");
+            
+            var result = await _authService.RefreshTokenAsync(request.RefreshToken);
+
+            if (result.Succeeded)
+            {
+                
+                return Ok(new
+                {
+                    AccessToken = result.AccessToken,
+                    RefreshToken = result.RefreshToken,
+                    Message = "Tokenlər uğurla yeniləndi."
+                });
+            }
+
+            
+            return Unauthorized(new { Errors = result.Errors });
+        }
+
+        [Authorize]
+        [HttpPost("signout")]
+        public async Task<IActionResult> SignOut([FromBody] RefreshTokenRequest request)
+        {
+           
+            var success = await _authService.RevokeRefreshTokenAsync(request.RefreshToken);
+
+            if (success)
+            {
+                
+                return Ok(new { Message = "Çıxış uğurlu oldu. Refresh Token ləğv edildi." });
+            }
+
+            
+            return BadRequest(new { Message = "Çıxış zamanı xəta baş verdi." });
         }
     }
 }

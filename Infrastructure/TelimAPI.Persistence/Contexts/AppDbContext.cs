@@ -20,6 +20,7 @@ namespace TelimAPI.Persistence.Contexts
         public DbSet<Department> Departments { get; set; }
         public DbSet<TrainingParticipant> TrainingParticipants { get; set; }
         public DbSet<TrainingFeedback> TrainingFeedback { get; set; }
+        public DbSet<RefreshToken> RefreshTokens { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

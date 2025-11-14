@@ -11,7 +11,8 @@ namespace TelimAPI.Application.Services
     {
         Task<AuthResult> RegisterUserAsync(RegisterDto model, string roleName);
         Task<AuthResult> LoginUserAsync(LoginDto model);
-        Task SignOutUserAsync();
+        Task<AuthResult> RefreshTokenAsync(string refreshToken);
+        Task<bool> RevokeRefreshTokenAsync(string refreshToken);
         Task<bool> IsInRoleAsync(string email, string roleName);
     }
 }

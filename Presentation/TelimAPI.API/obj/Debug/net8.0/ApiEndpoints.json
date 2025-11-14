@@ -1,16 +1,6 @@
 [
   {
     "ContainingType": "TelimAPI.API.Controllers.AuthController",
-    "Method": "AdminTest",
-    "RelativePath": "api/Auth/admin-test",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "TelimAPI.API.Controllers.AuthController",
     "Method": "Login",
     "RelativePath": "api/Auth/login",
     "HttpMethod": "POST",
@@ -27,12 +17,28 @@
   },
   {
     "ContainingType": "TelimAPI.API.Controllers.AuthController",
-    "Method": "logout",
-    "RelativePath": "api/Auth/logout",
-    "HttpMethod": "POST",
+    "Method": "GetCurrentUser",
+    "RelativePath": "api/Auth/me",
+    "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
     "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "TelimAPI.API.Controllers.AuthController",
+    "Method": "RefreshToken",
+    "RelativePath": "api/Auth/refresh",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "request",
+        "Type": "TelimAPI.Application.DTOs.Auth.RefreshTokenRequest",
+        "IsRequired": true
+      }
+    ],
     "ReturnTypes": []
   },
   {
@@ -78,6 +84,22 @@
       {
         "Name": "dto",
         "Type": "TelimAPI.Application.DTOs.Auth.RegisterDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "TelimAPI.API.Controllers.AuthController",
+    "Method": "SignOut",
+    "RelativePath": "api/Auth/signout",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "request",
+        "Type": "TelimAPI.Application.DTOs.Auth.RefreshTokenRequest",
         "IsRequired": true
       }
     ],

@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TelimAPI.Application.DTOs.Auth;
+using TelimAPI.Application.Repositories;
 using TelimAPI.Application.Services;
 using TelimAPI.Domain.Entities;
 
@@ -15,12 +16,15 @@ namespace TelimAPI.Persistence.Services
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
         private readonly RoleManager<IdentityRole<Guid>> _roleManager;
-
-        public AuthService(UserManager<User> userManager, SignInManager<User> signInManager, RoleManager<IdentityRole<Guid>> roleManager)
+        private readonly ITokenService _tokenService;
+        private readonly IRefreshTokenRepository _refreshTokenRepository;
+        public AuthService(UserManager<User> userManager, SignInManager<User> signInManager, RoleManager<IdentityRole<Guid>> roleManager, ITokenService tokenService, IRefreshTokenRepository refreshTokenRepository)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _roleManager = roleManager;
+            _tokenService = tokenService;
+            _refreshTokenRepository = refreshTokenRepository;
         }
 
 
@@ -60,23 +64,84 @@ namespace TelimAPI.Persistence.Services
 
         public async Task<AuthResult> LoginUserAsync(LoginDto dto)
         {
-            var result = await _signInManager.PasswordSignInAsync(
-                dto.Email,
-                dto.Password,
-                dto.RememberMe,
-                lockoutOnFailure: false
-                );
 
+            var user = await _userManager.FindByEmailAsync(dto.Email);
+            if (user == null || !await _userManager.CheckPasswordAsync(user, dto.Password))
+            {
+                return new AuthResult
+                {
+                    Succeeded = false,
+                    Errors = new[] { "Yanlış e-poçt və ya şifrə." }
+                };
+            }
+
+            var roles = await _userManager.GetRolesAsync(user);
+            var accessToken = _tokenService.CreateAccessToken(user, roles);
+            var refreshTokenEntity = _tokenService.CreateRefreshToken(user.Id);
             return new AuthResult
             {
-                Succeeded = result.Succeeded,
-                Errors = result.Succeeded ? null : new[] { "Yanlış e-poçt və ya şifrə." }
+                Succeeded = true,
+                AccessToken = accessToken,
+                RefreshToken = refreshTokenEntity.Token,
+                Errors = null
             };
         }
 
-        public async Task SignOutUserAsync()
+        public async Task<AuthResult> RefreshTokenAsync(string refreshToken)
         {
-            await _signInManager.SignOutAsync();
+            var existingRefreshToken = await _refreshTokenRepository.GetByTokenAsync(refreshToken);
+
+            
+            if (existingRefreshToken == null || existingRefreshToken.IsRevoked || existingRefreshToken.Expires < DateTime.UtcNow)
+            {
+                return new AuthResult
+                {
+                    Succeeded = false,
+                    Errors = new[] { "Etibarsız və ya vaxtı bitmiş Refresh Token." }
+                };
+            }
+
+            var user = existingRefreshToken.User;
+
+            
+            existingRefreshToken.IsRevoked = true;
+            await _refreshTokenRepository.UpdateAsync(existingRefreshToken);
+
+            
+            var roles = await _userManager.GetRolesAsync(user);
+            var newAccessToken = _tokenService.CreateAccessToken(user, roles);
+            var newRefreshTokenEntity = _tokenService.CreateRefreshToken(user.Id);
+
+           
+            await _refreshTokenRepository.AddAsync(newRefreshTokenEntity);
+
+            
+            return new AuthResult
+            {
+                Succeeded = true,
+                AccessToken = newAccessToken,
+                RefreshToken = newRefreshTokenEntity.Token
+            };
+        }
+
+        public async Task<bool> RevokeRefreshTokenAsync(string refreshToken)
+        {
+            
+            var existingRefreshToken = await _refreshTokenRepository.GetByTokenAsync(refreshToken);
+
+            
+            if (existingRefreshToken == null || existingRefreshToken.IsRevoked)
+            {
+                
+                return true;
+            }
+
+            
+            existingRefreshToken.IsRevoked = true;
+            await _refreshTokenRepository.UpdateAsync(existingRefreshToken);
+
+           
+            return true;
         }
 
         public async Task<bool> IsInRoleAsync(string email, string roleName)
