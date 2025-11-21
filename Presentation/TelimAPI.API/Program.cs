@@ -16,6 +16,7 @@ namespace TelimAPI.API
         {
             var builder = WebApplication.CreateBuilder(args);
 
+
             // Add services to the container.
             builder.Services.AddPersistenceServices(builder.Configuration);
 
@@ -26,52 +27,78 @@ namespace TelimAPI.API
             //    options.Cookie.HttpOnly = true;
             //    options.Cookie.IsEssential = true;
             //});
-            var jwtSettings = builder.Configuration.GetSection("JwtSettings");
-            var key = Encoding.ASCII.GetBytes(jwtSettings["Key"]);
+
+            builder.Services.AddIdentity<User, IdentityRole<Guid>>(options =>
+            {
+                options.Password.RequiredLength = 6;
+                options.Password.RequireNonAlphanumeric = false;
+            })
+               .AddEntityFrameworkStores<AppDbContext>()
+               .AddDefaultTokenProviders();
 
             builder.Services.AddAuthentication(options =>
             {
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                 options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
             })
-                .AddJwtBearer(options =>
-            {
-                options.RequireHttpsMetadata = false; 
-                options.SaveToken = true;
-                options.TokenValidationParameters = new TokenValidationParameters()
+                .AddJwtBearer("Bearer", options =>
                 {
-                    ValidateIssuerSigningKey = true,
-                    IssuerSigningKey = new SymmetricSecurityKey(key),
-                    ValidateIssuer = true,
-                    ValidIssuer = jwtSettings["Issuer"],
-                    ValidateAudience = true,
-                    ValidAudience = jwtSettings["Audience"],
-                    ValidateLifetime = true,
-                    ClockSkew = TimeSpan.Zero
-                };
+                    
+                    options.SaveToken = true;
+                    options.TokenValidationParameters = new TokenValidationParameters()
+                    {
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JwtSettings:Key"])),
+                        ValidateIssuerSigningKey = true,
+                        ValidIssuer = builder.Configuration["JwtSettings:Issuer"],
+                        ValidateIssuer = true,
+                        ValidAudience = builder.Configuration["JwtSettings:Audience"],
+                        ValidateAudience = true,
+                        ValidateLifetime = true,
+                        ClockSkew = TimeSpan.Zero,
+                        RoleClaimType = "role"
+
+                    };
+                    options.Events = new JwtBearerEvents
+                    {
+                        OnMessageReceived = context =>
+                        {
+                            Console.WriteLine("OnMessageReceived fired");
+                            return Task.CompletedTask;
+                        },
+                        OnTokenValidated = context =>
+                        {
+                            Console.WriteLine("OnTokenValidated fired");
+                            return Task.CompletedTask;
+                        },
+                        OnAuthenticationFailed = context =>
+                        {
+                            Console.WriteLine("OnAuthenticationFailed: " + context.Exception?.Message);
+                            return Task.CompletedTask;
+                        }
+                    };
+                });
+
+            builder.Services.AddAuthorization(options =>
+            {
+                options.AddPolicy("AdminOnly", policy => policy.RequireRole("Admin"));
+                options.AddPolicy("TrainerOrAdmin", policy => policy.RequireRole("Admin", "Trainer"));
             });
 
             builder.Services.AddControllers();
 
-            
 
+
+            builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo
-                {
-                    Title = "TelimAPI",
-                    Version = "v1"
-                });
-
-                // JWT üçün
                 c.AddSecurityDefinition("Bearer", new Microsoft.OpenApi.Models.OpenApiSecurityScheme
                 {
                     Name = "Authorization",
-                    Type = Microsoft.OpenApi.Models.SecuritySchemeType.ApiKey,
+                    Type = Microsoft.OpenApi.Models.SecuritySchemeType.Http,
                     Scheme = "Bearer",
                     BearerFormat = "JWT",
                     In = Microsoft.OpenApi.Models.ParameterLocation.Header,
-                    Description = "Bearer {token} formatında JWT token daxil edin"
+                    Description = "JWT Authorization header using the Bearer scheme. Example: 'Bearer {token}'"
                 });
 
                 c.AddSecurityRequirement(new Microsoft.OpenApi.Models.OpenApiSecurityRequirement
@@ -85,19 +112,13 @@ namespace TelimAPI.API
                     Id = "Bearer"
                 }
             },
-            new string[] {}
+            Array.Empty<string>()
         }
     });
             });
 
-            builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddIdentity<User, IdentityRole<Guid>>(options =>
-            {
-                options.Password.RequiredLength = 6;
-                options.Password.RequireNonAlphanumeric = false;
-            })
-                .AddEntityFrameworkStores<AppDbContext>()
-                .AddDefaultTokenProviders();
+            
+           
 
             //builder.Services.ConfigureApplicationCookie(options =>
             //{
@@ -107,13 +128,21 @@ namespace TelimAPI.API
             //    options.SlidingExpiration = true; 
             //});
 
-            builder.Services.AddAuthorization(options =>
+           
+
+            builder.Services.AddCors(opt =>
             {
-                options.AddPolicy("AdminOnly", policy => policy.RequireRole("Admin"));
-                options.AddPolicy("TrainerOrAdmin", policy => policy.RequireRole("Admin", "Trainer"));
+                opt.AddPolicy("all", builder => {
+                    builder.WithOrigins("http://localhost:5198")
+                           .AllowAnyHeader()
+                           .AllowAnyMethod()
+                           .AllowCredentials();
+                });
             });
 
             var app = builder.Build();
+
+
             using (var scope = app.Services.CreateScope())
             {
                 var services = scope.ServiceProvider;
@@ -122,14 +151,20 @@ namespace TelimAPI.API
 
             if (app.Environment.IsDevelopment())
             {
+                app.UseDeveloperExceptionPage();
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
 
-            app.UseRouting();
             app.UseHttpsRedirection();
-            app.UseAuthentication();  
+            app.UseRouting();
+
+            app.UseCors("all");
+
+
+            app.UseAuthentication();
             app.UseAuthorization();
+
 
 
 

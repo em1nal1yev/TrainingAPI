@@ -3,24 +3,48 @@
   "WorkspaceRootPath": "C:\\Users\\User.DESKTOP-U18JVHB\\Desktop\\Projects\\TrainingAPI\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{070F825D-CC8A-433A-8E27-67A63821AC1D}|Infrastructure\\TelimAPI.Persistence\\TelimAPI.Persistence.csproj|c:\\users\\user.desktop-u18jvhb\\desktop\\projects\\trainingapi\\infrastructure\\telimapi.persistence\\services\\tokenservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{070F825D-CC8A-433A-8E27-67A63821AC1D}|Infrastructure\\TelimAPI.Persistence\\TelimAPI.Persistence.csproj|solutionrelative:infrastructure\\telimapi.persistence\\services\\tokenservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{04961C3C-DABA-49A6-B844-FC9295E74ED2}|Presentation\\TelimAPI.API\\TelimAPI.API.csproj|c:\\users\\user.desktop-u18jvhb\\desktop\\projects\\trainingapi\\presentation\\telimapi.api\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{04961C3C-DABA-49A6-B844-FC9295E74ED2}|Presentation\\TelimAPI.API\\TelimAPI.API.csproj|solutionrelative:presentation\\telimapi.api\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{070F825D-CC8A-433A-8E27-67A63821AC1D}|Infrastructure\\TelimAPI.Persistence\\TelimAPI.Persistence.csproj|c:\\users\\user.desktop-u18jvhb\\desktop\\projects\\trainingapi\\infrastructure\\telimapi.persistence\\services\\authservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{070F825D-CC8A-433A-8E27-67A63821AC1D}|Infrastructure\\TelimAPI.Persistence\\TelimAPI.Persistence.csproj|solutionrelative:infrastructure\\telimapi.persistence\\services\\authservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{983BB30C-A2B4-465C-8D17-8D2CB4DE119E}|Core\\TelimAPI.Domain\\TelimAPI.Domain.csproj|c:\\users\\user.desktop-u18jvhb\\desktop\\projects\\trainingapi\\core\\telimapi.domain\\enums\\userrole.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{983BB30C-A2B4-465C-8D17-8D2CB4DE119E}|Core\\TelimAPI.Domain\\TelimAPI.Domain.csproj|solutionrelative:core\\telimapi.domain\\enums\\userrole.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{983BB30C-A2B4-465C-8D17-8D2CB4DE119E}|Core\\TelimAPI.Domain\\TelimAPI.Domain.csproj|c:\\users\\user.desktop-u18jvhb\\desktop\\projects\\trainingapi\\core\\telimapi.domain\\entities\\user.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{983BB30C-A2B4-465C-8D17-8D2CB4DE119E}|Core\\TelimAPI.Domain\\TelimAPI.Domain.csproj|solutionrelative:core\\telimapi.domain\\entities\\user.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{04961C3C-DABA-49A6-B844-FC9295E74ED2}|Presentation\\TelimAPI.API\\TelimAPI.API.csproj|c:\\users\\user.desktop-u18jvhb\\desktop\\projects\\trainingapi\\presentation\\telimapi.api\\controllers\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{04961C3C-DABA-49A6-B844-FC9295E74ED2}|Presentation\\TelimAPI.API\\TelimAPI.API.csproj|solutionrelative:presentation\\telimapi.api\\controllers\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
+      "AbsoluteMoniker": "D:0:0:{070F825D-CC8A-433A-8E27-67A63821AC1D}|Infrastructure\\TelimAPI.Persistence\\TelimAPI.Persistence.csproj|c:\\users\\user.desktop-u18jvhb\\desktop\\projects\\trainingapi\\infrastructure\\telimapi.persistence\\services\\tokenservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{070F825D-CC8A-433A-8E27-67A63821AC1D}|Infrastructure\\TelimAPI.Persistence\\TelimAPI.Persistence.csproj|solutionrelative:infrastructure\\telimapi.persistence\\services\\tokenservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{0E24D8D5-B7F5-4614-A98B-14190715C68A}|Core\\TelimAPI.Application\\TelimAPI.Application.csproj|c:\\users\\user.desktop-u18jvhb\\desktop\\projects\\trainingapi\\core\\telimapi.application\\dtos\\auth\\refreshtokenrequest.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{0E24D8D5-B7F5-4614-A98B-14190715C68A}|Core\\TelimAPI.Application\\TelimAPI.Application.csproj|solutionrelative:core\\telimapi.application\\dtos\\auth\\refreshtokenrequest.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{070F825D-CC8A-433A-8E27-67A63821AC1D}|Infrastructure\\TelimAPI.Persistence\\TelimAPI.Persistence.csproj|c:\\users\\user.desktop-u18jvhb\\desktop\\projects\\trainingapi\\infrastructure\\telimapi.persistence\\services\\authservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{070F825D-CC8A-433A-8E27-67A63821AC1D}|Infrastructure\\TelimAPI.Persistence\\TelimAPI.Persistence.csproj|solutionrelative:infrastructure\\telimapi.persistence\\services\\authservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{0E24D8D5-B7F5-4614-A98B-14190715C68A}|Core\\TelimAPI.Application\\TelimAPI.Application.csproj|c:\\users\\user.desktop-u18jvhb\\desktop\\projects\\trainingapi\\core\\telimapi.application\\services\\itokenservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{0E24D8D5-B7F5-4614-A98B-14190715C68A}|Core\\TelimAPI.Application\\TelimAPI.Application.csproj|solutionrelative:core\\telimapi.application\\services\\itokenservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{070F825D-CC8A-433A-8E27-67A63821AC1D}|Infrastructure\\TelimAPI.Persistence\\TelimAPI.Persistence.csproj|c:\\users\\user.desktop-u18jvhb\\desktop\\projects\\trainingapi\\infrastructure\\telimapi.persistence\\serviceregistration.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{070F825D-CC8A-433A-8E27-67A63821AC1D}|Infrastructure\\TelimAPI.Persistence\\TelimAPI.Persistence.csproj|solutionrelative:infrastructure\\telimapi.persistence\\serviceregistration.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{04961C3C-DABA-49A6-B844-FC9295E74ED2}|Presentation\\TelimAPI.API\\TelimAPI.API.csproj|c:\\users\\user.desktop-u18jvhb\\desktop\\projects\\trainingapi\\presentation\\telimapi.api\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{04961C3C-DABA-49A6-B844-FC9295E74ED2}|Presentation\\TelimAPI.API\\TelimAPI.API.csproj|solutionrelative:presentation\\telimapi.api\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{070F825D-CC8A-433A-8E27-67A63821AC1D}|Infrastructure\\TelimAPI.Persistence\\TelimAPI.Persistence.csproj|c:\\users\\user.desktop-u18jvhb\\desktop\\projects\\trainingapi\\infrastructure\\telimapi.persistence\\repositories\\refreshtokenrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{070F825D-CC8A-433A-8E27-67A63821AC1D}|Infrastructure\\TelimAPI.Persistence\\TelimAPI.Persistence.csproj|solutionrelative:infrastructure\\telimapi.persistence\\repositories\\refreshtokenrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -30,58 +54,71 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 0,
+          "SelectedChildIndex": 4,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 1,
+              "Title": "UserRole.cs",
+              "DocumentMoniker": "C:\\Users\\User.DESKTOP-U18JVHB\\Desktop\\Projects\\TrainingAPI\\Core\\TelimAPI.Domain\\Enums\\UserRole.cs",
+              "RelativeDocumentMoniker": "Core\\TelimAPI.Domain\\Enums\\UserRole.cs",
+              "ToolTip": "C:\\Users\\User.DESKTOP-U18JVHB\\Desktop\\Projects\\TrainingAPI\\Core\\TelimAPI.Domain\\Enums\\UserRole.cs",
+              "RelativeToolTip": "Core\\TelimAPI.Domain\\Enums\\UserRole.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA0AAAAFAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-21T07:07:03.386Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
               "Title": "TokenService.cs",
               "DocumentMoniker": "C:\\Users\\User.DESKTOP-U18JVHB\\Desktop\\Projects\\TrainingAPI\\Infrastructure\\TelimAPI.Persistence\\Services\\TokenService.cs",
               "RelativeDocumentMoniker": "Infrastructure\\TelimAPI.Persistence\\Services\\TokenService.cs",
               "ToolTip": "C:\\Users\\User.DESKTOP-U18JVHB\\Desktop\\Projects\\TrainingAPI\\Infrastructure\\TelimAPI.Persistence\\Services\\TokenService.cs",
               "RelativeToolTip": "Infrastructure\\TelimAPI.Persistence\\Services\\TokenService.cs",
-              "ViewState": "AgIAAC0AAAAAAAAAAAAowDQAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAA0AAAAAAAAAAAAcwCIAAAANAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-11-14T07:27:58.182Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 7,
+              "Title": "ITokenService.cs",
+              "DocumentMoniker": "C:\\Users\\User.DESKTOP-U18JVHB\\Desktop\\Projects\\TrainingAPI\\Core\\TelimAPI.Application\\Services\\ITokenService.cs",
+              "RelativeDocumentMoniker": "Core\\TelimAPI.Application\\Services\\ITokenService.cs",
+              "ToolTip": "C:\\Users\\User.DESKTOP-U18JVHB\\Desktop\\Projects\\TrainingAPI\\Core\\TelimAPI.Application\\Services\\ITokenService.cs",
+              "RelativeToolTip": "Core\\TelimAPI.Application\\Services\\ITokenService.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAqwAsAAAA5AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-18T07:30:48.116Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
               "Title": "ServiceRegistration.cs",
               "DocumentMoniker": "C:\\Users\\User.DESKTOP-U18JVHB\\Desktop\\Projects\\TrainingAPI\\Infrastructure\\TelimAPI.Persistence\\ServiceRegistration.cs",
               "RelativeDocumentMoniker": "Infrastructure\\TelimAPI.Persistence\\ServiceRegistration.cs",
               "ToolTip": "C:\\Users\\User.DESKTOP-U18JVHB\\Desktop\\Projects\\TrainingAPI\\Infrastructure\\TelimAPI.Persistence\\ServiceRegistration.cs",
               "RelativeToolTip": "Infrastructure\\TelimAPI.Persistence\\ServiceRegistration.cs",
-              "ViewState": "AgIAAAMAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAAYAAAAAAAAAAAAmwB4AAAA8AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-11-14T07:25:02.82Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 0,
               "Title": "Program.cs",
               "DocumentMoniker": "C:\\Users\\User.DESKTOP-U18JVHB\\Desktop\\Projects\\TrainingAPI\\Presentation\\TelimAPI.API\\Program.cs",
               "RelativeDocumentMoniker": "Presentation\\TelimAPI.API\\Program.cs",
               "ToolTip": "C:\\Users\\User.DESKTOP-U18JVHB\\Desktop\\Projects\\TrainingAPI\\Presentation\\TelimAPI.API\\Program.cs",
               "RelativeToolTip": "Presentation\\TelimAPI.API\\Program.cs",
-              "ViewState": "AgIAAJgAAAAAAAAAAAAAwKsAAAArAAAAAAAAAA==",
+              "ViewState": "AgIAAKYAAAAAAAAAAAAUwKYAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-11-14T07:23:50.794Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "AuthService.cs",
-              "DocumentMoniker": "C:\\Users\\User.DESKTOP-U18JVHB\\Desktop\\Projects\\TrainingAPI\\Infrastructure\\TelimAPI.Persistence\\Services\\AuthService.cs",
-              "RelativeDocumentMoniker": "Infrastructure\\TelimAPI.Persistence\\Services\\AuthService.cs",
-              "ToolTip": "C:\\Users\\User.DESKTOP-U18JVHB\\Desktop\\Projects\\TrainingAPI\\Infrastructure\\TelimAPI.Persistence\\Services\\AuthService.cs",
-              "RelativeToolTip": "Infrastructure\\TelimAPI.Persistence\\Services\\AuthService.cs",
-              "ViewState": "AgIAAHkAAAAAAAAAAAAmwJwAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-14T07:18:10.218Z",
               "EditorCaption": ""
             },
             {
@@ -92,10 +129,73 @@
               "RelativeDocumentMoniker": "Presentation\\TelimAPI.API\\Controllers\\AuthController.cs",
               "ToolTip": "C:\\Users\\User.DESKTOP-U18JVHB\\Desktop\\Projects\\TrainingAPI\\Presentation\\TelimAPI.API\\Controllers\\AuthController.cs",
               "RelativeToolTip": "Presentation\\TelimAPI.API\\Controllers\\AuthController.cs",
-              "ViewState": "AgIAAGcAAAAAAAAAAAAuwIsAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAACYAAAAAAAAAAAAwwCwAAAAlAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-11-14T07:17:46.998Z",
               "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "RefreshTokenRequest.cs",
+              "DocumentMoniker": "C:\\Users\\User.DESKTOP-U18JVHB\\Desktop\\Projects\\TrainingAPI\\Core\\TelimAPI.Application\\DTOs\\Auth\\RefreshTokenRequest.cs",
+              "RelativeDocumentMoniker": "Core\\TelimAPI.Application\\DTOs\\Auth\\RefreshTokenRequest.cs",
+              "ToolTip": "C:\\Users\\User.DESKTOP-U18JVHB\\Desktop\\Projects\\TrainingAPI\\Core\\TelimAPI.Application\\DTOs\\Auth\\RefreshTokenRequest.cs",
+              "RelativeToolTip": "Core\\TelimAPI.Application\\DTOs\\Auth\\RefreshTokenRequest.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-18T07:33:21.084Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "AuthService.cs",
+              "DocumentMoniker": "C:\\Users\\User.DESKTOP-U18JVHB\\Desktop\\Projects\\TrainingAPI\\Infrastructure\\TelimAPI.Persistence\\Services\\AuthService.cs",
+              "RelativeDocumentMoniker": "Infrastructure\\TelimAPI.Persistence\\Services\\AuthService.cs",
+              "ToolTip": "C:\\Users\\User.DESKTOP-U18JVHB\\Desktop\\Projects\\TrainingAPI\\Infrastructure\\TelimAPI.Persistence\\Services\\AuthService.cs",
+              "RelativeToolTip": "Infrastructure\\TelimAPI.Persistence\\Services\\AuthService.cs",
+              "ViewState": "AgIAADgAAAAAAAAAAAAWwE4AAABEAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-14T07:18:10.218Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "User.cs",
+              "DocumentMoniker": "C:\\Users\\User.DESKTOP-U18JVHB\\Desktop\\Projects\\TrainingAPI\\Core\\TelimAPI.Domain\\Entities\\User.cs",
+              "RelativeDocumentMoniker": "Core\\TelimAPI.Domain\\Entities\\User.cs",
+              "ToolTip": "C:\\Users\\User.DESKTOP-U18JVHB\\Desktop\\Projects\\TrainingAPI\\Core\\TelimAPI.Domain\\Entities\\User.cs",
+              "RelativeToolTip": "Core\\TelimAPI.Domain\\Entities\\User.cs",
+              "ViewState": "AgIAAAMAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-20T08:11:07.078Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "appsettings.json",
+              "DocumentMoniker": "C:\\Users\\User.DESKTOP-U18JVHB\\Desktop\\Projects\\TrainingAPI\\Presentation\\TelimAPI.API\\appsettings.json",
+              "RelativeDocumentMoniker": "Presentation\\TelimAPI.API\\appsettings.json",
+              "ToolTip": "C:\\Users\\User.DESKTOP-U18JVHB\\Desktop\\Projects\\TrainingAPI\\Presentation\\TelimAPI.API\\appsettings.json",
+              "RelativeToolTip": "Presentation\\TelimAPI.API\\appsettings.json",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAAAOAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2025-11-18T05:37:19.505Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "RefreshTokenRepository.cs",
+              "DocumentMoniker": "C:\\Users\\User.DESKTOP-U18JVHB\\Desktop\\Projects\\TrainingAPI\\Infrastructure\\TelimAPI.Persistence\\Repositories\\RefreshTokenRepository.cs",
+              "RelativeDocumentMoniker": "Infrastructure\\TelimAPI.Persistence\\Repositories\\RefreshTokenRepository.cs",
+              "ToolTip": "C:\\Users\\User.DESKTOP-U18JVHB\\Desktop\\Projects\\TrainingAPI\\Infrastructure\\TelimAPI.Persistence\\Repositories\\RefreshTokenRepository.cs",
+              "RelativeToolTip": "Infrastructure\\TelimAPI.Persistence\\Repositories\\RefreshTokenRepository.cs",
+              "ViewState": "AgIAABEAAAAAAAAAAAAIwC4AAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-20T06:20:19.035Z"
             }
           ]
         }

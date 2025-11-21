@@ -25,16 +25,10 @@ namespace TelimAPI.Persistence.Services
         public string CreateAccessToken(User user, IList<string> roles)
         {
 
-            var jwtSettings = _configuration.GetSection("JwtSettings");
-            string secretKey = jwtSettings["Key"]
-                ?? throw new InvalidOperationException("JwtSettings:Key konfiqurasiyası tapılmadı.");
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey));
-
             var claims = new List<Claim>()
             {
                 new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-                new Claim(ClaimTypes.Email, user.Email),
-                new Claim(ClaimTypes.Name, user.Name + " " + user.Surname)
+                 new Claim(ClaimTypes.Email, user.Email),
             };
 
             foreach (var role in roles)
@@ -42,19 +36,17 @@ namespace TelimAPI.Persistence.Services
                 claims.Add(new Claim(ClaimTypes.Role, role));
             }
 
-            var tokenDescription = new SecurityTokenDescriptor()
-            {
-                Subject = new ClaimsIdentity(claims),
-                Expires = DateTime.UtcNow.AddMinutes(double.Parse(jwtSettings["DurationInMinutes"])),
-                SigningCredentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256Signature),
-                Issuer = jwtSettings["Issuer"],
-                Audience = jwtSettings["Audience"]
-            };
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JwtSettings:Key"]));
+            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
-            var tokenHandler = new JwtSecurityTokenHandler();
-            var token = tokenHandler.CreateToken(tokenDescription);
+            var token = new JwtSecurityToken(
+                issuer: _configuration["JwtSettings:Issuer"],
+                audience: _configuration["JwtSettings:Audience"],
+                claims: claims,
+                expires: DateTime.UtcNow.AddHours(2),
+                signingCredentials: creds);
 
-            return tokenHandler.WriteToken(token);
+            return new JwtSecurityTokenHandler().WriteToken(token);
         }
 
         public RefreshToken CreateRefreshToken(Guid userId)

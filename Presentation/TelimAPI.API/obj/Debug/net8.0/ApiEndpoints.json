@@ -1,8 +1,28 @@
 [
   {
     "ContainingType": "TelimAPI.API.Controllers.AuthController",
+    "Method": "GetUserClaims",
+    "RelativePath": "api/Auth/claims",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "TelimAPI.API.Controllers.AuthController",
+    "Method": "GetCurrentUser",
+    "RelativePath": "api/Auth/GetCurrentUser",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "TelimAPI.API.Controllers.AuthController",
     "Method": "Login",
-    "RelativePath": "api/Auth/login",
+    "RelativePath": "api/Auth/Login",
     "HttpMethod": "POST",
     "IsController": true,
     "Order": 0,
@@ -17,18 +37,8 @@
   },
   {
     "ContainingType": "TelimAPI.API.Controllers.AuthController",
-    "Method": "GetCurrentUser",
-    "RelativePath": "api/Auth/me",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "TelimAPI.API.Controllers.AuthController",
     "Method": "RefreshToken",
-    "RelativePath": "api/Auth/refresh",
+    "RelativePath": "api/Auth/RefreshToken",
     "HttpMethod": "POST",
     "IsController": true,
     "Order": 0,
@@ -44,7 +54,7 @@
   {
     "ContainingType": "TelimAPI.API.Controllers.AuthController",
     "Method": "Register",
-    "RelativePath": "api/Auth/register",
+    "RelativePath": "api/Auth/Register",
     "HttpMethod": "POST",
     "IsController": true,
     "Order": 0,
@@ -60,7 +70,7 @@
   {
     "ContainingType": "TelimAPI.API.Controllers.AuthController",
     "Method": "RegisterAdmin",
-    "RelativePath": "api/Auth/register-admin",
+    "RelativePath": "api/Auth/RegisterAdmin",
     "HttpMethod": "POST",
     "IsController": true,
     "Order": 0,
@@ -76,7 +86,7 @@
   {
     "ContainingType": "TelimAPI.API.Controllers.AuthController",
     "Method": "RegisterTrainer",
-    "RelativePath": "api/Auth/register-trainer",
+    "RelativePath": "api/Auth/RegisterTrainer",
     "HttpMethod": "POST",
     "IsController": true,
     "Order": 0,
@@ -92,7 +102,7 @@
   {
     "ContainingType": "TelimAPI.API.Controllers.AuthController",
     "Method": "SignOut",
-    "RelativePath": "api/Auth/signout",
+    "RelativePath": "api/Auth/SignOut",
     "HttpMethod": "POST",
     "IsController": true,
     "Order": 0,
