@@ -1,11 +1,11 @@
 {
   "openapi": "3.0.1",
   "info": {
-    "title": "TelimAPI",
+    "title": "WebAPIv6",
     "version": "v1"
   },
   "paths": {
-    "/api/Auth/register": {
+    "/api/Auth/Register": {
       "post": {
         "tags": [
           "Auth"
@@ -36,7 +36,7 @@
         }
       }
     },
-    "/api/Auth/register-admin": {
+    "/api/Auth/RegisterAdmin": {
       "post": {
         "tags": [
           "Auth"
@@ -67,7 +67,7 @@
         }
       }
     },
-    "/api/Auth/register-trainer": {
+    "/api/Auth/RegisterTrainer": {
       "post": {
         "tags": [
           "Auth"
@@ -98,7 +98,7 @@
         }
       }
     },
-    "/api/Auth/login": {
+    "/api/Auth/Login": {
       "post": {
         "tags": [
           "Auth"
@@ -129,7 +129,7 @@
         }
       }
     },
-    "/api/Auth/me": {
+    "/api/Auth/GetCurrentUser": {
       "get": {
         "tags": [
           "Auth"
@@ -141,7 +141,19 @@
         }
       }
     },
-    "/api/Auth/refresh": {
+    "/api/Auth/claims": {
+      "get": {
+        "tags": [
+          "Auth"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Auth/RefreshToken": {
       "post": {
         "tags": [
           "Auth"
@@ -172,7 +184,7 @@
         }
       }
     },
-    "/api/Auth/signout": {
+    "/api/Auth/SignOut": {
       "post": {
         "tags": [
           "Auth"
@@ -580,10 +592,10 @@
     },
     "securitySchemes": {
       "Bearer": {
-        "type": "apiKey",
-        "description": "Bearer {token} formatında JWT token daxil edin",
-        "name": "Authorization",
-        "in": "header"
+        "type": "http",
+        "description": "JWT Authorization header using the Bearer scheme.",
+        "scheme": "Bearer",
+        "bearerFormat": "Jwt"
       }
     }
   },

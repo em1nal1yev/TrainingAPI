@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 using TelimAPI.Application.DTOs.Auth;
@@ -18,7 +17,8 @@ namespace TelimAPI.API.Controllers
             _authService = authService;
         }
 
-        [HttpPost("register")]
+        [HttpPost("Register")]
+        [AllowAnonymous]
         public async Task<IActionResult> Register([FromBody] RegisterDto dto)
         {
             var result = await _authService.RegisterUserAsync(dto, "User");
@@ -29,7 +29,7 @@ namespace TelimAPI.API.Controllers
             return BadRequest(new { Error = result.Errors });
         }
 
-        [HttpPost("register-admin")]
+        [HttpPost("RegisterAdmin")]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> RegisterAdmin([FromBody] RegisterDto dto)
         {
@@ -42,7 +42,7 @@ namespace TelimAPI.API.Controllers
             return BadRequest(new { Errors = result.Errors });
         }
 
-        [HttpPost("register-trainer")]
+        [HttpPost("RegisterTrainer")]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> RegisterTrainer([FromBody] RegisterDto dto)
         {
@@ -54,7 +54,7 @@ namespace TelimAPI.API.Controllers
             return BadRequest(new { Errors = result.Errors });
         }
 
-        [HttpPost("login")]
+        [HttpPost("Login")]
         public async Task<IActionResult> Login([FromBody] LoginDto dto)
         {
             var result = await _authService.LoginUserAsync(dto);
@@ -72,19 +72,24 @@ namespace TelimAPI.API.Controllers
             return Unauthorized(new { Errors = result.Errors });
         }
 
+       
+        [HttpGet("GetCurrentUser")]
         [Authorize]
-        [HttpGet("me")]
         public IActionResult GetCurrentUser()
         {
 
-            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            var email = User.FindFirst(ClaimTypes.Email)?.Value;
-            var name = User.FindFirst(ClaimTypes.Name)?.Value;
-            var role = User.FindFirst(ClaimTypes.Role)?.Value;
+            if (User?.Identity?.IsAuthenticated != true)
+            {
+                return Unauthorized(new { Message = "İstifadəçi daxil olmayıb." });
+            }
+
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier);
+            var email = User.FindFirst(ClaimTypes.Email);
+            var role = User.FindFirst(ClaimTypes.Role);
 
             if (userId == null)
             {
-                
+
                 return NotFound(new { Message = "İstifadəçi ID tapılmadı." });
             }
 
@@ -92,13 +97,21 @@ namespace TelimAPI.API.Controllers
             {
                 UserId = userId,
                 Email = email,
-                FullName = name,
                 Role = role,
                 Message = "Cari istifadəçi məlumatları uğurla alındı."
             });
+                
         }
 
-        [HttpPost("refresh")]
+        [Authorize]
+        [HttpGet("claims")]
+        public IActionResult GetUserClaims()
+        {
+            var claims = User.Claims.Select(c => new { c.Type, c.Value }).ToList();
+            return Ok(claims);                          
+        }
+
+        [HttpPost("RefreshToken")]
         public async Task<IActionResult> RefreshToken([FromBody] RefreshTokenRequest request)
         {
             
@@ -120,7 +133,7 @@ namespace TelimAPI.API.Controllers
         }
 
         [Authorize]
-        [HttpPost("signout")]
+        [HttpPost("SignOut")]
         public async Task<IActionResult> SignOut([FromBody] RefreshTokenRequest request)
         {
            
