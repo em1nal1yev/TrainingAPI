@@ -3,7 +3,9 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 using System.IdentityModel.Tokens.Jwt;
+using System.Reflection;
 using System.Security.Claims;
 using System.Text;
 using TelimAPI.Domain.Entities;
@@ -70,14 +72,15 @@ namespace TelimAPI.API
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen(c =>
             {
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "WebAPIv6", Version = "v1" });
                 c.AddSecurityDefinition("Bearer", new Microsoft.OpenApi.Models.OpenApiSecurityScheme
                 {
                     Name = "Authorization",
                     Type = Microsoft.OpenApi.Models.SecuritySchemeType.Http,
                     Scheme = "Bearer",
-                    BearerFormat = "JWT",
+                    BearerFormat = "Jwt",
                     In = Microsoft.OpenApi.Models.ParameterLocation.Header,
-                    Description = "JWT Authorization header using the Bearer scheme. Example: 'Bearer {token}'"
+                    Description = "JWT Authorization header using the Bearer scheme."
                 });
 
                 c.AddSecurityRequirement(new Microsoft.OpenApi.Models.OpenApiSecurityRequirement
@@ -96,8 +99,8 @@ namespace TelimAPI.API
     });
             });
 
-            
-           
+
+
 
             //builder.Services.ConfigureApplicationCookie(options =>
             //{
@@ -107,7 +110,7 @@ namespace TelimAPI.API
             //    options.SlidingExpiration = true; 
             //});
 
-           
+
 
             builder.Services.AddCors(opt =>
             {

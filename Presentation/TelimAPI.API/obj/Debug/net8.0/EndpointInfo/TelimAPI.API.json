@@ -1,8 +1,8 @@
 {
   "openapi": "3.0.1",
   "info": {
-    "title": "TelimAPI.API",
-    "version": "1.0"
+    "title": "WebAPIv6",
+    "version": "v1"
   },
   "paths": {
     "/api/Auth/Register": {
@@ -593,9 +593,9 @@
     "securitySchemes": {
       "Bearer": {
         "type": "http",
-        "description": "JWT Authorization header using the Bearer scheme. Example: 'Bearer {token}'",
+        "description": "JWT Authorization header using the Bearer scheme.",
         "scheme": "Bearer",
-        "bearerFormat": "JWT"
+        "bearerFormat": "Jwt"
       }
     }
   },
