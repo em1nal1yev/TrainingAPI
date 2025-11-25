@@ -87,8 +87,8 @@ namespace TelimAPI.Persistence.Services
 
                     existingParticipant.IsJoined = true;
 
-                    
-                    _trainingRepository.UpdateParticipantAsync(existingParticipant);
+
+                    await _trainingRepository.UpdateParticipantAsync(existingParticipant);
                     return;
                 }
             }
