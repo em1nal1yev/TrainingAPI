@@ -78,22 +78,20 @@ namespace TelimAPI.API.Controllers
         public IActionResult GetCurrentUser()
         {
 
-            if (User?.Identity?.IsAuthenticated == true)
+            if (User?.Identity?.IsAuthenticated != true)
             {
+                return Unauthorized(new { Message = "İstifadəçi daxil olmayıb." });
             }
 
-                var userId = User.FindFirst(ClaimTypes.NameIdentifier);
-                var email = User.FindFirst(ClaimTypes.Email);
-                var role = User.FindFirst(ClaimTypes.Role);
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier);
+            var email = User.FindFirst(ClaimTypes.Email);
+            var role = User.FindFirst(ClaimTypes.Role);
 
-                if (userId == null)
-                {
+            if (userId == null)
+            {
 
-                    return NotFound(new { Message = "İstifadəçi ID tapılmadı." });
-                }
-            
-
-           
+                return NotFound(new { Message = "İstifadəçi ID tapılmadı." });
+            }
 
             return Ok(new
             {
@@ -102,17 +100,18 @@ namespace TelimAPI.API.Controllers
                 Role = role,
                 Message = "Cari istifadəçi məlumatları uğurla alındı."
             });
+                
         }
 
+        [Authorize]
         [HttpGet("claims")]
         public IActionResult GetUserClaims()
         {
             var claims = User.Claims.Select(c => new { c.Type, c.Value }).ToList();
-            return Ok(claims);
+            return Ok(claims);                          
         }
 
         [HttpPost("RefreshToken")]
-        [Authorize]
         public async Task<IActionResult> RefreshToken([FromBody] RefreshTokenRequest request)
         {
             

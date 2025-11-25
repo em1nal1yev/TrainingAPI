@@ -78,6 +78,7 @@ namespace TelimAPI.Persistence.Services
             var roles = await _userManager.GetRolesAsync(user);
             var accessToken = _tokenService.CreateAccessToken(user, roles);
             var refreshTokenEntity = _tokenService.CreateRefreshToken(user.Id);
+            await _refreshTokenRepository.AddAsync(refreshTokenEntity);
             return new AuthResult
             {
                 Succeeded = true,
@@ -101,9 +102,19 @@ namespace TelimAPI.Persistence.Services
                 };
             }
 
+
+
             var user = existingRefreshToken.User;
 
-            
+            if (user == null)
+            {
+                return new AuthResult
+                {
+                    Succeeded = false,
+                    Errors = new[] { "Refresh Token-ə bağlı istifadəçi tapılmadı." }
+                };
+            }
+
             existingRefreshToken.IsRevoked = true;
             await _refreshTokenRepository.UpdateAsync(existingRefreshToken);
 
