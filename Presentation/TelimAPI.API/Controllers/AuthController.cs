@@ -72,35 +72,33 @@ namespace TelimAPI.API.Controllers
             return Unauthorized(new { Errors = result.Errors });
         }
 
-       
+
         [HttpGet("GetCurrentUser")]
         [Authorize]
         public IActionResult GetCurrentUser()
         {
-
             if (User?.Identity?.IsAuthenticated != true)
             {
                 return Unauthorized(new { Message = "İstifadəçi daxil olmayıb." });
             }
 
-            var userId = User.FindFirst(ClaimTypes.NameIdentifier);
-            var email = User.FindFirst(ClaimTypes.Email);
-            var role = User.FindFirst(ClaimTypes.Role);
+            
+            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
+            var emailClaim = User.FindFirst(ClaimTypes.Email);
+            var roleClaim = User.FindFirst(ClaimTypes.Role);
 
-            if (userId == null)
+            if (userIdClaim == null)
             {
-
                 return NotFound(new { Message = "İstifadəçi ID tapılmadı." });
             }
 
             return Ok(new
             {
-                UserId = userId,
-                Email = email,
-                Role = role,
+                UserId = userIdClaim?.Value,
+                Email = emailClaim?.Value,
+                Role = roleClaim?.Value,
                 Message = "Cari istifadəçi məlumatları uğurla alındı."
             });
-                
         }
 
         [Authorize]
