@@ -36,6 +36,7 @@ namespace TelimAPI.Persistence.Repositories
                    .ThenInclude(tc => tc.Court)
                .Include(t => t.TrainingDepartments)
                    .ThenInclude(td => td.Department)
+               .Include(t => t.Participants)
                .FirstOrDefaultAsync(t => t.Id == id);
 
         }

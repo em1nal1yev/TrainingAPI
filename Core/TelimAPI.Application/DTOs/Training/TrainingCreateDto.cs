@@ -10,16 +10,16 @@ namespace TelimAPI.Application.DTOs.Training
     (
         string Title,
         string Description,
-        DateTime? SelectionDeadline,
+        DateTime Date,
         List<Guid>? CourtIds,
         List<Guid>? DepartmentIds
     );
 
     public record TrainingUpdateDto(
         Guid Id,
-        string Title,
+        string? Title,
         string? Description,
-        DateTime? SelectionDeadline,
+        DateTime? Date,
         List<Guid>? CourtIds,
         List<Guid>? DepartmentIds
     );
@@ -28,7 +28,7 @@ namespace TelimAPI.Application.DTOs.Training
        Guid Id,
        string? Title,
        string? Description,
-       DateTime? SelectionDeadline,
+       DateTime? Date,
        List<string>? Courts,
        List<string>? Departments
    );

@@ -32,7 +32,7 @@ namespace TelimAPI.Persistence.Services
                 t.Id,
                 t.Title,
                 t.Description,
-                t.SelectionDeadline,
+                t.Date,
                 t.TrainingCourts?.Select(c => c.Court.Name ?? "").ToList(),
                 t.TrainingDepartments?.Select(d => d.Department.Name ?? "").ToList()
                 )).ToList();
@@ -50,7 +50,7 @@ namespace TelimAPI.Persistence.Services
                 training.Id,
                 training.Title,
                 training.Description,
-                training.SelectionDeadline,
+                training.Date,
                 training.TrainingCourts?.Select(c => c.Court.Name ?? "").ToList(),
                 training.TrainingDepartments?.Select(d => d.Department.Name ?? "").ToList());
 
@@ -62,7 +62,7 @@ namespace TelimAPI.Persistence.Services
                 Id = Guid.NewGuid(),
                 Title = dto.Title,
                 Description = dto.Description,
-                SelectionDeadline = dto.SelectionDeadline,
+                Date = dto.Date,
                 CreatedDate = DateTime.UtcNow,
                 
             };
@@ -97,17 +97,29 @@ namespace TelimAPI.Persistence.Services
 
             
             var allDepartments = await _departmentRepository.GetAllAsync();
+
+            IEnumerable<Department> filteredDepartmentsByCourt = allDepartments;
+            
+            if (dto.CourtIds != null && dto.CourtIds.Count > 0)
+            {
+                
+                filteredDepartmentsByCourt = allDepartments.Where(d => dto.CourtIds.Contains(d.CourtId));
+            }
+
             List<Department> selectedDepartments;
 
             if (dto.DepartmentIds == null || dto.DepartmentIds.Count == 0)
             {
-                selectedDepartments = allDepartments;
+                
+                selectedDepartments = filteredDepartmentsByCourt.ToList();
             }
             else
             {
-                selectedDepartments = allDepartments.Where(d => dto.DepartmentIds.Contains(d.Id)).ToList();
+                
+                selectedDepartments = filteredDepartmentsByCourt.Where(d => dto.DepartmentIds.Contains(d.Id)).ToList();
             }
 
+            
             training.TrainingDepartments = selectedDepartments.Select(d => new TrainingDepartment
             {
                 DepartmentId = d.Id,
@@ -116,10 +128,12 @@ namespace TelimAPI.Persistence.Services
 
 
 
-            
+
             var allUsers = await _userRepository.GetAllAsync();
 
             List<User> targetUsers = new List<User>();
+
+            
 
             foreach (var user in allUsers)
             {
@@ -145,18 +159,142 @@ namespace TelimAPI.Persistence.Services
             await _trainingRepository.AddAsync(training);
 
         }
+
+        // court ve department null gelerse deyisilmir count 0olarsa hamsi olur
         public async Task UpdateAsync(TrainingUpdateDto dto)
         {
+            
             Training training = await _trainingRepository.GetByIdAsync(dto.Id);
             if (training == null)
                 throw new Exception("Training not found");
-            
-            training.Title = dto.Title; 
-            training.Description = dto.Description;
-            training.SelectionDeadline = dto.SelectionDeadline;
 
+            
+            if (dto.Title != null) training.Title = dto.Title;
+            if (dto.Description != null) training.Description = dto.Description;
+            if (dto.Date.HasValue) training.Date = dto.Date.Value;
+
+            
+            var allCourts = await _courtRepository.GetAllAsync();
+            var allDepartments = await _departmentRepository.GetAllAsync();
+            var allUsers = await _userRepository.GetAllAsync();
+
+            
+            List<Court> effectiveCourts;
+
+            
+            if (dto.CourtIds != null)
+            {
+                if (dto.CourtIds.Count == 0)
+                {
+                    
+                    effectiveCourts = allCourts;
+                }
+                else
+                {
+                    
+                    effectiveCourts = allCourts.Where(c => dto.CourtIds.Contains(c.Id)).ToList();
+                }
+
+                
+                training.TrainingCourts.Clear();
+                training.TrainingCourts = effectiveCourts.Select(c => new TrainingCourt
+                {
+                    CourtId = c.Id,
+                    TrainingId = training.Id
+                }).ToList();
+            }
+            else 
+            {
+                var currentCourtIds = training.TrainingCourts.Select(tc => tc.CourtId).ToList();
+                effectiveCourts = allCourts.Where(c => currentCourtIds.Contains(c.Id)).ToList();
+            }
+
+            
+            var courtIdsForFiltering = effectiveCourts.Select(c => c.Id).ToList();
+
+            
+            IEnumerable<Department> filteredDepartmentsByCourt = allDepartments
+                .Where(d => courtIdsForFiltering.Contains(d.CourtId));
+
+            List<Department> selectedDepartments;
+
+            
+            if (dto.DepartmentIds != null)
+            {
+                if (dto.DepartmentIds.Count == 0)
+                {
+                    
+                    selectedDepartments = filteredDepartmentsByCourt.ToList();
+                }
+                else
+                {
+                    
+                    selectedDepartments = filteredDepartmentsByCourt
+                        .Where(d => dto.DepartmentIds.Contains(d.Id)).ToList();
+                }
+
+                
+                training.TrainingDepartments.Clear();
+                training.TrainingDepartments = selectedDepartments.Select(d => new TrainingDepartment
+                {
+                    DepartmentId = d.Id,
+                    TrainingId = training.Id
+                }).ToList();
+            }
+            else 
+            {
+                
+                if (dto.CourtIds != null)
+                {
+                    
+                    selectedDepartments = filteredDepartmentsByCourt.ToList();
+
+                    
+                    training.TrainingDepartments.Clear();
+                    training.TrainingDepartments = selectedDepartments.Select(d => new TrainingDepartment
+                    {
+                        DepartmentId = d.Id,
+                        TrainingId = training.Id
+                    }).ToList();
+                }
+                else
+                {
+                    
+                    var currentDepartmentIds = training.TrainingDepartments.Select(td => td.DepartmentId).ToList();
+                    selectedDepartments = allDepartments.Where(d => currentDepartmentIds.Contains(d.Id)).ToList();
+                }
+            }
+
+           
+            var finalCourtIds = effectiveCourts.Select(c => c.Id).ToList();
+            var finalDepartmentIds = selectedDepartments.Select(d => d.Id).ToList();
+
+            List<User> targetUsers = new List<User>();
+            foreach (var user in allUsers)
+            {
+                bool courtMatch = finalCourtIds.Contains(user.CourtId);
+                bool departmentMatch = finalDepartmentIds.Contains(user.DepartmentId);
+
+                if (courtMatch && departmentMatch)
+                {
+                    targetUsers.Add(user);
+                }
+            }
+
+            
+            training.Participants.Clear();
+            training.Participants = targetUsers.Select(u => new TrainingParticipant
+            {
+                TrainingId = training.Id,
+                UserId = u.Id,
+                IsJoined = false
+            }).ToList();
+
+            
             _trainingRepository.Update(training);
         }
+
+
 
         public async Task DeleteAsync(Guid id)
         {

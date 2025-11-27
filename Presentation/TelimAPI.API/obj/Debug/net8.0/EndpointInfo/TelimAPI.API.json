@@ -526,10 +526,9 @@
             "type": "string",
             "nullable": true
           },
-          "selectionDeadline": {
+          "date": {
             "type": "string",
-            "format": "date-time",
-            "nullable": true
+            "format": "date-time"
           },
           "courtIds": {
             "type": "array",
@@ -565,7 +564,7 @@
             "type": "string",
             "nullable": true
           },
-          "selectionDeadline": {
+          "date": {
             "type": "string",
             "format": "date-time",
             "nullable": true

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 using TelimAPI.Application.DTOs.User;
@@ -18,6 +19,7 @@ namespace TelimAPI.API.Controllers
         }
 
         [HttpGet("trainings")]
+        [Authorize(Roles = "Trainer, Admin")]
         public async Task<IActionResult> GetUserTrainings()
         {
             var result = await _userService.GetUserTrainingsAsync();
@@ -25,6 +27,7 @@ namespace TelimAPI.API.Controllers
         }
 
         [HttpPost("trainings/join")]
+        [Authorize(Roles = "Trainer, Admin")]
         public async Task<IActionResult> JoinTraining([FromBody] JoinTrainingRequest request)
         {
             
@@ -46,6 +49,7 @@ namespace TelimAPI.API.Controllers
             }
         }
         [HttpPost("trainings/feedback")]
+        [Authorize(Roles = "Trainer, Admin")]
         public async Task<IActionResult> SubmitFeedback([FromBody] SubmitFeedbackRequest request)
         {
             

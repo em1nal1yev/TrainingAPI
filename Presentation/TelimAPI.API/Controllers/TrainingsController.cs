@@ -19,6 +19,7 @@ namespace TelimAPI.API.Controllers
 
 
         [HttpGet("get-all")]
+
         public async Task<IActionResult> GetAll()
         {
             var trainings = await _trainingService.GetAllAsync();
