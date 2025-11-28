@@ -72,11 +72,24 @@ namespace TelimAPI.Persistence.Services
             if (training == null)
                 throw new Exception("Training not found.");
 
-            
+            if (training.Date == null)
+                throw new Exception("Training date is not set.");
+
+            var now = DateTime.UtcNow; 
+            var joinStart = training.Date.Value.AddMinutes(-10); 
+            var joinEnd = training.Date.Value.AddMinutes(20); 
+
+            if (now < joinStart || now > joinEnd)
+                throw new Exception("You can join the training only from 10 minutes before to 20 minutes after the start.");
+
+
+
             var existingParticipant = await _trainingRepository.GetParticipantByTrainingAndUserAsync(trainingId, userId);
 
             if (existingParticipant != null)
             {
+
+
                
                 if (existingParticipant.IsJoined)
                 {

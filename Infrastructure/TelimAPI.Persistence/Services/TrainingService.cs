@@ -137,8 +137,8 @@ namespace TelimAPI.Persistence.Services
 
             foreach (var user in allUsers)
             {
-                bool courtMatch = dto.CourtIds == null || dto.CourtIds.Contains(user.CourtId);
-                bool departmentMatch = dto.DepartmentIds == null || dto.DepartmentIds.Contains(user.DepartmentId);
+                bool courtMatch = dto.CourtIds == null || dto.CourtIds.Count == 0 || dto.CourtIds.Contains(user.CourtId);
+                bool departmentMatch = dto.DepartmentIds == null || dto.DepartmentIds.Count == 0 || dto.DepartmentIds.Contains(user.DepartmentId);
 
                 if (courtMatch && departmentMatch)
                 {

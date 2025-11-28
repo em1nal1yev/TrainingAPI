@@ -101,8 +101,8 @@
   },
   {
     "ContainingType": "TelimAPI.API.Controllers.AuthController",
-    "Method": "SignOut",
-    "RelativePath": "api/Auth/SignOut",
+    "Method": "RevokeRefreshToken",
+    "RelativePath": "api/Auth/RevokeRefreshToken",
     "HttpMethod": "POST",
     "IsController": true,
     "Order": 0,

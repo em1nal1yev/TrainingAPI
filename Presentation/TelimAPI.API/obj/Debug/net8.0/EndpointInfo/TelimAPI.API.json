@@ -184,7 +184,7 @@
         }
       }
     },
-    "/api/Auth/SignOut": {
+    "/api/Auth/RevokeRefreshToken": {
       "post": {
         "tags": [
           "Auth"

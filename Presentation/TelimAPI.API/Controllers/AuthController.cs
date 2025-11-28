@@ -131,8 +131,8 @@ namespace TelimAPI.API.Controllers
         }
 
         [Authorize]
-        [HttpPost("SignOut")]
-        public async Task<IActionResult> SignOut([FromBody] RefreshTokenRequest request)
+        [HttpPost("RevokeRefreshToken")]
+        public async Task<IActionResult> RevokeRefreshToken([FromBody] RefreshTokenRequest request)
         {
            
             var success = await _authService.RevokeRefreshTokenAsync(request.RefreshToken);
