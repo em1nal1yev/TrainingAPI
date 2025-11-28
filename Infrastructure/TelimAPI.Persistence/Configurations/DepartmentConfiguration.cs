@@ -16,6 +16,7 @@ namespace TelimAPI.Persistence.Configurations
             var fixedDate = new DateTime(2025, 1, 1, 0, 0, 0, DateTimeKind.Utc);
 
             
+
             var aliMehkemeId = Guid.Parse("11111111-1111-1111-1111-111111111111");
             var apellyasiyaMehkemesiId = Guid.Parse("22222222-2222-2222-2222-222222222222");
             var inzibatiMehkemeId = Guid.Parse("33333333-3333-3333-3333-333333333333");

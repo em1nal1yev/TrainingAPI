@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("TelimAPI.Persistence")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+62924bb1c9a7b98bea46185b32a1f07b1122f525")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+ae1c14225e4546d08c2cc454d459d608bed2ba26")]
 [assembly: System.Reflection.AssemblyProductAttribute("TelimAPI.Persistence")]
 [assembly: System.Reflection.AssemblyTitleAttribute("TelimAPI.Persistence")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

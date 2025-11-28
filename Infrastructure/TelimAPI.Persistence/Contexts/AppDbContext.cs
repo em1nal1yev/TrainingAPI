@@ -97,8 +97,6 @@ namespace TelimAPI.Persistence.Contexts
                 .WithOne()
                 .HasForeignKey<TrainingFeedback>(tf => tf.TrainingParticipantId);
 
-           
-            
         }
 
 

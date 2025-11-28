@@ -30,6 +30,18 @@ namespace TelimAPI.Persistence.Services
 
         public async Task<AuthResult> RegisterUserAsync(RegisterDto dto, string roleName)
         {
+
+            var existingUser = await _userManager.FindByEmailAsync(dto.Email);
+
+            if (existingUser != null)
+            {
+                return new AuthResult
+                {
+                    Succeeded = false,
+                    Errors = new[] { "Bu e-poçt ünvanı artıq qeydiyyatdan keçib." }
+                };
+            }
+
             var user = new User
             {
                 UserName = dto.Email,
