@@ -25,5 +25,7 @@ namespace TelimAPI.Application.Repositories
 
         Task<TrainingFeedback?> GetFeedbackByParticipantIdAsync(Guid participantId);
         Task AddFeedbackAsync(TrainingFeedback feedback);
+        Task<IEnumerable<TrainingSession>> GetSessionsByTrainingIdAsync(Guid trainingId);
+        Task AddTrainingSessionAsync(TrainingSession session);
     }
 }

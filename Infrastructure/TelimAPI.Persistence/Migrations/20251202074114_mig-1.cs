@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace TelimAPI.Persistence.Migrations
 {
     /// <inheritdoc />
-    public partial class mig_1 : Migration
+    public partial class mig1 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -115,6 +115,28 @@ namespace TelimAPI.Persistence.Migrations
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_TrainingCourt_Trainings_TrainingId",
+                        column: x => x.TrainingId,
+                        principalTable: "Trainings",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "TrainingSessions",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    TrainingId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    StartTime = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    EndTime = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_TrainingSessions", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_TrainingSessions_Trainings_TrainingId",
                         column: x => x.TrainingId,
                         principalTable: "Trainings",
                         principalColumn: "Id",
@@ -295,6 +317,34 @@ namespace TelimAPI.Persistence.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "SessionAttendances",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    TrainingSessionId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    IsPresent = table.Column<bool>(type: "bit", nullable: false),
+                    JoinedTime = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_SessionAttendances", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_SessionAttendances_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_SessionAttendances_TrainingSessions_TrainingSessionId",
+                        column: x => x.TrainingSessionId,
+                        principalTable: "TrainingSessions",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "TrainingParticipants",
                 columns: table => new
                 {
@@ -438,6 +488,16 @@ namespace TelimAPI.Persistence.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_SessionAttendances_TrainingSessionId",
+                table: "SessionAttendances",
+                column: "TrainingSessionId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_SessionAttendances_UserId",
+                table: "SessionAttendances",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_TrainingCourt_CourtId",
                 table: "TrainingCourt",
                 column: "CourtId");
@@ -462,6 +522,11 @@ namespace TelimAPI.Persistence.Migrations
                 name: "IX_TrainingParticipants_UserId",
                 table: "TrainingParticipants",
                 column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_TrainingSessions_TrainingId",
+                table: "TrainingSessions",
+                column: "TrainingId");
         }
 
         /// <inheritdoc />
@@ -486,6 +551,9 @@ namespace TelimAPI.Persistence.Migrations
                 name: "RefreshTokens");
 
             migrationBuilder.DropTable(
+                name: "SessionAttendances");
+
+            migrationBuilder.DropTable(
                 name: "TrainingCourt");
 
             migrationBuilder.DropTable(
@@ -496,6 +564,9 @@ namespace TelimAPI.Persistence.Migrations
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
+
+            migrationBuilder.DropTable(
+                name: "TrainingSessions");
 
             migrationBuilder.DropTable(
                 name: "TrainingParticipants");

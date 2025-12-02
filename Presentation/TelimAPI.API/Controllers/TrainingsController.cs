@@ -34,6 +34,37 @@ namespace TelimAPI.API.Controllers
             return Ok(training);
         }
 
+        [HttpPost("create-session")]
+        public async Task<IActionResult> CreateTrainingSession([FromBody] TrainingSessionCreateDto dto)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            
+            var createdSession = await _trainingService.CreateSessionAsync(dto);
+
+            
+            return CreatedAtAction(
+                nameof(GetTrainingSessionsByTrainingId), 
+                new { trainingId = createdSession.Id },
+                createdSession
+            );
+        }
+
+        [HttpGet("GetSessions")]
+        public async Task<IActionResult> GetTrainingSessionsByTrainingId(Guid trainingId)
+        {
+            var sessions = await _trainingService.GetSessionsByTrainingIdAsync(trainingId);
+            if (sessions == null || !sessions.Any())
+            {
+                return NotFound($"Training with ID {trainingId} has no sessions or training not found.");
+            }
+            return Ok(sessions);
+        }
+
+
         [HttpPost("create")]
         [Authorize(Roles = "Trainer, Admin")]
         public async Task<IActionResult> Create([FromBody] TrainingCreateDto dto)

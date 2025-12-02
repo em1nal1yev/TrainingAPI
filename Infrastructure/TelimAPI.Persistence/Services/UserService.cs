@@ -76,11 +76,7 @@ namespace TelimAPI.Persistence.Services
                 throw new Exception("Training date is not set.");
 
             var now = DateTime.UtcNow; 
-            var joinStart = training.Date.Value.AddMinutes(-10); 
-            var joinEnd = training.Date.Value.AddMinutes(20); 
-
-            if (now < joinStart || now > joinEnd)
-                throw new Exception("You can join the training only from 10 minutes before to 20 minutes after the start.");
+            
 
 
 

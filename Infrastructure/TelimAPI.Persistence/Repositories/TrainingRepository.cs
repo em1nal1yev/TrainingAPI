@@ -41,6 +41,8 @@ namespace TelimAPI.Persistence.Repositories
 
         }
 
+       
+
         public async Task AddAsync(Training training)
         {
             await _context.Trainings.AddAsync(training);
@@ -89,6 +91,20 @@ namespace TelimAPI.Persistence.Repositories
         public async Task AddFeedbackAsync(TrainingFeedback feedback)
         {
             await _context.TrainingFeedback.AddAsync(feedback);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task<IEnumerable<TrainingSession>> GetSessionsByTrainingIdAsync(Guid trainingId)
+        {
+                return await _context.TrainingSessions
+                    .Where(s => s.TrainingId == trainingId)
+                    .Include(s => s.Attendances) 
+                    .ToListAsync();
+        }
+
+        public async Task AddTrainingSessionAsync(TrainingSession session)
+        {
+            await _context.TrainingSessions.AddAsync(session);
             await _context.SaveChangesAsync();
         }
     }

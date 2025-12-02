@@ -133,6 +133,22 @@
   },
   {
     "ContainingType": "TelimAPI.API.Controllers.TrainingsController",
+    "Method": "CreateTrainingSession",
+    "RelativePath": "api/Trainings/create-session",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "dto",
+        "Type": "TelimAPI.Application.DTOs.Training.TrainingSessionCreateDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "TelimAPI.API.Controllers.TrainingsController",
     "Method": "Delete",
     "RelativePath": "api/Trainings/delete{id}",
     "HttpMethod": "DELETE",
@@ -169,6 +185,22 @@
         "Name": "id",
         "Type": "System.Guid",
         "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "TelimAPI.API.Controllers.TrainingsController",
+    "Method": "GetTrainingSessionsByTrainingId",
+    "RelativePath": "api/Trainings/GetSessions",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "trainingId",
+        "Type": "System.Guid",
+        "IsRequired": false
       }
     ],
     "ReturnTypes": []

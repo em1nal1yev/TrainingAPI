@@ -13,6 +13,8 @@ namespace TelimAPI.Domain.Entities
         public string? Description { get; set; }
         public DateTime? Date { get; set; }
 
+        public ICollection<TrainingSession>? Sessions { get; set; }
+
         public ICollection<TrainingCourt>? TrainingCourts { get; set; }
         public ICollection<TrainingDepartment>? TrainingDepartments { get; set; }
 

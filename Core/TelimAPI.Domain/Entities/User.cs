@@ -19,6 +19,8 @@ namespace TelimAPI.Domain.Entities
         public Guid DepartmentId { get; set; }
         public Department? Department { get; set; }
 
+        public ICollection<SessionAttendance>? SessionAttendances { get; set; }
+
         public ICollection<TrainingParticipant>? TrainingParticipants { get; set; }
         public DateTime CreatedDate { get; set; } = DateTime.UtcNow;
     }

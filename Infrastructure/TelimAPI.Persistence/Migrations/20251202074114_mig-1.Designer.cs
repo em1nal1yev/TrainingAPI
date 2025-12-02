@@ -12,8 +12,8 @@ using TelimAPI.Persistence.Contexts;
 namespace TelimAPI.Persistence.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20251127061525_mig_1")]
-    partial class mig_1
+    [Migration("20251202074114_mig-1")]
+    partial class mig1
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -368,6 +368,36 @@ namespace TelimAPI.Persistence.Migrations
                     b.ToTable("RefreshTokens");
                 });
 
+            modelBuilder.Entity("TelimAPI.Domain.Entities.SessionAttendance", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsPresent")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime?>("JoinedTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("TrainingSessionId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TrainingSessionId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("SessionAttendances");
+                });
+
             modelBuilder.Entity("TelimAPI.Domain.Entities.Training", b =>
                 {
                     b.Property<Guid>("Id")
@@ -487,6 +517,35 @@ namespace TelimAPI.Persistence.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("TrainingParticipants");
+                });
+
+            modelBuilder.Entity("TelimAPI.Domain.Entities.TrainingSession", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("EndTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("StartTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("TrainingId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TrainingId");
+
+                    b.ToTable("TrainingSessions");
                 });
 
             modelBuilder.Entity("TelimAPI.Domain.Entities.User", b =>
@@ -647,6 +706,25 @@ namespace TelimAPI.Persistence.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("TelimAPI.Domain.Entities.SessionAttendance", b =>
+                {
+                    b.HasOne("TelimAPI.Domain.Entities.TrainingSession", "TrainingSession")
+                        .WithMany("Attendances")
+                        .HasForeignKey("TrainingSessionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("TelimAPI.Domain.Entities.User", "User")
+                        .WithMany("SessionAttendances")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("TrainingSession");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("TelimAPI.Domain.Entities.TrainingCourt", b =>
                 {
                     b.HasOne("TelimAPI.Domain.Entities.Court", "Court")
@@ -715,6 +793,17 @@ namespace TelimAPI.Persistence.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("TelimAPI.Domain.Entities.TrainingSession", b =>
+                {
+                    b.HasOne("TelimAPI.Domain.Entities.Training", "Training")
+                        .WithMany("Sessions")
+                        .HasForeignKey("TrainingId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Training");
+                });
+
             modelBuilder.Entity("TelimAPI.Domain.Entities.User", b =>
                 {
                     b.HasOne("TelimAPI.Domain.Entities.Court", "Court")
@@ -754,13 +843,22 @@ namespace TelimAPI.Persistence.Migrations
                 {
                     b.Navigation("Participants");
 
+                    b.Navigation("Sessions");
+
                     b.Navigation("TrainingCourts");
 
                     b.Navigation("TrainingDepartments");
                 });
 
+            modelBuilder.Entity("TelimAPI.Domain.Entities.TrainingSession", b =>
+                {
+                    b.Navigation("Attendances");
+                });
+
             modelBuilder.Entity("TelimAPI.Domain.Entities.User", b =>
                 {
+                    b.Navigation("SessionAttendances");
+
                     b.Navigation("TrainingParticipants");
                 });
 #pragma warning restore 612, 618

@@ -160,6 +160,8 @@ namespace TelimAPI.Persistence.Services
 
         }
 
+       
+
         // court ve department null gelerse deyisilmir count 0olarsa hamsi olur
         public async Task UpdateAsync(TrainingUpdateDto dto)
         {
@@ -301,7 +303,43 @@ namespace TelimAPI.Persistence.Services
             await _trainingRepository.DeleteAsync(id);
         }
 
+        public async Task<List<TrainingSessionGetDto>> GetSessionsByTrainingIdAsync(Guid trainingId)
+        {
+            var sessions = await _trainingRepository.GetSessionsByTrainingIdAsync(trainingId);
 
+            return sessions.Select(s => new TrainingSessionGetDto(
+                s.Id,
+                s.StartTime, 
+                s.EndTime,
+                s.Attendances?.Count ?? 0,
+                s.Attendances?.Count(a => a.IsPresent) ?? 0
+            )).ToList();
+        }
+
+        public async Task<TrainingSessionGetDto> CreateSessionAsync(TrainingSessionCreateDto sessionDto)
+        {
+            
+            var sessionEntity = new TrainingSession
+            {
+                TrainingId = sessionDto.TrainingId,
+                Title = sessionDto.Title,
+                StartTime = sessionDto.StartTime,
+                EndTime = sessionDto.EndTime
+                
+            };
+
+            
+            await _trainingRepository.AddTrainingSessionAsync(sessionEntity);
+
+            
+            return new TrainingSessionGetDto(
+                sessionEntity.Id,
+                sessionEntity.StartTime,
+                sessionEntity.EndTime,
+                0, 
+                0
+            );
+        }
     }
 }
               

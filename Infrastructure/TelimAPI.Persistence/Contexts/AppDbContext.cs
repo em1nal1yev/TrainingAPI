@@ -21,6 +21,8 @@ namespace TelimAPI.Persistence.Contexts
         public DbSet<TrainingParticipant> TrainingParticipants { get; set; }
         public DbSet<TrainingFeedback> TrainingFeedback { get; set; }
         public DbSet<RefreshToken> RefreshTokens { get; set; }
+        public DbSet<TrainingSession> TrainingSessions { get; set; }
+        public DbSet<SessionAttendance> SessionAttendances { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -96,7 +98,22 @@ namespace TelimAPI.Persistence.Contexts
                 .HasOne(tf => tf.TrainingParticipant)
                 .WithOne()
                 .HasForeignKey<TrainingFeedback>(tf => tf.TrainingParticipantId);
+                
+            modelBuilder.Entity<TrainingSession>()
+                .HasOne(ts => ts.Training)
+                .WithMany(t => t.Sessions)
+                .HasForeignKey(ts => ts.TrainingId);
 
+            modelBuilder.Entity<SessionAttendance>()
+                .HasOne(sa => sa.TrainingSession)
+                .WithMany(ts => ts.Attendances)
+                .HasForeignKey(sa => sa.TrainingSessionId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<SessionAttendance>()
+                .HasOne(sa => sa.User)
+                .WithMany(u => u.SessionAttendances)
+                .HasForeignKey(sa => sa.UserId);
         }
 
 
