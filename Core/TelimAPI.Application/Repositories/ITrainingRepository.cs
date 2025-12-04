@@ -27,5 +27,12 @@ namespace TelimAPI.Application.Repositories
         Task AddFeedbackAsync(TrainingFeedback feedback);
         Task<IEnumerable<TrainingSession>> GetSessionsByTrainingIdAsync(Guid trainingId);
         Task AddTrainingSessionAsync(TrainingSession session);
+        Task<List<TrainingParticipant>> GetJoinedParticipantsByTrainingIdAsync(Guid trainingId);
+        Task AddRangeSessionAttendanceAsync(IEnumerable<SessionAttendance> attendances);
+        Task<SessionAttendance?> GetAttendanceBySessionAndUserAsync(Guid sessionId, Guid userId);
+        Task UpdateSessionAttendance(SessionAttendance attendance);
+        Task<TrainingSession?> GetSessionByIdAsync(Guid sessionId);
+        Task<List<SessionAttendance>> GetAllAttendancesBySessionIdAsync(Guid sessionId);
+        Task<int> SaveChangesAsync();
     }
 }

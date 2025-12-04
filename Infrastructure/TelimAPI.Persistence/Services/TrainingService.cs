@@ -305,13 +305,16 @@ namespace TelimAPI.Persistence.Services
 
         public async Task<List<TrainingSessionGetDto>> GetSessionsByTrainingIdAsync(Guid trainingId)
         {
+            var joinedParticipants = await _trainingRepository.GetJoinedParticipantsByTrainingIdAsync(trainingId);
+            var totalJoinedParticipants = joinedParticipants.Count;
+
             var sessions = await _trainingRepository.GetSessionsByTrainingIdAsync(trainingId);
 
             return sessions.Select(s => new TrainingSessionGetDto(
                 s.Id,
                 s.StartTime, 
                 s.EndTime,
-                s.Attendances?.Count ?? 0,
+                totalJoinedParticipants,
                 s.Attendances?.Count(a => a.IsPresent) ?? 0
             )).ToList();
         }
@@ -339,6 +342,162 @@ namespace TelimAPI.Persistence.Services
                 0, 
                 0
             );
+        }
+
+        public async Task AddSessionAttendanceAsync(Guid sessionId, List<SessionAttendanceDto> attendanceDtos)
+        {
+            var attendancesToInsert = new List<SessionAttendance>();
+            var attendancesToUpdate = new List<SessionAttendance>();
+
+            var session = await _trainingRepository.GetSessionByIdAsync(sessionId);
+            if (session == null)
+            {
+                throw new Exception($"Training session with ID {sessionId} not found.");
+            }
+            var trainingId = session.TrainingId;
+
+            var joinedParticipants = await _trainingRepository.GetJoinedParticipantsByTrainingIdAsync(trainingId);
+            var joinedUserIds = joinedParticipants.Select(p => p.UserId).ToHashSet();
+
+            var incomingUserIds = attendanceDtos.Select(dto => dto.UserId).Distinct();
+
+            var existingUserIds = await _userRepository.GetExistingUserIdsAsync(incomingUserIds);
+
+            foreach (var dto in attendanceDtos)
+            {
+                
+                if (!existingUserIds.Contains(dto.UserId))
+                {
+                    
+                    throw new Exception($"User with ID {dto.UserId} not found in the database.");
+                }
+
+                
+                if (joinedUserIds.Contains(dto.UserId))
+                {
+                    
+                    var existingAttendance = await _trainingRepository.GetAttendanceBySessionAndUserAsync(sessionId, dto.UserId);
+                    
+
+                    if (existingAttendance != null)
+                    {
+                        
+                        if (existingAttendance.IsPresent != dto.IsPresent)
+                        {
+                            existingAttendance.IsPresent = dto.IsPresent;
+                            existingAttendance.JoinedTime = dto.IsPresent ? (DateTime?)DateTime.UtcNow : null;
+                            attendancesToUpdate.Add(existingAttendance);
+                        }
+                    }
+                    else
+                    {
+                        attendancesToInsert.Add(new SessionAttendance
+                        {
+                            TrainingSessionId = sessionId,
+                            UserId = dto.UserId,
+                            IsPresent = dto.IsPresent,
+                            JoinedTime = dto.IsPresent ? (DateTime?)DateTime.UtcNow : null,
+                            CreatedDate = DateTime.UtcNow
+                        });
+                    }
+                }
+                else
+                {
+                    
+                    throw new Exception($"User with ID {dto.UserId} is not a registered (IsJoined=true) participant for this training.");
+                }
+                if (attendancesToInsert.Any())
+                {
+                    await _trainingRepository.AddRangeSessionAttendanceAsync(attendancesToInsert);
+                }
+
+                if (attendancesToUpdate.Any())
+                {
+                    foreach (var attendance in attendancesToUpdate)
+                    {
+                        _trainingRepository.UpdateSessionAttendance(attendance);
+                    }
+                    await _trainingRepository.SaveChangesAsync();
+                }
+            }
+
+
+        }
+
+        public async Task<List<Guid>> GetJoinedParticipantIdsAsync(Guid trainingId)
+        {
+            var participants = await _trainingRepository.GetJoinedParticipantsByTrainingIdAsync(trainingId);
+            return participants.Select(p => p.UserId).ToList();
+        }
+
+        public async Task<List<SessionParticipantDto>> GetSessionAttendanceListAsync(Guid sessionId)
+        {
+            // 1. Sessiyanı tap
+            var session = await _trainingRepository.GetSessionByIdAsync(sessionId);
+            if (session == null)
+            {
+                throw new Exception($"Training session with ID {sessionId} not found.");
+            }
+
+            var trainingId = session.TrainingId;
+
+            // 2. Təlimə qoşulmuş iştirakçıları (User məlumatları ilə) al
+            var participants = await _trainingRepository.GetJoinedParticipantsByTrainingIdAsync(trainingId);
+
+            // 3. Mövcud davamiyyət qeydlərini al (SessionAttendance modelində SessionId ilə gəlməlidir)
+            // Əgər GetSessionByIdAsync-də .Include(s => s.Attendances) istifadə olunmayıbsa, Attendance-ları ayrı alırıq.
+            // Tutaq ki, SessionAttendance-larınızı repo metodu ilə alırsınız:
+            var allAttendances = await _trainingRepository.GetAllAttendancesBySessionIdAsync(sessionId); // Bu metodu da əlavə etməlisiniz!
+            var attendanceMap = allAttendances.ToDictionary(a => a.UserId, a => a.IsPresent);
+
+            // 4. DTO-ya çevir və qaytar
+            return participants.Select(p => new SessionParticipantDto
+            {
+                UserId = p.UserId,
+                UserName = $"{p.User.Name} {p.User.Surname}", // Ad və soyadınızı User modelinə görə birləşdirin
+                IsJoined = p.IsJoined,
+                IsPresent = attendanceMap.ContainsKey(p.UserId) ? attendanceMap[p.UserId] : (bool?)null
+            }).ToList();
+        }
+
+        public async Task<SessionDetailsDto> GetSessionDetailsWithParticipantsAsync(Guid sessionId)
+        {
+            
+            var session = await _trainingRepository.GetSessionByIdAsync(sessionId);
+
+            if (session == null)
+            {
+                throw new Exception($"Training session with ID {sessionId} not found.");
+            }
+
+            var attendances = await _trainingRepository.GetAllAttendancesBySessionIdAsync(sessionId);
+            var attendanceMap = attendances.ToDictionary(a => a.UserId, a => a.IsPresent);
+            var participantsDto = session.Training.Participants
+                .Select(p => new SessionParticipantDto
+                {
+                    UserId = p.UserId,
+                    
+                    UserName = $"{p.User.Name} {p.User.Surname}",
+                    IsJoined = p.IsJoined,
+                    IsPresent = attendanceMap.ContainsKey(p.UserId) ? attendanceMap[p.UserId] : (bool?)null
+
+                })
+                
+                .Where(p => p.IsJoined == true)
+                .ToList();
+
+            
+            var sessionDetailsDto = new SessionDetailsDto
+            {
+                SessionId = session.Id,
+                Title = session.Title,
+                StartDate = session.StartTime,
+                EndDate = session.EndTime,
+                TrainingName = session.Training.Title,
+                JoinedParticipants = participantsDto
+            };
+
+            return sessionDetailsDto;
         }
     }
 }

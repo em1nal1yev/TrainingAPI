@@ -73,6 +73,14 @@ namespace TelimAPI.Persistence.Repositories
             }
         }
 
+        public async Task<HashSet<Guid>> GetExistingUserIdsAsync(IEnumerable<Guid> userIds)
+        {
+            var existingIds = await _context.Set<User>()
+                                        .Where(u => userIds.Contains(u.Id))
+                                        .Select(u => u.Id)
+                                        .ToListAsync();
 
+            return new HashSet<Guid>(existingIds);
+        }
     }
 }

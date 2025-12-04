@@ -18,5 +18,6 @@ namespace TelimAPI.Application.Repositories
         void Update(User user);
 
         Task DeleteAsync(Guid id);
+        Task<HashSet<Guid>> GetExistingUserIdsAsync(IEnumerable<Guid> userIds);
     }
 }

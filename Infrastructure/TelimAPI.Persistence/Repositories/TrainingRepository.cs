@@ -107,5 +107,52 @@ namespace TelimAPI.Persistence.Repositories
             await _context.TrainingSessions.AddAsync(session);
             await _context.SaveChangesAsync();
         }
+
+        public async Task<List<TrainingParticipant>> GetJoinedParticipantsByTrainingIdAsync(Guid trainingId)
+        {
+            return await _context.Set<TrainingParticipant>()
+                             .Include(p => p.User)
+                             .Where(p => p.TrainingId == trainingId && p.IsJoined == true)
+                             .ToListAsync();
+        }
+
+        public async Task AddRangeSessionAttendanceAsync(IEnumerable<SessionAttendance> attendances)
+        {
+            await _context.Set<SessionAttendance>().AddRangeAsync(attendances);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task<SessionAttendance?> GetAttendanceBySessionAndUserAsync(Guid sessionId, Guid userId)
+        {
+            return await _context.Set<SessionAttendance>()
+                                 .FirstOrDefaultAsync(a => a.TrainingSessionId == sessionId && a.UserId == userId);
+        }
+
+        public async Task UpdateSessionAttendance(SessionAttendance attendance)
+        {
+            _context.Set<SessionAttendance>().Update(attendance);
+            await _context.SaveChangesAsync(); // burda elememek daha meslehetlidi eslinde
+        }
+
+        public async Task<TrainingSession?> GetSessionByIdAsync(Guid sessionId)
+        {
+            return await _context.Set<TrainingSession>()
+                             .Include(s => s.Training)
+                                .ThenInclude(t => t.Participants.Where(p => p.IsJoined == true))
+                                    .ThenInclude(p => p.User)
+                             .FirstOrDefaultAsync(s => s.Id == sessionId);
+        }
+
+        public async Task<List<SessionAttendance>> GetAllAttendancesBySessionIdAsync(Guid sessionId)
+        {
+            return await _context.Set<SessionAttendance>()
+                             .Where(a => a.TrainingSessionId == sessionId)
+                             .ToListAsync();
+        }
+
+        public async Task<int> SaveChangesAsync()
+        {
+            return await _context.SaveChangesAsync();
+        }
     }
 }

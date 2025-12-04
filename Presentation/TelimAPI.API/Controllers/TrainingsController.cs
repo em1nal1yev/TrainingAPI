@@ -37,10 +37,7 @@ namespace TelimAPI.API.Controllers
         [HttpPost("create-session")]
         public async Task<IActionResult> CreateTrainingSession([FromBody] TrainingSessionCreateDto dto)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
+        
 
             
             var createdSession = await _trainingService.CreateSessionAsync(dto);
@@ -63,7 +60,40 @@ namespace TelimAPI.API.Controllers
             }
             return Ok(sessions);
         }
+        [HttpPost("{sessionId}/attendance")]
+        [Authorize(Roles = "Trainer, Admin")] 
+        public async Task<IActionResult> AddSessionAttendance(Guid sessionId, [FromBody] List<SessionAttendanceDto> attendanceDtos)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
 
+            try
+            {
+                await _trainingService.AddSessionAttendanceAsync(sessionId, attendanceDtos);
+                return Ok(new { Message = "Attendance successfully recorded." });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { Message = ex.Message });
+            }
+        }
+        [HttpGet("sessions/{sessionId}/details")]
+        [Authorize(Roles = "Trainer, Admin")] 
+        public async Task<IActionResult> GetSessionDetails(Guid sessionId)
+        {
+            try
+            {
+                var details = await _trainingService.GetSessionDetailsWithParticipantsAsync(sessionId);
+                return Ok(details);
+            }
+            catch (Exception ex)
+            {
+                
+                return NotFound(new { Message = ex.Message });
+            }
+        }
 
         [HttpPost("create")]
         [Authorize(Roles = "Trainer, Admin")]
