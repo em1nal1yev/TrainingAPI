@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TelimAPI.Domain.Entities.Common;
+using TelimAPI.Domain.Enums;
 
 namespace TelimAPI.Domain.Entities
 {
@@ -11,8 +12,9 @@ namespace TelimAPI.Domain.Entities
     {
         public string? Title { get; set; }
         public string? Description { get; set; }
-        public DateTime? Date { get; set; }
-
+        public DateTime? StartDate { get; set; }
+        public DateTime? EndDate { get; set; }
+        public TrainingStatus Status { get; set; } = TrainingStatus.Draft;
         public ICollection<TrainingSession>? Sessions { get; set; }
 
         public ICollection<TrainingCourt>? TrainingCourts { get; set; }

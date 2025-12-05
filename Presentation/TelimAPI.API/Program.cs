@@ -12,7 +12,6 @@ using TelimAPI.Domain.Entities;
 using TelimAPI.Domain.Enums;
 using TelimAPI.Persistence;
 using TelimAPI.Persistence.Contexts;
-using TelimAPI.Persistence.Services.BackgroundServices;
 namespace TelimAPI.API
 {
     public class Program
@@ -123,7 +122,7 @@ namespace TelimAPI.API
                 });
             });
 
-            builder.Services.AddHostedService<TrainingCleanupService>();
+            //builder.Services.AddHostedService<TrainingCleanupService>();
 
             var app = builder.Build();
 

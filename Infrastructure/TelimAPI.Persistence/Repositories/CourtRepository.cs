@@ -38,5 +38,12 @@ namespace TelimAPI.Persistence.Repositories
                     .ThenInclude (c => c.Training)
                 .FirstOrDefaultAsync(x => x.Id == id);
         }
+
+        public async Task<List<Court>> GetByIdsAsync(IEnumerable<Guid> ids)
+        {
+            return await _context.Courts
+                .Where(c => ids.Contains(c.Id))
+                .ToListAsync();
+        }
     }
 }

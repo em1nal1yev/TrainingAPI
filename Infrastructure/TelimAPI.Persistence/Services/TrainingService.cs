@@ -4,38 +4,45 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TelimAPI.Application.DTOs.Training;
+using TelimAPI.Application.Helper;
 using TelimAPI.Application.Repositories;
 using TelimAPI.Application.Services;
 using TelimAPI.Domain.Entities;
+using TelimAPI.Domain.Enums;
 
 namespace TelimAPI.Persistence.Services
 {
     public class TrainingService : ITrainingService
     {
+        IIdValidationService _idValidator;
         private readonly ITrainingRepository _trainingRepository;
         private readonly ICourtRepository _courtRepository;
         private readonly IDepartmentRepository _departmentRepository;
         private readonly IUserRepository _userRepository;
 
-        public TrainingService(ITrainingRepository trainingRepository, ICourtRepository courtRepository, IDepartmentRepository departmentRepository, IUserRepository userRepository)
+        public TrainingService(ITrainingRepository trainingRepository, ICourtRepository courtRepository, IDepartmentRepository departmentRepository, IUserRepository userRepository, IIdValidationService idValidator)
         {
             _trainingRepository = trainingRepository;
             _courtRepository = courtRepository;
             _departmentRepository = departmentRepository;
             _userRepository = userRepository;
+            _idValidator = idValidator;
         }
 
         public async Task<List<TrainingGetDto>> GetAllAsync()
         {
             var trainings = await _trainingRepository.GetAllAsync();
-            return trainings.Select(t => new TrainingGetDto(
+            var filtered = trainings.Where(x => x.Status != TrainingStatus.Draft);
+
+            return filtered.Select(t => new TrainingGetDto(
                 t.Id,
                 t.Title,
                 t.Description,
-                t.Date,
+                t.StartDate,
+                t.EndDate,
                 t.TrainingCourts?.Select(c => c.Court.Name ?? "").ToList(),
                 t.TrainingDepartments?.Select(d => d.Department.Name ?? "").ToList()
-                )).ToList();
+            )).ToList();
         }
 
         public async Task<TrainingGetDto?> GetByIdAsync(Guid id)
@@ -50,19 +57,33 @@ namespace TelimAPI.Persistence.Services
                 training.Id,
                 training.Title,
                 training.Description,
-                training.Date,
+                training.StartDate,
+                training.EndDate,
                 training.TrainingCourts?.Select(c => c.Court.Name ?? "").ToList(),
                 training.TrainingDepartments?.Select(d => d.Department.Name ?? "").ToList());
 
         }
         public async Task CreateAsync(TrainingCreateDto dto)
         {
+
+            await _idValidator.ValidateIdsAsync(
+                dto.CourtIds,
+                _courtRepository.GetByIdsAsync,
+                "One or more courts not found");
+
+            await _idValidator.ValidateIdsAsync(
+                dto.DepartmentIds,
+                _departmentRepository.GetByIdsAsync,
+                "One or more departments not found");
+
+
             var training = new Training
             {
                 Id = Guid.NewGuid(),
                 Title = dto.Title,
                 Description = dto.Description,
-                Date = dto.Date,
+                StartDate = dto.StartDate,
+                EndDate = dto.EndDate,
                 CreatedDate = DateTime.UtcNow,
                 
             };
@@ -173,9 +194,10 @@ namespace TelimAPI.Persistence.Services
             
             if (dto.Title != null) training.Title = dto.Title;
             if (dto.Description != null) training.Description = dto.Description;
-            if (dto.Date.HasValue) training.Date = dto.Date.Value;
+            if (dto.StartDate.HasValue) training.StartDate = dto.StartDate.Value;
+            if (dto.EndDate.HasValue) training.EndDate = dto.EndDate.Value;
 
-            
+
             var allCourts = await _courtRepository.GetAllAsync();
             var allDepartments = await _departmentRepository.GetAllAsync();
             var allUsers = await _userRepository.GetAllAsync();
@@ -321,7 +343,14 @@ namespace TelimAPI.Persistence.Services
 
         public async Task<TrainingSessionGetDto> CreateSessionAsync(TrainingSessionCreateDto sessionDto)
         {
-            
+            var training = await _trainingRepository.GetByIdAsync(sessionDto.TrainingId);
+
+            if (training == null)
+                throw new Exception("Training not found.");
+
+            if (sessionDto.StartTime < training.StartDate || sessionDto.EndTime > training.EndDate)
+                throw new Exception("Session time must be inside training date range");
+
             var sessionEntity = new TrainingSession
             {
                 TrainingId = sessionDto.TrainingId,
@@ -346,6 +375,7 @@ namespace TelimAPI.Persistence.Services
 
         public async Task AddSessionAttendanceAsync(Guid sessionId, List<SessionAttendanceDto> attendanceDtos)
         {
+
             var attendancesToInsert = new List<SessionAttendance>();
             var attendancesToUpdate = new List<SessionAttendance>();
 
@@ -354,6 +384,9 @@ namespace TelimAPI.Persistence.Services
             {
                 throw new Exception($"Training session with ID {sessionId} not found.");
             }
+            var deadline = session.EndTime.AddDays(1);
+            if (DateTime.UtcNow > deadline)
+                throw new Exception("Attendance submission time is expired.");
             var trainingId = session.TrainingId;
 
             var joinedParticipants = await _trainingRepository.GetJoinedParticipantsByTrainingIdAsync(trainingId);
@@ -498,6 +531,70 @@ namespace TelimAPI.Persistence.Services
             };
 
             return sessionDetailsDto;
+        }
+
+        public async Task<List<TrainingGetDto>> GetExpiredAsync()
+        {
+            var trainings = await _trainingRepository.GetExpiredAsync();
+
+            return trainings.Select(t => new TrainingGetDto(
+                t.Id,
+                t.Title,
+                t.Description,
+                t.StartDate,
+                t.EndDate,
+                t.TrainingCourts?.Select(c => c.Court.Name ?? "").ToList(),
+                t.TrainingDepartments?.Select(d => d.Department.Name ?? "").ToList()
+            )).ToList();
+        }
+
+        public async Task<List<TrainingGetDto>> GetDraftsAsync()
+        {
+            var trainings = await _trainingRepository.GetDraftsAsync();
+
+            return trainings.Select(t => new TrainingGetDto(
+                t.Id,
+                t.Title,
+                t.Description,
+                t.StartDate,
+                t.EndDate,
+                t.TrainingCourts?.Select(c => c.Court.Name ?? "").ToList(),
+                t.TrainingDepartments?.Select(d => d.Department.Name ?? "").ToList()
+            )).ToList();
+        }
+
+        public async Task<List<TrainingOngoingWithUsersDto>> GetOngoingAsync()
+        {
+            var trainings = await _trainingRepository.GetOngoingAsync();
+
+            return trainings.Select(t => new TrainingOngoingWithUsersDto
+            {
+                Id = t.Id,
+                Title = t.Title,
+                Users = t.Participants
+        .Where(p => p.IsJoined)
+        .Select(p => new UserSimpleDto
+        {
+            Id = p.UserId,
+            Name = p.User.Name
+        }).ToList()
+            }).ToList();
+        }
+
+        public async Task<bool> ApproveAsync(Guid id)
+        {
+            var training = await _trainingRepository.GetByIdAsync(id);
+
+            if (training == null)
+                throw new Exception("Training not found");
+
+            if (training.Status != TrainingStatus.Draft)
+                throw new Exception("Training is not in draft state");
+
+            training.Status = TrainingStatus.Pending;
+
+            await _trainingRepository.SaveAsync();
+            return true;
         }
     }
 }

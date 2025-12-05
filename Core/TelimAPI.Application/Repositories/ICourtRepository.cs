@@ -12,5 +12,6 @@ namespace TelimAPI.Application.Repositories
         Task<List<Court>> GetAllAsync();
 
         Task<Court?> GetByIdAsync(Guid id);
+        Task<List<Court>> GetByIdsAsync(IEnumerable<Guid> ids);
     }
 }

@@ -55,6 +55,13 @@ namespace TelimAPI.Persistence.Repositories
                 .FirstOrDefaultAsync(d => d.Id == id);
         }
 
+        public async Task<List<Department>> GetByIdsAsync(IEnumerable<Guid> ids)
+        {
+            return await _context.Departments
+                .Where(d => ids.Contains(d.Id))
+                .ToListAsync();
+        }
+
         public void Update(Department department)
         {
             _context.Update(department);

@@ -12,6 +12,9 @@ namespace TelimAPI.Application.Repositories
         Task<List<Training>> GetAllAsync();
 
         Task<Training?> GetByIdAsync(Guid id);
+        Task<List<Training>> GetExpiredAsync();
+        Task<List<Training>> GetDraftsAsync();
+        Task<List<Training>> GetOngoingAsync();
 
         Task AddAsync(Training training);
 
@@ -25,6 +28,7 @@ namespace TelimAPI.Application.Repositories
 
         Task<TrainingFeedback?> GetFeedbackByParticipantIdAsync(Guid participantId);
         Task AddFeedbackAsync(TrainingFeedback feedback);
+        Task<int> SaveChangesAsync();
         Task<IEnumerable<TrainingSession>> GetSessionsByTrainingIdAsync(Guid trainingId);
         Task AddTrainingSessionAsync(TrainingSession session);
         Task<List<TrainingParticipant>> GetJoinedParticipantsByTrainingIdAsync(Guid trainingId);
@@ -33,6 +37,6 @@ namespace TelimAPI.Application.Repositories
         Task UpdateSessionAttendance(SessionAttendance attendance);
         Task<TrainingSession?> GetSessionByIdAsync(Guid sessionId);
         Task<List<SessionAttendance>> GetAllAttendancesBySessionIdAsync(Guid sessionId);
-        Task<int> SaveChangesAsync();
+        Task SaveAsync();
     }
 }

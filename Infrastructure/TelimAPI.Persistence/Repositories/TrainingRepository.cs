@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using TelimAPI.Application.Repositories;
 using TelimAPI.Domain.Entities;
+using TelimAPI.Domain.Enums;
 using TelimAPI.Persistence.Contexts;
 
 namespace TelimAPI.Persistence.Repositories
@@ -41,7 +42,23 @@ namespace TelimAPI.Persistence.Repositories
 
         }
 
-       
+        public async Task<List<Training>> GetDraftsAsync()
+        {
+            return await _context.Trainings
+                .Where(x => x.Status == TrainingStatus.Draft)
+                .ToListAsync();
+        }
+
+        public async Task<List<Training>> GetOngoingAsync()
+        {
+            var now = DateTime.UtcNow;
+
+            return await _context.Trainings
+                .Include(x => x.Participants)
+                    .ThenInclude(p => p.User)
+                .Where(t => t.Status == TrainingStatus.OnGoing)
+                .ToListAsync();
+        }
 
         public async Task AddAsync(Training training)
         {
@@ -153,6 +170,21 @@ namespace TelimAPI.Persistence.Repositories
         public async Task<int> SaveChangesAsync()
         {
             return await _context.SaveChangesAsync();
+        }
+
+        public async Task<List<Training>> GetExpiredAsync()
+        {
+            return await _context.Trainings
+                .Include(x => x.TrainingCourts)
+                    .ThenInclude(x => x.Court)
+                .Include(x => x.TrainingDepartments)
+                    .ThenInclude(x => x.Department)
+                .Where(t => t.EndDate < DateTime.UtcNow)
+                .ToListAsync();
+        }
+        public async Task SaveAsync()
+        {
+            await _context.SaveChangesAsync();
         }
     }
 }

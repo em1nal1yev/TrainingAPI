@@ -10,7 +10,8 @@ namespace TelimAPI.Application.DTOs.Training
     (
         string Title,
         string Description,
-        DateTime Date,
+        DateTime StartDate,
+        DateTime EndDate,
         List<Guid>? CourtIds,
         List<Guid>? DepartmentIds
     );
@@ -19,7 +20,8 @@ namespace TelimAPI.Application.DTOs.Training
         Guid Id,
         string? Title,
         string? Description,
-        DateTime? Date,
+        DateTime? StartDate,
+        DateTime? EndDate,
         List<Guid>? CourtIds,
         List<Guid>? DepartmentIds
     );
@@ -28,7 +30,8 @@ namespace TelimAPI.Application.DTOs.Training
        Guid Id,
        string? Title,
        string? Description,
-       DateTime? Date,
+       DateTime? StartDate,
+       DateTime? EndDate,
        List<string>? Courts,
        List<string>? Departments
    );

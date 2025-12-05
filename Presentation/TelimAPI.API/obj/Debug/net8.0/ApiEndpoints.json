@@ -117,6 +117,22 @@
   },
   {
     "ContainingType": "TelimAPI.API.Controllers.TrainingsController",
+    "Method": "Approve",
+    "RelativePath": "api/Trainings/{id}/approve",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Guid",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "TelimAPI.API.Controllers.TrainingsController",
     "Method": "AddSessionAttendance",
     "RelativePath": "api/Trainings/{sessionId}/attendance",
     "HttpMethod": "POST",
@@ -186,6 +202,26 @@
   },
   {
     "ContainingType": "TelimAPI.API.Controllers.TrainingsController",
+    "Method": "GetDrafts",
+    "RelativePath": "api/Trainings/drafts",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "TelimAPI.API.Controllers.TrainingsController",
+    "Method": "GetExpired",
+    "RelativePath": "api/Trainings/expired",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "TelimAPI.API.Controllers.TrainingsController",
     "Method": "GetAll",
     "RelativePath": "api/Trainings/get-all",
     "HttpMethod": "GET",
@@ -224,6 +260,26 @@
         "IsRequired": false
       }
     ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "TelimAPI.API.Controllers.TrainingsController",
+    "Method": "GetOngoing",
+    "RelativePath": "api/Trainings/ongoing",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "TelimAPI.API.Controllers.TrainingsController",
+    "Method": "GetOngoingWithUsers",
+    "RelativePath": "api/Trainings/ongoingTrainings",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
     "ReturnTypes": []
   },
   {

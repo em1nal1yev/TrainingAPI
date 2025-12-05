@@ -72,8 +72,8 @@ namespace TelimAPI.Persistence.Services
             if (training == null)
                 throw new Exception("Training not found.");
 
-            if (training.Date == null)
-                throw new Exception("Training date is not set.");
+            if (training.StartDate < DateTime.UtcNow)
+                throw new Exception("It is too late to join this training");
 
             var now = DateTime.UtcNow; 
             

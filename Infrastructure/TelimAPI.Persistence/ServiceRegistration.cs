@@ -7,9 +7,11 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using TelimAPI.Application.Helper;
 using TelimAPI.Application.Repositories;
 using TelimAPI.Application.Services;
 using TelimAPI.Persistence.Contexts;
+using TelimAPI.Persistence.Helper;
 using TelimAPI.Persistence.Repositories;
 using TelimAPI.Persistence.Services;
 
@@ -31,6 +33,7 @@ namespace TelimAPI.Persistence
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<ITokenService, TokenService>();
             services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
+            services.AddScoped<IIdValidationService, IdValidationService>();
 
         }
     }

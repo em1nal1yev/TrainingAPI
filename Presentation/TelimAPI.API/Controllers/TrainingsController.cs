@@ -33,7 +33,44 @@ namespace TelimAPI.API.Controllers
             if (training == null) return NotFound("Training not found");
             return Ok(training);
         }
+        [Authorize(Roles = "Trainer, Admin")]
+        [HttpGet("expired")]
+        public async Task<IActionResult> GetExpired()
+        {
+            var data = await _trainingService.GetExpiredAsync();
+            return Ok(data);
+        }
+        [Authorize(Roles = "Admin")]
+        [HttpGet("ongoingTrainings")]
+        public async Task<IActionResult> GetOngoingWithUsers()
+        {
+            var result = await _trainingService.GetOngoingAsync();
+            return Ok(result);
+        }
+        [Authorize(Roles = "Admin")]
+        [HttpGet("drafts")]
+        public async Task<IActionResult> GetDrafts()
+        {
+            var result = await _trainingService.GetDraftsAsync();
+            return Ok(result);
+        }
+        [Authorize(Roles = "Admin")]
+        [HttpPut("{id}/approve")]
+        public async Task<IActionResult> Approve(Guid id)
+        {
+            await _trainingService.ApproveAsync(id);
+            return Ok();
+        }
 
+        [Authorize(Roles ="Admin")]
+        [HttpGet("ongoing")]
+        public async Task<IActionResult> GetOngoing()
+        {
+            var result = await _trainingService.GetOngoingAsync();
+            return Ok(result);
+        }
+
+        [Authorize(Roles = "Trainer, Admin")]
         [HttpPost("create-session")]
         public async Task<IActionResult> CreateTrainingSession([FromBody] TrainingSessionCreateDto dto)
         {
