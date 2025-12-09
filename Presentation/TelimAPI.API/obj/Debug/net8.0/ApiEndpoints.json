@@ -154,6 +154,38 @@
   },
   {
     "ContainingType": "TelimAPI.API.Controllers.TrainingsController",
+    "Method": "GetHighAttendance",
+    "RelativePath": "api/Trainings/{trainingId}/high-attendance",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "trainingId",
+        "Type": "System.Guid",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "TelimAPI.API.Controllers.TrainingsController",
+    "Method": "GetLowAttendance",
+    "RelativePath": "api/Trainings/{trainingId}/low-attendance",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "trainingId",
+        "Type": "System.Guid",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "TelimAPI.API.Controllers.TrainingsController",
     "Method": "Create",
     "RelativePath": "api/Trainings/create",
     "HttpMethod": "POST",

@@ -62,14 +62,6 @@ namespace TelimAPI.API.Controllers
             return Ok();
         }
 
-        [Authorize(Roles ="Admin")]
-        [HttpGet("ongoing")]
-        public async Task<IActionResult> GetOngoing()
-        {
-            var result = await _trainingService.GetOngoingAsync();
-            return Ok(result);
-        }
-
         [Authorize(Roles = "Trainer, Admin")]
         [HttpPost("create-session")]
         public async Task<IActionResult> CreateTrainingSession([FromBody] TrainingSessionCreateDto dto)
@@ -130,6 +122,18 @@ namespace TelimAPI.API.Controllers
                 
                 return NotFound(new { Message = ex.Message });
             }
+        }
+        [HttpGet("{trainingId}/high-attendance")]
+        public async Task<IActionResult> GetHighAttendance(Guid trainingId)
+        {
+            var result = await _trainingService.GetHighAttendanceAsync(trainingId);
+            return Ok(result);
+        }
+        [HttpGet("{trainingId}/low-attendance")]
+        public async Task<IActionResult> GetLowAttendance(Guid trainingId)
+        {
+            var result = await _trainingService.GetLowAttendanceAsync(trainingId);
+            return Ok(result);
         }
 
         [HttpPost("create")]

@@ -25,6 +25,8 @@ namespace TelimAPI.Application.Services
         Task AddSessionAttendanceAsync(Guid sessionId, List<SessionAttendanceDto> attendanceDtos);
         Task<List<Guid>> GetJoinedParticipantIdsAsync(Guid trainingId);
         Task<SessionDetailsDto> GetSessionDetailsWithParticipantsAsync(Guid sessionId);
+        Task<List<HighAttendanceDto>> GetHighAttendanceAsync(Guid trainingId);
+        Task<List<HighAttendanceDto>> GetLowAttendanceAsync(Guid trainingId);
 
     }
 }

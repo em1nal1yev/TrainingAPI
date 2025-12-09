@@ -58,7 +58,7 @@ namespace TelimAPI.Persistence.Repositories
                     .ThenInclude(p => p.User)
                 .Where(t => t.Status == TrainingStatus.OnGoing)
                 .ToListAsync();
-        }
+        }   
 
         public async Task AddAsync(Training training)
         {
@@ -148,7 +148,7 @@ namespace TelimAPI.Persistence.Repositories
         public async Task UpdateSessionAttendance(SessionAttendance attendance)
         {
             _context.Set<SessionAttendance>().Update(attendance);
-            await _context.SaveChangesAsync(); // burda elememek daha meslehetlidi eslinde
+            await _context.SaveChangesAsync();
         }
 
         public async Task<TrainingSession?> GetSessionByIdAsync(Guid sessionId)

@@ -596,6 +596,106 @@ namespace TelimAPI.Persistence.Services
             await _trainingRepository.SaveAsync();
             return true;
         }
+
+        public async Task<List<HighAttendanceDto>> GetHighAttendanceAsync(Guid trainingId)
+        {
+            
+            var participants = await _trainingRepository.GetJoinedParticipantsByTrainingIdAsync(trainingId);
+            if (!participants.Any()) return new List<HighAttendanceDto>();
+
+            var participantUserIds = participants.Select(p => p.UserId).ToList();
+
+            
+            var sessions = await _trainingRepository.GetSessionsByTrainingIdAsync(trainingId);
+            int totalSessions = sessions.Count();
+            if (totalSessions == 0) return new List<HighAttendanceDto>();
+
+            
+            var allAttendances = new List<SessionAttendance>();
+            foreach (var session in sessions)
+            {
+                var attendances = await _trainingRepository.GetAllAttendancesBySessionIdAsync(session.Id);
+                allAttendances.AddRange(attendances);
+            }
+
+            
+            var result = new List<HighAttendanceDto>();
+
+            foreach (var participant in participants)
+            {
+                int attended = allAttendances.Count(a =>
+                    a.UserId == participant.UserId &&
+                    a.IsPresent == true
+                );
+
+                double rate = (double)attended / totalSessions * 100;
+
+                if (rate > 75) 
+                {
+                    result.Add(new HighAttendanceDto
+                    {
+                        UserId = participant.UserId,
+                        Fullname = participant.User?.Name ?? "", // səndə fullname yoxdur demişdin, boş gələcək
+                        TotalSessions = totalSessions,
+                        AttendedSessions = attended,
+                        AttendanceRate = Math.Round(rate, 2)
+                    });
+                }
+            }
+
+            return result;
+
+        }
+
+        public async Task<List<HighAttendanceDto>> GetLowAttendanceAsync(Guid trainingId)
+        {
+
+            var participants = await _trainingRepository.GetJoinedParticipantsByTrainingIdAsync(trainingId);
+            if (!participants.Any()) return new List<HighAttendanceDto>();
+
+            var participantUserIds = participants.Select(p => p.UserId).ToList();
+
+
+            var sessions = await _trainingRepository.GetSessionsByTrainingIdAsync(trainingId);
+            int totalSessions = sessions.Count();
+            if (totalSessions == 0) return new List<HighAttendanceDto>();
+
+
+            var allAttendances = new List<SessionAttendance>();
+            foreach (var session in sessions)
+            {
+                var attendances = await _trainingRepository.GetAllAttendancesBySessionIdAsync(session.Id);
+                allAttendances.AddRange(attendances);
+            }
+
+
+            var result = new List<HighAttendanceDto>();
+
+            foreach (var participant in participants)
+            {
+                int attended = allAttendances.Count(a =>
+                    a.UserId == participant.UserId &&
+                    a.IsPresent == true
+                );
+
+                double rate = (double)attended / totalSessions * 100;
+
+                if (rate < 75)
+                {
+                    result.Add(new HighAttendanceDto
+                    {
+                        UserId = participant.UserId,
+                        Fullname = participant.User?.Name ?? "", // səndə fullname yoxdur demişdin, boş gələcək
+                        TotalSessions = totalSessions,
+                        AttendedSessions = attended,
+                        AttendanceRate = Math.Round(rate, 2)
+                    });
+                }
+            }
+
+            return result;
+
+        }
     }
 }
               

@@ -19,7 +19,7 @@ namespace TelimAPI.API.Controllers
         }
 
         [HttpGet("trainings")]
-        [Authorize(Roles = "Trainer, Admin")]
+        [Authorize]
         public async Task<IActionResult> GetUserTrainings()
         {
             var result = await _userService.GetUserTrainingsAsync();
@@ -27,7 +27,7 @@ namespace TelimAPI.API.Controllers
         }
 
         [HttpPost("trainings/join")]
-        [Authorize(Roles = "Trainer, Admin")]
+        [Authorize]
         public async Task<IActionResult> JoinTraining([FromBody] JoinTrainingRequest request)
         {
             
@@ -49,7 +49,7 @@ namespace TelimAPI.API.Controllers
             }
         }
         [HttpPost("trainings/feedback")]
-        [Authorize(Roles = "Trainer, Admin")]
+        [Authorize]
         public async Task<IActionResult> SubmitFeedback([FromBody] SubmitFeedbackRequest request)
         {
             

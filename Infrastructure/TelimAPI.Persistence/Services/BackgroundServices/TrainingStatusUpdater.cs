@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Hosting;
+﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,25 +12,30 @@ namespace TelimAPI.Persistence.Services.BackgroundServices
 {
     public class TrainingStatusUpdater: BackgroundService
     {
-        private readonly ITrainingRepository _repo;
+        private readonly IServiceProvider _provider;
 
-        public TrainingStatusUpdater(ITrainingRepository repo)
+        public TrainingStatusUpdater(IServiceProvider provider)
         {
-            _repo = repo;
+            _provider = provider;
         }
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
             while (!stoppingToken.IsCancellationRequested)
             {
-                await UpdateStatuses();
-                await Task.Delay(TimeSpan.FromHours(1), stoppingToken); 
+                using (var scope = _provider.CreateScope())
+                {
+                    var repo = scope.ServiceProvider.GetRequiredService<ITrainingRepository>();
+                    await UpdateStatuses(repo);
+                }
+
+                await Task.Delay(TimeSpan.FromMinutes(1), stoppingToken);
             }
         }
-        private async Task UpdateStatuses()
+        private async Task UpdateStatuses(ITrainingRepository repo)
         {
-            var now = DateTime.UtcNow;
+            var now = DateTime.Now;
 
-            var trainings = await _repo.GetAllAsync();
+            var trainings = await repo.GetAllAsync();
 
             foreach (var t in trainings)
             {
@@ -43,7 +49,7 @@ namespace TelimAPI.Persistence.Services.BackgroundServices
                     t.Status = TrainingStatus.Completed;
             }
 
-            await _repo.SaveAsync();
+            await repo.SaveAsync();
         }
     }
 }
