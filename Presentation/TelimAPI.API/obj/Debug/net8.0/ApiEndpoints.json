@@ -296,16 +296,6 @@
   },
   {
     "ContainingType": "TelimAPI.API.Controllers.TrainingsController",
-    "Method": "GetOngoing",
-    "RelativePath": "api/Trainings/ongoing",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "TelimAPI.API.Controllers.TrainingsController",
     "Method": "GetOngoingWithUsers",
     "RelativePath": "api/Trainings/ongoingTrainings",
     "HttpMethod": "GET",

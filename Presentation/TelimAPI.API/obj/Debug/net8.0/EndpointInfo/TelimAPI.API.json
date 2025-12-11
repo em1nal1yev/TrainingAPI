@@ -309,18 +309,6 @@
         }
       }
     },
-    "/api/Trainings/ongoing": {
-      "get": {
-        "tags": [
-          "Trainings"
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
     "/api/Trainings/create-session": {
       "post": {
         "tags": [

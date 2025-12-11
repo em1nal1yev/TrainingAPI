@@ -101,14 +101,6 @@ namespace TelimAPI.API.Controllers
             });
         }
 
-        [Authorize]
-        [HttpGet("claims")]
-        public IActionResult GetUserClaims()
-        {
-            var claims = User.Claims.Select(c => new { c.Type, c.Value }).ToList();
-            return Ok(claims);                          
-        }
-
         [HttpPost("RefreshToken")]
         public async Task<IActionResult> RefreshToken([FromBody] RefreshTokenRequest request)
         {

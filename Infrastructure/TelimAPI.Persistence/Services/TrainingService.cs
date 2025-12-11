@@ -60,7 +60,8 @@ namespace TelimAPI.Persistence.Services
                 training.StartDate,
                 training.EndDate,
                 training.TrainingCourts?.Select(c => c.Court.Name ?? "").ToList(),
-                training.TrainingDepartments?.Select(d => d.Department.Name ?? "").ToList());
+                training.TrainingDepartments?.Select(d => d.Department.Name ?? "").ToList()
+            );
 
         }
         public async Task CreateAsync(TrainingCreateDto dto)
@@ -465,7 +466,6 @@ namespace TelimAPI.Persistence.Services
 
         public async Task<List<SessionParticipantDto>> GetSessionAttendanceListAsync(Guid sessionId)
         {
-            // 1. Sessiyanı tap
             var session = await _trainingRepository.GetSessionByIdAsync(sessionId);
             if (session == null)
             {
@@ -474,16 +474,16 @@ namespace TelimAPI.Persistence.Services
 
             var trainingId = session.TrainingId;
 
-            // 2. Təlimə qoşulmuş iştirakçıları (User məlumatları ilə) al
             var participants = await _trainingRepository.GetJoinedParticipantsByTrainingIdAsync(trainingId);
 
-            // 3. Mövcud davamiyyət qeydlərini al (SessionAttendance modelində SessionId ilə gəlməlidir)
-            // Əgər GetSessionByIdAsync-də .Include(s => s.Attendances) istifadə olunmayıbsa, Attendance-ları ayrı alırıq.
-            // Tutaq ki, SessionAttendance-larınızı repo metodu ilə alırsınız:
-            var allAttendances = await _trainingRepository.GetAllAttendancesBySessionIdAsync(sessionId); // Bu metodu da əlavə etməlisiniz!
+            
+            
+           
+            var allAttendances = await _trainingRepository.GetAllAttendancesBySessionIdAsync(sessionId); 
+
             var attendanceMap = allAttendances.ToDictionary(a => a.UserId, a => a.IsPresent);
 
-            // 4. DTO-ya çevir və qaytar
+            
             return participants.Select(p => new SessionParticipantDto
             {
                 UserId = p.UserId,
@@ -685,17 +685,20 @@ namespace TelimAPI.Persistence.Services
                     result.Add(new HighAttendanceDto
                     {
                         UserId = participant.UserId,
-                        Fullname = participant.User?.Name ?? "", // səndə fullname yoxdur demişdin, boş gələcək
+                        Fullname = participant.User?.Name ?? "", 
                         TotalSessions = totalSessions,
                         AttendedSessions = attended,
                         AttendanceRate = Math.Round(rate, 2)
                     });
                 }
             }
-
+            if (result.Count == 0)
+                throw new Exception("There are no students with low attendance.");
+            
             return result;
 
         }
+
     }
 }
               
