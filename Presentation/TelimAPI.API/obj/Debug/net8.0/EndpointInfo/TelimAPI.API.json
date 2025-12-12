@@ -424,6 +424,29 @@
         }
       }
     },
+    "/api/Trainings/{trainingId}/attendance": {
+      "get": {
+        "tags": [
+          "Trainings"
+        ],
+        "parameters": [
+          {
+            "name": "trainingId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/api/Trainings/{trainingId}/high-attendance": {
       "get": {
         "tags": [
@@ -540,29 +563,6 @@
         "parameters": [
           {
             "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "uuid"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/api/Trainings/{trainingId}/attendance": {
-      "get": {
-        "tags": [
-          "Trainings"
-        ],
-        "parameters": [
-          {
-            "name": "trainingId",
             "in": "path",
             "required": true,
             "schema": {

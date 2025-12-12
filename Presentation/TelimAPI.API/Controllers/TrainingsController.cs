@@ -124,6 +124,13 @@ namespace TelimAPI.API.Controllers
                 return NotFound(new { Message = ex.Message });
             }
         }
+        [HttpGet("{trainingId}/attendance")]
+        [Authorize(Roles = "Trainer, Admin")]
+        public async Task<IActionResult> GetTrainingAttendance(Guid trainingId)
+        {
+            var result = await _trainingService.GetTrainingAttendancesAsync(trainingId);
+            return Ok(result);
+        }
         [HttpGet("{trainingId}/high-attendance")]
         public async Task<IActionResult> GetHighAttendance(Guid trainingId)
         {
@@ -161,12 +168,6 @@ namespace TelimAPI.API.Controllers
             return Ok("training succcessfuly deleted");
         }
 
-        [HttpGet("{trainingId}/attendance")]
-        [Authorize(Roles = "Trainer, Admin")]
-        public async Task<IActionResult> GetTrainingAttendance(Guid trainingId)
-        {
-            var result = await _trainingService.GetTrainingAttendancesAsync(trainingId);
-            return Ok(result);
-        }
+        
     }
 }

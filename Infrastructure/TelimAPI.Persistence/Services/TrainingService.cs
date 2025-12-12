@@ -182,8 +182,6 @@ namespace TelimAPI.Persistence.Services
 
         }
 
-       
-
         // court ve department null gelerse deyisilmir count 0olarsa hamsi olur
         public async Task UpdateAsync(TrainingUpdateDto dto)
         {
@@ -318,8 +316,6 @@ namespace TelimAPI.Persistence.Services
             
             _trainingRepository.Update(training);
         }
-
-
 
         public async Task DeleteAsync(Guid id)
         {
@@ -458,40 +454,7 @@ namespace TelimAPI.Persistence.Services
 
         }
 
-        public async Task<List<Guid>> GetJoinedParticipantIdsAsync(Guid trainingId)
-        {
-            var participants = await _trainingRepository.GetJoinedParticipantsByTrainingIdAsync(trainingId);
-            return participants.Select(p => p.UserId).ToList();
-        }
 
-        public async Task<List<SessionParticipantDto>> GetSessionAttendanceListAsync(Guid sessionId)
-        {
-            var session = await _trainingRepository.GetSessionByIdAsync(sessionId);
-            if (session == null)
-            {
-                throw new Exception($"Training session with ID {sessionId} not found.");
-            }
-
-            var trainingId = session.TrainingId;
-
-            var participants = await _trainingRepository.GetJoinedParticipantsByTrainingIdAsync(trainingId);
-
-            
-            
-           
-            var allAttendances = await _trainingRepository.GetAllAttendancesBySessionIdAsync(sessionId); 
-
-            var attendanceMap = allAttendances.ToDictionary(a => a.UserId, a => a.IsPresent);
-
-            
-            return participants.Select(p => new SessionParticipantDto
-            {
-                UserId = p.UserId,
-                UserName = $"{p.User.Name} {p.User.Surname}", // Ad və soyadınızı User modelinə görə birləşdirin
-                IsJoined = p.IsJoined,
-                IsPresent = attendanceMap.ContainsKey(p.UserId) ? attendanceMap[p.UserId] : (bool?)null
-            }).ToList();
-        }
 
         public async Task<SessionDetailsDto> GetSessionDetailsWithParticipantsAsync(Guid sessionId)
         {
@@ -597,6 +560,53 @@ namespace TelimAPI.Persistence.Services
             return true;
         }
 
+        public async Task<TrainingAttendanceSummaryDto> GetTrainingAttendancesAsync(Guid trainingId)
+        {
+            var training = await _trainingRepository.GetByIdAsync(trainingId);
+
+            if (training == null)
+                throw new Exception("Training not found.");
+
+            
+            var sessions = await _trainingRepository.GetSessionsByTrainingIdAsync(trainingId);
+
+            
+            var participants = await _trainingRepository.GetJoinedParticipantsByTrainingIdAsync(trainingId);
+
+            var result = new TrainingAttendanceSummaryDto
+            {
+                TrainingId = training.Id,
+                TrainingTitle = training.Title
+            };
+
+            foreach (var session in sessions)
+            {
+                var sessionResult = new SessionAttendanceResultDto
+                {
+                    SessionId = session.Id,
+                    StartDate = session.StartTime,
+                    EndDate = session.EndTime
+                };
+
+                foreach (var participant in participants)
+                {
+                    var attendance = session.Attendances
+                        .FirstOrDefault(a => a.UserId == participant.UserId);
+
+                    sessionResult.Attendances.Add(new UserAttendanceDto
+                    {
+                        UserId = participant.UserId,
+                        UserName = participant.User.Name,
+                        IsPresent = attendance?.IsPresent ?? false
+                    });
+                }
+
+                result.Sessions.Add(sessionResult);
+            }
+
+            return result;
+        }
+
         public async Task<List<HighAttendanceDto>> GetHighAttendanceAsync(Guid trainingId)
         {
             
@@ -699,52 +709,6 @@ namespace TelimAPI.Persistence.Services
 
         }
 
-        public async Task<TrainingAttendanceSummaryDto> GetTrainingAttendancesAsync(Guid trainingId)
-        {
-            var training = await _trainingRepository.GetByIdAsync(trainingId);
-
-            if (training == null)
-                throw new Exception("Training not found.");
-
-            // Sessiyaları çəkirik
-            var sessions = await _trainingRepository.GetSessionsByTrainingIdAsync(trainingId);
-
-            // Qoşulmuş participantları çək
-            var participants = await _trainingRepository.GetJoinedParticipantsByTrainingIdAsync(trainingId);
-
-            var result = new TrainingAttendanceSummaryDto
-            {
-                TrainingId = training.Id,
-                TrainingTitle = training.Title
-            };
-
-            foreach (var session in sessions)
-            {
-                var sessionResult = new SessionAttendanceResultDto
-                {
-                    SessionId = session.Id,
-                    StartDate = session.StartTime,
-                    EndDate = session.EndTime
-                };
-
-                foreach (var participant in participants)
-                {
-                    var attendance = session.Attendances
-                        .FirstOrDefault(a => a.UserId == participant.UserId);
-
-                    sessionResult.Attendances.Add(new UserAttendanceDto
-                    {
-                        UserId = participant.UserId,
-                        UserName = participant.User.Name,
-                        IsPresent = attendance?.IsPresent ?? false
-                    });
-                }
-
-                result.Sessions.Add(sessionResult);
-            }
-
-            return result;
-        }
     }
 }
               
