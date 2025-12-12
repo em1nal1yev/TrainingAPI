@@ -699,6 +699,52 @@ namespace TelimAPI.Persistence.Services
 
         }
 
+        public async Task<TrainingAttendanceSummaryDto> GetTrainingAttendancesAsync(Guid trainingId)
+        {
+            var training = await _trainingRepository.GetByIdAsync(trainingId);
+
+            if (training == null)
+                throw new Exception("Training not found.");
+
+            // Sessiyaları çəkirik
+            var sessions = await _trainingRepository.GetSessionsByTrainingIdAsync(trainingId);
+
+            // Qoşulmuş participantları çək
+            var participants = await _trainingRepository.GetJoinedParticipantsByTrainingIdAsync(trainingId);
+
+            var result = new TrainingAttendanceSummaryDto
+            {
+                TrainingId = training.Id,
+                TrainingTitle = training.Title
+            };
+
+            foreach (var session in sessions)
+            {
+                var sessionResult = new SessionAttendanceResultDto
+                {
+                    SessionId = session.Id,
+                    StartDate = session.StartTime,
+                    EndDate = session.EndTime
+                };
+
+                foreach (var participant in participants)
+                {
+                    var attendance = session.Attendances
+                        .FirstOrDefault(a => a.UserId == participant.UserId);
+
+                    sessionResult.Attendances.Add(new UserAttendanceDto
+                    {
+                        UserId = participant.UserId,
+                        UserName = participant.User.Name,
+                        IsPresent = attendance?.IsPresent ?? false
+                    });
+                }
+
+                result.Sessions.Add(sessionResult);
+            }
+
+            return result;
+        }
     }
 }
               

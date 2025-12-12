@@ -27,6 +27,7 @@ namespace TelimAPI.Application.Services
         Task<SessionDetailsDto> GetSessionDetailsWithParticipantsAsync(Guid sessionId);
         Task<List<HighAttendanceDto>> GetHighAttendanceAsync(Guid trainingId);
         Task<List<HighAttendanceDto>> GetLowAttendanceAsync(Guid trainingId);
+        Task<TrainingAttendanceSummaryDto> GetTrainingAttendancesAsync(Guid trainingId);
 
     }
 }

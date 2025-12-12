@@ -1,16 +1,6 @@
 [
   {
     "ContainingType": "TelimAPI.API.Controllers.AuthController",
-    "Method": "GetUserClaims",
-    "RelativePath": "api/Auth/claims",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "TelimAPI.API.Controllers.AuthController",
     "Method": "GetCurrentUser",
     "RelativePath": "api/Auth/GetCurrentUser",
     "HttpMethod": "GET",
@@ -147,6 +137,22 @@
       {
         "Name": "attendanceDtos",
         "Type": "System.Collections.Generic.List\u00601[[TelimAPI.Application.DTOs.Training.SessionAttendanceDto, TelimAPI.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "TelimAPI.API.Controllers.TrainingsController",
+    "Method": "GetTrainingAttendance",
+    "RelativePath": "api/Trainings/{trainingId}/attendance",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "trainingId",
+        "Type": "System.Guid",
         "IsRequired": true
       }
     ],

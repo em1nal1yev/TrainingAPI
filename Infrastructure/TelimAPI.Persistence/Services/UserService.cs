@@ -149,5 +149,7 @@ namespace TelimAPI.Persistence.Services
             
             await _trainingRepository.AddFeedbackAsync(newFeedback);
         }
+
+
     }
 }

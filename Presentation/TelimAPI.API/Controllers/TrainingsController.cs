@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using TelimAPI.Application.DTOs.Training;
 using TelimAPI.Application.Services;
+using TelimAPI.Persistence.Services;
 
 namespace TelimAPI.API.Controllers
 {
@@ -158,6 +159,14 @@ namespace TelimAPI.API.Controllers
         {
             await _trainingService.DeleteAsync(id);
             return Ok("training succcessfuly deleted");
+        }
+
+        [HttpGet("{trainingId}/attendance")]
+        [Authorize(Roles = "Trainer, Admin")]
+        public async Task<IActionResult> GetTrainingAttendance(Guid trainingId)
+        {
+            var result = await _trainingService.GetTrainingAttendancesAsync(trainingId);
+            return Ok(result);
         }
     }
 }
