@@ -7,6 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="MailKit" Version="4.14.1" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.22" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.21" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.21">
@@ -22,6 +23,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\Core\TelimAPI.Application\TelimAPI.Application.csproj" />
+    <ProjectReference Include="..\..\Infrastructure\TelimAPI.Infrastructure\TelimAPI.Infrastructure.csproj" />
     <ProjectReference Include="..\..\Infrastructure\TelimAPI.Persistence\TelimAPI.Persistence.csproj" />
   </ItemGroup>
 

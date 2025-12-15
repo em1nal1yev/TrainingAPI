@@ -15,6 +15,7 @@ using TelimAPI.Persistence.Helper;
 using TelimAPI.Persistence.Repositories;
 using TelimAPI.Persistence.Services;
 
+
 namespace TelimAPI.Persistence
 {
     public static class ServiceRegistration

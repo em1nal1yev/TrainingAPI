@@ -11,6 +11,7 @@ using TelimAPI.Domain.Entities;
 
 namespace TelimAPI.Persistence.Services
 {
+
     internal class AuthService : IAuthService
     {
         private readonly UserManager<User> _userManager;
@@ -18,13 +19,15 @@ namespace TelimAPI.Persistence.Services
         private readonly RoleManager<IdentityRole<Guid>> _roleManager;
         private readonly ITokenService _tokenService;
         private readonly IRefreshTokenRepository _refreshTokenRepository;
-        public AuthService(UserManager<User> userManager, SignInManager<User> signInManager, RoleManager<IdentityRole<Guid>> roleManager, ITokenService tokenService, IRefreshTokenRepository refreshTokenRepository)
+        private readonly IEmailService _emailService;
+        public AuthService(UserManager<User> userManager, SignInManager<User> signInManager, RoleManager<IdentityRole<Guid>> roleManager, ITokenService tokenService, IRefreshTokenRepository refreshTokenRepository, IEmailService emailService)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _roleManager = roleManager;
             _tokenService = tokenService;
             _refreshTokenRepository = refreshTokenRepository;
+            _emailService = emailService;
         }
 
 
@@ -167,6 +170,8 @@ namespace TelimAPI.Persistence.Services
             return true;
         }
 
+
+
         public async Task<bool> IsInRoleAsync(string email, string roleName)
         {
             var user = await _userManager.FindByEmailAsync(email);
@@ -174,6 +179,90 @@ namespace TelimAPI.Persistence.Services
             return await _userManager.IsInRoleAsync(user, roleName);
         }
 
+        public async Task<AuthResult> ForgotPasswordAsync(ForgotPasswordRequestDto dto, string resetPasswordApiUrl)
+        {
 
+            var user = await _userManager.FindByNameAsync(dto.Username);
+
+            if (user == null)
+            {
+                
+                return new AuthResult
+                {
+                    Succeeded = true,
+                    Errors = null
+                };
+
+            }
+
+            
+            var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+
+            
+            var encodedToken = System.Web.HttpUtility.UrlEncode(token);
+
+            //?
+            var resetUrl = $"{resetPasswordApiUrl}?Username={user.UserName}&Token={encodedToken}";
+
+            
+            try
+            {
+                
+                await _emailService.SendAsync(
+                    user.Email,
+                    "Şifrə Bərpası",
+                    $"Şifrənizi bərpa etmək üçün bu linkə daxil olun: {resetUrl}"
+                );
+            }
+            catch (Exception ex)
+            {
+                
+                return new AuthResult
+                {
+                    Succeeded = false,
+                    Errors = new[] { $"Email göndərilmədi: {ex.Message}" }
+                };
+            }
+
+            return new AuthResult
+            {
+                Succeeded = true,
+                Errors = null
+            };
+        }
+
+        public async Task<AuthResult> ResetPasswordAsync(ResetPasswordDto dto)
+        {
+            
+            var user = await _userManager.FindByNameAsync(dto.Username);
+
+            if (user == null)
+            {
+                return new AuthResult
+                {
+                    Succeeded = false,
+                    Errors = new[] { "İstifadəçi tapılmadı." }
+                };
+            }
+
+            
+            var result = await _userManager.ResetPasswordAsync(user, dto.Token, dto.NewPassword);
+
+            if (result.Succeeded)
+            {
+                return new AuthResult
+                {
+                    Succeeded = true,
+                    Errors = null
+                };
+            }
+
+            
+            return new AuthResult
+            {
+                Succeeded = false,
+                Errors = result.Errors.Select(e => e.Description)
+            };
+        }
     }
 }

@@ -10,6 +10,8 @@ using System.Security.Claims;
 using System.Text;
 using TelimAPI.Domain.Entities;
 using TelimAPI.Domain.Enums;
+using TelimAPI.Infrastructure;
+using TelimAPI.Infrastructure.Options;
 using TelimAPI.Persistence;
 using TelimAPI.Persistence.Contexts;
 using TelimAPI.Persistence.Services.BackgroundServices;
@@ -24,6 +26,12 @@ namespace TelimAPI.API
 
             // Add services to the container.
             builder.Services.AddPersistenceServices(builder.Configuration);
+            builder.Services.AddInfrastructure(builder.Configuration);
+           
+
+
+            builder.Services.Configure<EmailSettings>(
+                builder.Configuration.GetSection("EmailSettings"));
 
             //builder.Services.AddDistributedMemoryCache(); 
             //builder.Services.AddSession(options =>
@@ -32,6 +40,7 @@ namespace TelimAPI.API
             //    options.Cookie.HttpOnly = true;
             //    options.Cookie.IsEssential = true;
             //});
+            
 
             builder.Services.AddIdentity<User, IdentityRole<Guid>>(options =>
             {
@@ -40,6 +49,11 @@ namespace TelimAPI.API
             })
                .AddEntityFrameworkStores<AppDbContext>()
                .AddDefaultTokenProviders();
+
+            builder.Services.Configure<DataProtectionTokenProviderOptions>(options =>
+            {
+                options.TokenLifespan = TimeSpan.FromHours(1); 
+            });
 
             builder.Services.AddAuthentication(options =>
             {

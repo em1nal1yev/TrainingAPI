@@ -73,6 +73,45 @@ namespace TelimAPI.API.Controllers
         }
 
 
+        [AllowAnonymous]
+        [HttpPost("ForgotPassword")]
+        public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordRequestDto dto)
+        {
+            
+            var resetPasswordApiUrl = Url.Action(nameof(ResetPassword), "Auth", null, Request.Scheme);
+
+            
+            var result = await _authService.ForgotPasswordAsync(dto, resetPasswordApiUrl);
+
+            
+            if (result.Succeeded)
+            {
+                return Ok(new { Message = "Şifrə bərpası linki e-poçtunuza göndərildi (əgər istifadəçi mövcuddursa)." });
+            }
+
+            return BadRequest(new { Errors = result.Errors });
+        }
+
+        [AllowAnonymous]
+        [HttpPost("ResetPassword")]
+        public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordDto dto)
+        {
+            if (!string.IsNullOrEmpty(dto.Token))
+            {
+                dto.Token = System.Net.WebUtility.UrlDecode(dto.Token);
+            }
+
+            var result = await _authService.ResetPasswordAsync(dto);
+
+            if (result.Succeeded)
+            {
+                return Ok(new { Message = "Şifrəniz uğurla bərpa edildi." });
+            }
+
+            return BadRequest(new { Errors = result.Errors, Message = "Şifrə bərpası uğursuz oldu. Token etibarsız ola bilər və ya şifrə tələblərə cavab vermir." });
+        }
+
+
         [HttpGet("GetCurrentUser")]
         [Authorize]
         public IActionResult GetCurrentUser()
