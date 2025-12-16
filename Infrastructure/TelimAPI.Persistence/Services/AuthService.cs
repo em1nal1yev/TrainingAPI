@@ -202,7 +202,7 @@ namespace TelimAPI.Persistence.Services
             var encodedToken = System.Web.HttpUtility.UrlEncode(token);
 
             //?
-            var resetUrl = $"{resetPasswordApiUrl}?Username={user.UserName}&Token={encodedToken}";
+            var resetUrl = $"{resetPasswordApiUrl}?Token={encodedToken}";
 
             
             try
@@ -231,7 +231,7 @@ namespace TelimAPI.Persistence.Services
             };
         }
 
-        public async Task<AuthResult> ResetPasswordAsync(ResetPasswordDto dto)
+        public async Task<AuthResult> ResetPasswordAsync(ResetPasswordDto dto, string token)
         {
             
             var user = await _userManager.FindByNameAsync(dto.Username);
@@ -246,7 +246,7 @@ namespace TelimAPI.Persistence.Services
             }
 
             
-            var result = await _userManager.ResetPasswordAsync(user, dto.Token, dto.NewPassword);
+            var result = await _userManager.ResetPasswordAsync(user, token, dto.NewPassword);
 
             if (result.Succeeded)
             {

@@ -114,6 +114,11 @@
     "Order": 0,
     "Parameters": [
       {
+        "Name": "token",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
         "Name": "dto",
         "Type": "TelimAPI.Application.DTOs.Auth.ResetPasswordDto",
         "IsRequired": true

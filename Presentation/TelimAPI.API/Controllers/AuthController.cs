@@ -94,14 +94,15 @@ namespace TelimAPI.API.Controllers
 
         [AllowAnonymous]
         [HttpPost("ResetPassword")]
-        public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordDto dto)
+        public async Task<IActionResult> ResetPassword(string token, [FromBody] ResetPasswordDto dto)
         {
-            if (!string.IsNullOrEmpty(dto.Token))
+            
+            if (!string.IsNullOrEmpty(token))
             {
-                dto.Token = System.Net.WebUtility.UrlDecode(dto.Token);
+                token = System.Net.WebUtility.UrlDecode(token);
             }
 
-            var result = await _authService.ResetPasswordAsync(dto);
+            var result = await _authService.ResetPasswordAsync(dto, token);
 
             if (result.Succeeded)
             {
