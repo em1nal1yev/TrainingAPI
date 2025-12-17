@@ -41,7 +41,7 @@ namespace TelimAPI.Persistence.Services
                 return new AuthResult
                 {
                     Succeeded = false,
-                    Errors = new[] { "Bu e-poçt ünvanı artıq qeydiyyatdan keçib." }
+                    Errors = new List<string> { "Bu e-poçt ünvanı artıq qeydiyyatdan keçib." }
                 };
             }
 
@@ -73,7 +73,7 @@ namespace TelimAPI.Persistence.Services
             return new AuthResult
             {
                 Succeeded = result.Succeeded,
-                Errors = result.Errors.Select(e => e.Description)
+                Errors = result.Errors.Select(e => e.Description).ToList()
             };
         }
 
@@ -86,7 +86,7 @@ namespace TelimAPI.Persistence.Services
                 return new AuthResult
                 {
                     Succeeded = false,
-                    Errors = new[] { "Yanlış e-poçt və ya şifrə." }
+                    Errors = new List<string> { "Yanlış e-poçt və ya şifrə." }
                 };
             }
 
@@ -98,8 +98,7 @@ namespace TelimAPI.Persistence.Services
             {
                 Succeeded = true,
                 AccessToken = accessToken,
-                RefreshToken = refreshTokenEntity.Token,
-                Errors = null
+                RefreshToken = refreshTokenEntity.Token
             };
         }
 
@@ -113,7 +112,7 @@ namespace TelimAPI.Persistence.Services
                 return new AuthResult
                 {
                     Succeeded = false,
-                    Errors = new[] { "Etibarsız və ya vaxtı bitmiş Refresh Token." }
+                    Errors = new List<string> { "Etibarsız və ya vaxtı bitmiş Refresh Token." }
                 };
             }
 
@@ -126,7 +125,7 @@ namespace TelimAPI.Persistence.Services
                 return new AuthResult
                 {
                     Succeeded = false,
-                    Errors = new[] { "Refresh Token-ə bağlı istifadəçi tapılmadı." }
+                    Errors = new List<string> { "Refresh Token-ə bağlı istifadəçi tapılmadı." }
                 };
             }
 
@@ -158,7 +157,6 @@ namespace TelimAPI.Persistence.Services
             
             if (existingRefreshToken == null || existingRefreshToken.IsRevoked)
             {
-                
                 return true;
             }
 
@@ -189,8 +187,7 @@ namespace TelimAPI.Persistence.Services
                 
                 return new AuthResult
                 {
-                    Succeeded = true,
-                    Errors = null
+                    Succeeded = true
                 };
 
             }
@@ -220,14 +217,13 @@ namespace TelimAPI.Persistence.Services
                 return new AuthResult
                 {
                     Succeeded = false,
-                    Errors = new[] { $"Email göndərilmədi: {ex.Message}" }
+                    Errors = new List<string> { $"Email göndərilmədi: {ex.Message}" }
                 };
             }
 
             return new AuthResult
             {
-                Succeeded = true,
-                Errors = null
+                Succeeded = true
             };
         }
 
@@ -241,7 +237,7 @@ namespace TelimAPI.Persistence.Services
                 return new AuthResult
                 {
                     Succeeded = false,
-                    Errors = new[] { "İstifadəçi tapılmadı." }
+                    Errors = new List<string> { "İstifadəçi tapılmadı." }
                 };
             }
 
@@ -252,16 +248,15 @@ namespace TelimAPI.Persistence.Services
             {
                 return new AuthResult
                 {
-                    Succeeded = true,
-                    Errors = null
+                    Succeeded = true
                 };
             }
 
-            
+
             return new AuthResult
             {
                 Succeeded = false,
-                Errors = result.Errors.Select(e => e.Description)
+                Errors = result.Errors.Select(e => e.Description).ToList()
             };
         }
     }

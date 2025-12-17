@@ -9,7 +9,7 @@ namespace TelimAPI.Application.DTOs.Auth
     public class AuthResult
     {
         public bool Succeeded { get; set; }
-        public IEnumerable<string>? Errors { get; set; }
+        public List<string> Errors { get; set; }
         public string? AccessToken { get; set; } 
         public string? RefreshToken { get; set; }
     }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TelimAPI.Application.Common.Results;
 using TelimAPI.Application.DTOs.Training;
 using TelimAPI.Application.Helper;
 using TelimAPI.Application.Repositories;
@@ -64,131 +65,98 @@ namespace TelimAPI.Persistence.Services
             );
 
         }
-        public async Task CreateAsync(TrainingCreateDto dto)
+        public async Task<Result> CreateAsync(TrainingCreateDto dto)
         {
+            try
+            {
+                
+                if (dto.CourtIds?.Any() == true)
+                {
+                    await _idValidator.ValidateIdsAsync(dto.CourtIds, _courtRepository.GetByIdsAsync, "Məhkəmə tapılmadı.");
+                }
 
-            await _idValidator.ValidateIdsAsync(
-                dto.CourtIds,
-                _courtRepository.GetByIdsAsync,
-                "One or more courts not found");
+                if (dto.DepartmentIds?.Any() == true)
+                {
+                    await _idValidator.ValidateIdsAsync(dto.DepartmentIds, _departmentRepository.GetByIdsAsync, "Departament tapılmadı.");
+                }
+            }
+            catch (Exception ex)
+            {
+                return Result.Failure(ex.Message);
+            }
 
-            await _idValidator.ValidateIdsAsync(
-                dto.DepartmentIds,
-                _departmentRepository.GetByIdsAsync,
-                "One or more departments not found");
-
-
+            var trainingId = Guid.NewGuid();
             var training = new Training
             {
-                Id = Guid.NewGuid(),
+                Id = trainingId,
                 Title = dto.Title,
                 Description = dto.Description,
                 StartDate = dto.StartDate,
                 EndDate = dto.EndDate,
                 CreatedDate = DateTime.UtcNow,
-                
+                Status = TrainingStatus.Draft
             };
-
-
 
             
             var allCourts = await _courtRepository.GetAllAsync();
+            var allDepartments = await _departmentRepository.GetAllAsync();
+            var allUsers = await _userRepository.GetAllAsync();
 
             
-            List<Court> selectedCourts;
+            var selectedCourts = (dto.CourtIds == null || !dto.CourtIds.Any())
+                ? allCourts
+                : allCourts.Where(c => dto.CourtIds.Contains(c.Id)).ToList();
 
-            if (dto.CourtIds == null || dto.CourtIds.Count == 0)
-            {
-                
-                selectedCourts = allCourts;
-            }
-            else
-            {
-                
-                selectedCourts = allCourts.Where(c => dto.CourtIds.Contains(c.Id)).ToList();
-            }
-
-            
             training.TrainingCourts = selectedCourts.Select(c => new TrainingCourt
             {
                 CourtId = c.Id,
-                TrainingId = training.Id
+                TrainingId = trainingId
             }).ToList();
 
-
+            
+            var courtIdsForFiltering = selectedCourts.Select(c => c.Id).ToList();
+            var departmentsOfSelectedCourts = allDepartments
+                .Where(d => courtIdsForFiltering.Contains(d.CourtId))
+                .ToList();
 
             
-            var allDepartments = await _departmentRepository.GetAllAsync();
+            var selectedDepartments = (dto.DepartmentIds == null || !dto.DepartmentIds.Any())
+                ? departmentsOfSelectedCourts
+                : departmentsOfSelectedCourts.Where(d => dto.DepartmentIds.Contains(d.Id)).ToList();
 
-            IEnumerable<Department> filteredDepartmentsByCourt = allDepartments;
-            
-            if (dto.CourtIds != null && dto.CourtIds.Count > 0)
-            {
-                
-                filteredDepartmentsByCourt = allDepartments.Where(d => dto.CourtIds.Contains(d.CourtId));
-            }
-
-            List<Department> selectedDepartments;
-
-            if (dto.DepartmentIds == null || dto.DepartmentIds.Count == 0)
-            {
-                
-                selectedDepartments = filteredDepartmentsByCourt.ToList();
-            }
-            else
-            {
-                
-                selectedDepartments = filteredDepartmentsByCourt.Where(d => dto.DepartmentIds.Contains(d.Id)).ToList();
-            }
-
-            
             training.TrainingDepartments = selectedDepartments.Select(d => new TrainingDepartment
             {
                 DepartmentId = d.Id,
-                TrainingId = training.Id
+                TrainingId = trainingId
             }).ToList();
 
-
-
-
-            var allUsers = await _userRepository.GetAllAsync();
-
-            List<User> targetUsers = new List<User>();
-
             
+            var selectedDeptIds = selectedDepartments.Select(d => d.Id).ToHashSet();
+            var selectedCourtIds = selectedCourts.Select(c => c.Id).ToHashSet();
 
-            foreach (var user in allUsers)
-            {
-                bool courtMatch = dto.CourtIds == null || dto.CourtIds.Count == 0 || dto.CourtIds.Contains(user.CourtId);
-                bool departmentMatch = dto.DepartmentIds == null || dto.DepartmentIds.Count == 0 || dto.DepartmentIds.Contains(user.DepartmentId);
-
-                if (courtMatch && departmentMatch)
+            training.Participants = allUsers
+                .Where(u => selectedCourtIds.Contains(u.CourtId) && selectedDeptIds.Contains(u.DepartmentId))
+                .Select(u => new TrainingParticipant
                 {
-                    targetUsers.Add(user);
-                }
-            }
+                    TrainingId = trainingId,
+                    UserId = u.Id,
+                    IsJoined = false
+                })
+                .ToList();
 
             
-            training.Participants = targetUsers.Select(u => new TrainingParticipant
-            {
-                TrainingId = training.Id,
-                UserId = u.Id,
-                IsJoined = false
-            }).ToList();
-
-
-
             await _trainingRepository.AddAsync(training);
+            await _trainingRepository.SaveAsync();
 
+            return Result.Success();
         }
 
-        // court ve department null gelerse deyisilmir count 0olarsa hamsi olur
-        public async Task UpdateAsync(TrainingUpdateDto dto)
+        public async Task<Result> UpdateAsync(TrainingUpdateDto dto)
         {
             
-            Training training = await _trainingRepository.GetByIdAsync(dto.Id);
+            var training = await _trainingRepository.GetByIdAsync(dto.Id);
             if (training == null)
-                throw new Exception("Training not found");
+                return Result.Failure("Təlim tapılmadı.");
 
             
             if (dto.Title != null) training.Title = dto.Title;
@@ -196,157 +164,134 @@ namespace TelimAPI.Persistence.Services
             if (dto.StartDate.HasValue) training.StartDate = dto.StartDate.Value;
             if (dto.EndDate.HasValue) training.EndDate = dto.EndDate.Value;
 
-
             var allCourts = await _courtRepository.GetAllAsync();
             var allDepartments = await _departmentRepository.GetAllAsync();
             var allUsers = await _userRepository.GetAllAsync();
 
-            
+            // --- MƏHKƏMƏ (COURT) MƏNTİQİ ---
             List<Court> effectiveCourts;
-
-            
-            if (dto.CourtIds != null)
+            if (dto.CourtIds != null) // null deyilsə dəyişiklik var
             {
-                if (dto.CourtIds.Count == 0)
-                {
-                    
-                    effectiveCourts = allCourts;
-                }
-                else
-                {
-                    
-                    effectiveCourts = allCourts.Where(c => dto.CourtIds.Contains(c.Id)).ToList();
-                }
+                effectiveCourts = dto.CourtIds.Count == 0
+                    ? allCourts
+                    : allCourts.Where(c => dto.CourtIds.Contains(c.Id)).ToList();
 
-                
                 training.TrainingCourts.Clear();
-                training.TrainingCourts = effectiveCourts.Select(c => new TrainingCourt
+                foreach (var court in effectiveCourts)
                 {
-                    CourtId = c.Id,
-                    TrainingId = training.Id
-                }).ToList();
+                    training.TrainingCourts.Add(new TrainingCourt { CourtId = court.Id, TrainingId = training.Id });
+                }
             }
-            else 
+            else // null-dırsa mövcud olanlar qalır
             {
                 var currentCourtIds = training.TrainingCourts.Select(tc => tc.CourtId).ToList();
                 effectiveCourts = allCourts.Where(c => currentCourtIds.Contains(c.Id)).ToList();
             }
 
-            
-            var courtIdsForFiltering = effectiveCourts.Select(c => c.Id).ToList();
-
-            
-            IEnumerable<Department> filteredDepartmentsByCourt = allDepartments
-                .Where(d => courtIdsForFiltering.Contains(d.CourtId));
-
+            // --- DEPARTAMENT MƏNTİQİ ---
             List<Department> selectedDepartments;
+            var courtIdsForFiltering = effectiveCourts.Select(c => c.Id).ToList();
+            var filteredDepartmentsByCourt = allDepartments.Where(d => courtIdsForFiltering.Contains(d.CourtId)).ToList();
 
-            
-            if (dto.DepartmentIds != null)
+            if (dto.DepartmentIds != null) // null deyilsə dəyişiklik var
             {
-                if (dto.DepartmentIds.Count == 0)
-                {
-                    
-                    selectedDepartments = filteredDepartmentsByCourt.ToList();
-                }
-                else
-                {
-                    
-                    selectedDepartments = filteredDepartmentsByCourt
-                        .Where(d => dto.DepartmentIds.Contains(d.Id)).ToList();
-                }
+                selectedDepartments = dto.DepartmentIds.Count == 0
+                    ? filteredDepartmentsByCourt
+                    : filteredDepartmentsByCourt.Where(d => dto.DepartmentIds.Contains(d.Id)).ToList();
 
-                
                 training.TrainingDepartments.Clear();
-                training.TrainingDepartments = selectedDepartments.Select(d => new TrainingDepartment
+                foreach (var dep in selectedDepartments)
                 {
-                    DepartmentId = d.Id,
-                    TrainingId = training.Id
-                }).ToList();
+                    training.TrainingDepartments.Add(new TrainingDepartment { DepartmentId = dep.Id, TrainingId = training.Id });
+                }
             }
-            else 
+            else // DepartamentIds null-dırsa
             {
-                
-                if (dto.CourtIds != null)
+                if (dto.CourtIds != null) 
                 {
-                    
-                    selectedDepartments = filteredDepartmentsByCourt.ToList();
-
-                    
+                    selectedDepartments = filteredDepartmentsByCourt;
                     training.TrainingDepartments.Clear();
-                    training.TrainingDepartments = selectedDepartments.Select(d => new TrainingDepartment
+                    foreach (var dep in selectedDepartments)
                     {
-                        DepartmentId = d.Id,
-                        TrainingId = training.Id
-                    }).ToList();
+                        training.TrainingDepartments.Add(new TrainingDepartment { DepartmentId = dep.Id, TrainingId = training.Id });
+                    }
                 }
-                else
+                else 
                 {
-                    
-                    var currentDepartmentIds = training.TrainingDepartments.Select(td => td.DepartmentId).ToList();
-                    selectedDepartments = allDepartments.Where(d => currentDepartmentIds.Contains(d.Id)).ToList();
-                }
-            }
-
-           
-            var finalCourtIds = effectiveCourts.Select(c => c.Id).ToList();
-            var finalDepartmentIds = selectedDepartments.Select(d => d.Id).ToList();
-
-            List<User> targetUsers = new List<User>();
-            foreach (var user in allUsers)
-            {
-                bool courtMatch = finalCourtIds.Contains(user.CourtId);
-                bool departmentMatch = finalDepartmentIds.Contains(user.DepartmentId);
-
-                if (courtMatch && departmentMatch)
-                {
-                    targetUsers.Add(user);
+                    var currentDepIds = training.TrainingDepartments.Select(td => td.DepartmentId).ToList();
+                    selectedDepartments = allDepartments.Where(d => currentDepIds.Contains(d.Id)).ToList();
                 }
             }
 
             
-            training.Participants.Clear();
-            training.Participants = targetUsers.Select(u => new TrainingParticipant
+            if (dto.CourtIds != null || dto.DepartmentIds != null)
             {
-                TrainingId = training.Id,
-                UserId = u.Id,
-                IsJoined = false
-            }).ToList();
+                var finalCourtIds = effectiveCourts.Select(c => c.Id).ToHashSet();
+                var finalDeptIds = selectedDepartments.Select(d => d.Id).ToHashSet();
 
-            
+                var targetUsers = allUsers.Where(u =>
+                    finalCourtIds.Contains(u.CourtId) && finalDeptIds.Contains(u.DepartmentId)).ToList();
+
+                training.Participants.Clear();
+                foreach (var user in targetUsers)
+                {
+                    training.Participants.Add(new TrainingParticipant { TrainingId = training.Id, UserId = user.Id, IsJoined = false });
+                }
+            }
+
             _trainingRepository.Update(training);
+            await _trainingRepository.SaveAsync();
+
+            return Result.Success();
         }
 
-        public async Task DeleteAsync(Guid id)
+        public async Task<Result> DeleteAsync(Guid id)
         {
+            var training = await _trainingRepository.GetByIdAsync(id);
+
+            if (training == null)
+            {
+                return Result.Failure("Silinmək istənən təlim tapılmadı.");
+            }
             await _trainingRepository.DeleteAsync(id);
+            await _trainingRepository.SaveAsync(); 
+
+            return Result.Success();
         }
 
-        public async Task<List<TrainingSessionGetDto>> GetSessionsByTrainingIdAsync(Guid trainingId)
+        public async Task<Result<List<TrainingSessionGetDto>>> GetSessionsByTrainingIdAsync(Guid trainingId)
         {
+            var training = await _trainingRepository.GetByIdAsync(trainingId);
+            if (training == null)
+            {
+                return Result<List<TrainingSessionGetDto>>.Failure("Təlim tapılmadı (Training not found).");
+            }
+
             var joinedParticipants = await _trainingRepository.GetJoinedParticipantsByTrainingIdAsync(trainingId);
             var totalJoinedParticipants = joinedParticipants.Count;
 
             var sessions = await _trainingRepository.GetSessionsByTrainingIdAsync(trainingId);
 
-            return sessions.Select(s => new TrainingSessionGetDto(
+            var dtos = sessions.Select(s => new TrainingSessionGetDto(
                 s.Id,
-                s.StartTime, 
+                s.StartTime,
                 s.EndTime,
                 totalJoinedParticipants,
                 s.Attendances?.Count(a => a.IsPresent) ?? 0
             )).ToList();
+
+            return Result<List<TrainingSessionGetDto>>.Success(dtos);
         }
 
-        public async Task<TrainingSessionGetDto> CreateSessionAsync(TrainingSessionCreateDto sessionDto)
+        public async Task<Result<TrainingSessionGetDto>> CreateSessionAsync(TrainingSessionCreateDto sessionDto)
         {
             var training = await _trainingRepository.GetByIdAsync(sessionDto.TrainingId);
 
             if (training == null)
-                throw new Exception("Training not found.");
+                return Result<TrainingSessionGetDto>.Failure("Təlim tapılmadı.");
 
             if (sessionDto.StartTime < training.StartDate || sessionDto.EndTime > training.EndDate)
-                throw new Exception("Session time must be inside training date range");
+                return Result<TrainingSessionGetDto>.Failure("Sessiya vaxtı təlimin tarix aralığında olmalıdır.");
 
             var sessionEntity = new TrainingSession
             {
@@ -360,129 +305,143 @@ namespace TelimAPI.Persistence.Services
             
             await _trainingRepository.AddTrainingSessionAsync(sessionEntity);
 
-            
-            return new TrainingSessionGetDto(
+            var resultDto = new TrainingSessionGetDto(
                 sessionEntity.Id,
                 sessionEntity.StartTime,
                 sessionEntity.EndTime,
-                0, 
+                0,
                 0
             );
+
+            return Result<TrainingSessionGetDto>.Success(resultDto);
+
         }
 
-        public async Task AddSessionAttendanceAsync(Guid sessionId, List<SessionAttendanceDto> attendanceDtos)
+        public async Task<Result> AddSessionAttendanceAsync(Guid sessionId, List<SessionAttendanceDto> attendanceDtos)
         {
+            var session = await _trainingRepository.GetSessionByIdAsync(sessionId);
+            if (session == null)
+            {
+                return Result.Failure($"Training session with ID {sessionId} not found.");
+            }
+
+            var deadline = session.EndTime.AddDays(1);
+            if (DateTime.UtcNow > deadline)
+            {
+                return Result.Failure("Davamiyyət qeydi üçün vaxt bitib (Deadline expired).");
+            }
 
             var attendancesToInsert = new List<SessionAttendance>();
             var attendancesToUpdate = new List<SessionAttendance>();
 
-            var session = await _trainingRepository.GetSessionByIdAsync(sessionId);
-            if (session == null)
-            {
-                throw new Exception($"Training session with ID {sessionId} not found.");
-            }
-            var deadline = session.EndTime.AddDays(1);
-            if (DateTime.UtcNow > deadline)
-                throw new Exception("Attendance submission time is expired.");
             var trainingId = session.TrainingId;
-
             var joinedParticipants = await _trainingRepository.GetJoinedParticipantsByTrainingIdAsync(trainingId);
+
             var joinedUserIds = joinedParticipants.Select(p => p.UserId).ToHashSet();
 
-            var incomingUserIds = attendanceDtos.Select(dto => dto.UserId).Distinct();
-
+            var incomingUserIds = attendanceDtos.Select(dto => dto.UserId).Distinct().ToList();
             var existingUserIds = await _userRepository.GetExistingUserIdsAsync(incomingUserIds);
 
+            var validationErrors = new List<string>();
             foreach (var dto in attendanceDtos)
             {
-                
+
                 if (!existingUserIds.Contains(dto.UserId))
                 {
-                    
-                    throw new Exception($"User with ID {dto.UserId} not found in the database.");
+                    validationErrors.Add($"İstifadəçi ID {dto.UserId} sistemdə tapılmadı.");
+                    continue;
                 }
 
-                
-                if (joinedUserIds.Contains(dto.UserId))
+                if (!joinedUserIds.Contains(dto.UserId))
                 {
-                    
-                    var existingAttendance = await _trainingRepository.GetAttendanceBySessionAndUserAsync(sessionId, dto.UserId);
-                    
+                    validationErrors.Add($"İstifadəçi ID {dto.UserId} bu təlimin iştirakçısı deyil.");
+                    continue;
+                }
 
-                    if (existingAttendance != null)
+
+
+                var existingAttendance = await _trainingRepository.GetAttendanceBySessionAndUserAsync(sessionId, dto.UserId);
+
+                if (existingAttendance != null)
+                {
+
+                    if (existingAttendance.IsPresent != dto.IsPresent)
                     {
-                        
-                        if (existingAttendance.IsPresent != dto.IsPresent)
-                        {
-                            existingAttendance.IsPresent = dto.IsPresent;
-                            existingAttendance.JoinedTime = dto.IsPresent ? (DateTime?)DateTime.UtcNow : null;
-                            attendancesToUpdate.Add(existingAttendance);
-                        }
-                    }
-                    else
-                    {
-                        attendancesToInsert.Add(new SessionAttendance
-                        {
-                            TrainingSessionId = sessionId,
-                            UserId = dto.UserId,
-                            IsPresent = dto.IsPresent,
-                            JoinedTime = dto.IsPresent ? (DateTime?)DateTime.UtcNow : null,
-                            CreatedDate = DateTime.UtcNow
-                        });
+                        existingAttendance.IsPresent = dto.IsPresent;
+                        existingAttendance.JoinedTime = dto.IsPresent ? (DateTime?)DateTime.UtcNow : null;
+                        attendancesToUpdate.Add(existingAttendance);
                     }
                 }
                 else
                 {
-                    
-                    throw new Exception($"User with ID {dto.UserId} is not a registered (IsJoined=true) participant for this training.");
-                }
-                if (attendancesToInsert.Any())
-                {
-                    await _trainingRepository.AddRangeSessionAttendanceAsync(attendancesToInsert);
+
+                    attendancesToInsert.Add(new SessionAttendance
+                    {
+                        TrainingSessionId = sessionId,
+                        UserId = dto.UserId,
+                        IsPresent = dto.IsPresent,
+                        JoinedTime = dto.IsPresent ? (DateTime?)DateTime.UtcNow : null,
+                        CreatedDate = DateTime.UtcNow
+                    });
                 }
 
-                if (attendancesToUpdate.Any())
+
+            }
+
+            if (validationErrors.Any())
+            {
+                return Result.Failure(validationErrors);
+            }
+
+            if (attendancesToInsert.Any())
+            {
+                await _trainingRepository.AddRangeSessionAttendanceAsync(attendancesToInsert);
+            }
+
+            if (attendancesToUpdate.Any())
+            {
+                foreach (var attendance in attendancesToUpdate)
                 {
-                    foreach (var attendance in attendancesToUpdate)
-                    {
-                        _trainingRepository.UpdateSessionAttendance(attendance);
-                    }
-                    await _trainingRepository.SaveChangesAsync();
+                    _trainingRepository.UpdateSessionAttendance(attendance);
                 }
             }
 
+            if (attendancesToInsert.Any() || attendancesToUpdate.Any())
+            {
+                await _trainingRepository.SaveChangesAsync();
+            }
+
+            return Result.Success();
 
         }
 
 
 
-        public async Task<SessionDetailsDto> GetSessionDetailsWithParticipantsAsync(Guid sessionId)
+        public async Task<Result<SessionDetailsDto>> GetSessionDetailsWithParticipantsAsync(Guid sessionId)
         {
             
             var session = await _trainingRepository.GetSessionByIdAsync(sessionId);
 
             if (session == null)
             {
-                throw new Exception($"Training session with ID {sessionId} not found.");
+                return Result<SessionDetailsDto>.Failure($"ID-si {sessionId} olan təlim sessiyası tapılmadı.");
             }
 
             var attendances = await _trainingRepository.GetAllAttendancesBySessionIdAsync(sessionId);
             var attendanceMap = attendances.ToDictionary(a => a.UserId, a => a.IsPresent);
+
             var participantsDto = session.Training.Participants
+                .Where(p => p.IsJoined) 
                 .Select(p => new SessionParticipantDto
                 {
                     UserId = p.UserId,
-                    
                     UserName = $"{p.User.Name} {p.User.Surname}",
                     IsJoined = p.IsJoined,
                     IsPresent = attendanceMap.ContainsKey(p.UserId) ? attendanceMap[p.UserId] : (bool?)null
-
                 })
-                
-                .Where(p => p.IsJoined == true)
                 .ToList();
 
-            
+
             var sessionDetailsDto = new SessionDetailsDto
             {
                 SessionId = session.Id,
@@ -493,7 +452,7 @@ namespace TelimAPI.Persistence.Services
                 JoinedParticipants = participantsDto
             };
 
-            return sessionDetailsDto;
+            return Result<SessionDetailsDto>.Success(sessionDetailsDto);
         }
 
         public async Task<List<TrainingGetDto>> GetExpiredAsync()
@@ -544,39 +503,52 @@ namespace TelimAPI.Persistence.Services
             }).ToList();
         }
 
-        public async Task<bool> ApproveAsync(Guid id)
+        public async Task<Result> ApproveAsync(Guid id)
         {
             var training = await _trainingRepository.GetByIdAsync(id);
 
             if (training == null)
-                throw new Exception("Training not found");
+            {
+                return new Result
+                {
+                    Succeeded = false,
+                    Errors = new List<string> { "Təlim tapılmadı" }
+                };
+            }
+                
 
             if (training.Status != TrainingStatus.Draft)
-                throw new Exception("Training is not in draft state");
+            {
+                return new Result
+                {
+                    Succeeded = false,
+                    Errors = new List<string> { "Təlim 'Draft' statusunda deyil, təsdiqlənə bilməz" }
+                };
+            }
+                
 
             training.Status = TrainingStatus.Pending;
 
             await _trainingRepository.SaveAsync();
-            return true;
+            return new Result { Succeeded = true };
         }
 
-        public async Task<TrainingAttendanceSummaryDto> GetTrainingAttendancesAsync(Guid trainingId)
+        public async Task<Result<TrainingAttendanceSummaryDto>> GetTrainingAttendancesAsync(Guid trainingId)
         {
             var training = await _trainingRepository.GetByIdAsync(trainingId);
-
             if (training == null)
-                throw new Exception("Training not found.");
+            {
+                return Result<TrainingAttendanceSummaryDto>.Failure("Təlim tapılmadı.");
+            }
 
-            
             var sessions = await _trainingRepository.GetSessionsByTrainingIdAsync(trainingId);
-
-            
             var participants = await _trainingRepository.GetJoinedParticipantsByTrainingIdAsync(trainingId);
 
             var result = new TrainingAttendanceSummaryDto
             {
                 TrainingId = training.Id,
-                TrainingTitle = training.Title
+                TrainingTitle = training.Title,
+                Sessions = new List<SessionAttendanceResultDto>() 
             };
 
             foreach (var session in sessions)
@@ -585,18 +557,20 @@ namespace TelimAPI.Persistence.Services
                 {
                     SessionId = session.Id,
                     StartDate = session.StartTime,
-                    EndDate = session.EndTime
+                    EndDate = session.EndTime,
+                    Attendances = new List<UserAttendanceDto>()
                 };
 
                 foreach (var participant in participants)
                 {
-                    var attendance = session.Attendances
+                    // Bu sessiya üçün həmin istifadəçinin davamiyyəti varmı?
+                    var attendance = session.Attendances?
                         .FirstOrDefault(a => a.UserId == participant.UserId);
 
                     sessionResult.Attendances.Add(new UserAttendanceDto
                     {
                         UserId = participant.UserId,
-                        UserName = participant.User.Name,
+                        UserName = $"{participant.User.Name} {participant.User.Surname}",
                         IsPresent = attendance?.IsPresent ?? false
                     });
                 }
@@ -604,109 +578,92 @@ namespace TelimAPI.Persistence.Services
                 result.Sessions.Add(sessionResult);
             }
 
-            return result;
+            return Result<TrainingAttendanceSummaryDto>.Success(result);
         }
 
-        public async Task<List<HighAttendanceDto>> GetHighAttendanceAsync(Guid trainingId)
+        public async Task<Result<List<HighAttendanceDto>>> GetHighAttendanceAsync(Guid trainingId)
         {
-            
+
             var participants = await _trainingRepository.GetJoinedParticipantsByTrainingIdAsync(trainingId);
-            if (!participants.Any()) return new List<HighAttendanceDto>();
+            if (!participants.Any())
+                return Result<List<HighAttendanceDto>>.Success(new List<HighAttendanceDto>());
 
-            var participantUserIds = participants.Select(p => p.UserId).ToList();
 
-            
             var sessions = await _trainingRepository.GetSessionsByTrainingIdAsync(trainingId);
             int totalSessions = sessions.Count();
-            if (totalSessions == 0) return new List<HighAttendanceDto>();
+            if (totalSessions == 0)
+                return Result<List<HighAttendanceDto>>.Success(new List<HighAttendanceDto>());
 
-            
-            var allAttendances = new List<SessionAttendance>();
-            foreach (var session in sessions)
-            {
-                var attendances = await _trainingRepository.GetAllAttendancesBySessionIdAsync(session.Id);
-                allAttendances.AddRange(attendances);
-            }
+            var allAttendances = sessions
+                .SelectMany(s => s.Attendances ?? new List<SessionAttendance>())
+                .ToList();
 
-            
             var result = new List<HighAttendanceDto>();
 
             foreach (var participant in participants)
             {
-                int attended = allAttendances.Count(a =>
-                    a.UserId == participant.UserId &&
-                    a.IsPresent == true
-                );
+                int attendedCount = allAttendances.Count(a =>
+                    a.UserId == participant.UserId && a.IsPresent);
 
-                double rate = (double)attended / totalSessions * 100;
+                double rate = (double)attendedCount / totalSessions * 100;
 
-                if (rate > 75) 
+                if (rate > 75)
                 {
                     result.Add(new HighAttendanceDto
                     {
                         UserId = participant.UserId,
-                        Fullname = participant.User?.Name ?? "", // səndə fullname yoxdur demişdin, boş gələcək
+                        Fullname = $"{participant.User?.Name} {participant.User?.Surname}".Trim(),
                         TotalSessions = totalSessions,
-                        AttendedSessions = attended,
+                        AttendedSessions = attendedCount,
                         AttendanceRate = Math.Round(rate, 2)
                     });
                 }
             }
-
-            return result;
+            return Result<List<HighAttendanceDto>>.Success(result);
 
         }
 
-        public async Task<List<HighAttendanceDto>> GetLowAttendanceAsync(Guid trainingId)
+        public async Task<Result<List<HighAttendanceDto>>> GetLowAttendanceAsync(Guid trainingId)
         {
 
             var participants = await _trainingRepository.GetJoinedParticipantsByTrainingIdAsync(trainingId);
-            if (!participants.Any()) return new List<HighAttendanceDto>();
-
-            var participantUserIds = participants.Select(p => p.UserId).ToList();
-
-
             var sessions = await _trainingRepository.GetSessionsByTrainingIdAsync(trainingId);
-            int totalSessions = sessions.Count();
-            if (totalSessions == 0) return new List<HighAttendanceDto>();
 
-
-            var allAttendances = new List<SessionAttendance>();
-            foreach (var session in sessions)
+            if (!participants.Any() || !sessions.Any())
             {
-                var attendances = await _trainingRepository.GetAllAttendancesBySessionIdAsync(session.Id);
-                allAttendances.AddRange(attendances);
+                return Result<List<HighAttendanceDto>>.Success(new List<HighAttendanceDto>());
             }
 
+            int totalSessions = sessions.Count();
+
+            var allAttendances = sessions
+                .SelectMany(s => s.Attendances ?? new List<SessionAttendance>())
+                .ToList();
 
             var result = new List<HighAttendanceDto>();
 
             foreach (var participant in participants)
             {
-                int attended = allAttendances.Count(a =>
-                    a.UserId == participant.UserId &&
-                    a.IsPresent == true
-                );
+                int attendedCount = allAttendances.Count(a =>
+                    a.UserId == participant.UserId && a.IsPresent);
 
-                double rate = (double)attended / totalSessions * 100;
+                double rate = (double)attendedCount / totalSessions * 100;
 
+                
                 if (rate < 75)
                 {
                     result.Add(new HighAttendanceDto
                     {
                         UserId = participant.UserId,
-                        Fullname = participant.User?.Name ?? "", 
+                        Fullname = $"{participant.User?.Name} {participant.User?.Surname}".Trim(),
                         TotalSessions = totalSessions,
-                        AttendedSessions = attended,
+                        AttendedSessions = attendedCount,
                         AttendanceRate = Math.Round(rate, 2)
                     });
                 }
             }
-            if (result.Count == 0)
-                throw new Exception("There are no students with low attendance.");
-            
-            return result;
 
+            return Result<List<HighAttendanceDto>>.Success(result);
         }
 
     }
