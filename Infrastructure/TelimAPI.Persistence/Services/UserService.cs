@@ -39,12 +39,11 @@ namespace TelimAPI.Persistence.Services
             var allTrainings = await _trainingRepository.GetAllAsync();
 
             var userTrainings = allTrainings
-                .Where(t => t.Participants != null && t.Participants.Any(p => p.UserId == userId))
+                .Where(t => t.Participants != null && t.Participants.Any(p => p.UserId == userId) && t.Status != Domain.Enums.TrainingStatus.Draft)
                 .Select(t => new TrainingDetailDto
                 {
                     Title = t.Title,
                     Description = t.Description,
-                    // Null check-lər mütləqdir
                     Courts = t.TrainingCourts?.Select(tc => tc.Court?.Name).Where(name => name != null).ToList() ?? new List<string>(),
                     Departments = t.TrainingDepartments?.Select(td => td.Department?.Name).Where(name => name != null).ToList() ?? new List<string>(),
                     ParticipantsCount = t.Participants?.Count ?? 0,
