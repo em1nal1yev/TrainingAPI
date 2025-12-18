@@ -14,4 +14,8 @@
     <ProjectReference Include="..\TelimAPI.Domain\TelimAPI.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Common\Models\" />
+  </ItemGroup>
+
 </Project>

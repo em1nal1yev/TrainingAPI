@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
+using TelimAPI.API.Common;
+using TelimAPI.API.Common.Helper;
 using TelimAPI.Application.DTOs.Auth;
 using TelimAPI.Application.Services;
 
@@ -22,11 +24,16 @@ namespace TelimAPI.API.Controllers
         public async Task<IActionResult> Register([FromBody] RegisterDto dto)
         {
             var result = await _authService.RegisterUserAsync(dto, "User");
-            if (result.Succeeded)
+            if (!result.Succeeded)
             {
-                return Ok(new { Message = "Qeydiyyat ugurlu oldu. Indi daxil ola bilərsiniz." });
+                return BadRequest(ApiResponses.Fail<object>(
+                    "Əməliyyat uğursuz oldu",
+                    result.Errors
+                ));
             }
-            return BadRequest(new { Error = result.Errors });
+            return Ok(ApiResponses.Success<object>(
+                message: "Qeydiyyat uğurla tamamlandı. İndi daxil ola bilərsiniz."
+            ));
         }
 
         [HttpPost("RegisterAdmin")]
@@ -35,11 +42,16 @@ namespace TelimAPI.API.Controllers
         {
             var result = await _authService.RegisterUserAsync(dto, "Admin");
 
-            if (result.Succeeded)
+            if (!result.Succeeded)
             {
-                return Ok(new { Message = "Admin hesabi uğurla yaradıldı." });
+                return BadRequest(ApiResponses.Fail<object>(
+                    "Əməliyyat uğursuz oldu",
+                    result.Errors
+                ));
             }
-            return BadRequest(new { Errors = result.Errors });
+            return Ok(ApiResponses.Success<object>(
+                message: "Qeydiyyat uğurla tamamlandı. İndi daxil ola bilərsiniz."
+            ));
         }
 
         [HttpPost("RegisterTrainer")]
@@ -47,11 +59,16 @@ namespace TelimAPI.API.Controllers
         public async Task<IActionResult> RegisterTrainer([FromBody] RegisterDto dto)
         {
             var result = await _authService.RegisterUserAsync(dto, "Trainer");
-            if (result.Succeeded)
+            if (!result.Succeeded)
             {
-                return Ok(new {Message = "Trainer hesabi ugurla yaradildi"} );
+                return BadRequest(ApiResponses.Fail<object>(
+                    "Əməliyyat uğursuz oldu",
+                    result.Errors
+                ));
             }
-            return BadRequest(new { Errors = result.Errors });
+            return Ok(ApiResponses.Success<object>(
+                message: "Qeydiyyat uğurla tamamlandı. İndi daxil ola bilərsiniz."
+            ));
         }
 
         [HttpPost("Login")]
@@ -59,17 +76,21 @@ namespace TelimAPI.API.Controllers
         {
             var result = await _authService.LoginUserAsync(dto);
 
-            if (result.Succeeded)
+            if (!result.Succeeded)
             {
-
-                return Ok(new
-                {
-                    AccessToken = result.AccessToken, 
-                    RefreshToken = result.RefreshToken, 
-                    Message = "Daxilolma uğurlu oldu."
-                });
+                return Unauthorized(ApiResponses.Fail<object>(
+                    "Daxilolma uğursuz oldu",
+                    result.Errors
+                ));
             }
-            return Unauthorized(new { Errors = result.Errors });
+            return Ok(ApiResponses.Success(
+                new LoginResponseDto
+                {
+                    AccessToken = result.AccessToken,
+                    RefreshToken = result.RefreshToken
+                },
+                "Daxilolma uğurlu oldu"
+    ));
         }
 
 
@@ -83,32 +104,43 @@ namespace TelimAPI.API.Controllers
             
             var result = await _authService.ForgotPasswordAsync(dto, resetPasswordApiUrl);
 
-            
-            if (result.Succeeded)
+
+            if (!result.Succeeded)
             {
-                return Ok(new { Message = "Şifrə bərpası linki e-poçtunuza göndərildi (əgər istifadəçi mövcuddursa)." });
+                return BadRequest(ApiResponses.Fail<object>(
+                    "Şifrə bərpası uğursuz oldu",
+                    result.Errors
+                ));
             }
 
-            return BadRequest(new { Errors = result.Errors });
+            return Ok(ApiResponses.Success<object>(
+                message: "Əgər istifadəçi mövcuddursa, şifrə bərpa linki e-poçta göndərildi."
+            ));
         }
 
         [AllowAnonymous]
         [HttpPost("ResetPassword")]
-        public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordDto dto)
+        public async Task<IActionResult> ResetPassword(string token, [FromBody] ResetPasswordDto dto)
         {
-            if (!string.IsNullOrEmpty(dto.Token))
+            
+            if (!string.IsNullOrEmpty(token))
             {
-                dto.Token = System.Net.WebUtility.UrlDecode(dto.Token);
+                token = System.Net.WebUtility.UrlDecode(token);
             }
 
-            var result = await _authService.ResetPasswordAsync(dto);
+            var result = await _authService.ResetPasswordAsync(dto, token);
 
-            if (result.Succeeded)
+            if (!result.Succeeded)
             {
-                return Ok(new { Message = "Şifrəniz uğurla bərpa edildi." });
+                return BadRequest(ApiResponses.Fail<object>(
+                    message: "Şifrə bərpası uğursuz oldu. Token etibarsız ola bilər və ya şifrə tələblərə cavab vermir.",
+                    errors: result.Errors 
+                ));
             }
 
-            return BadRequest(new { Errors = result.Errors, Message = "Şifrə bərpası uğursuz oldu. Token etibarsız ola bilər və ya şifrə tələblərə cavab vermir." });
+            return Ok(ApiResponses.Success<object>(
+            message: "Şifrəniz uğurla bərpa edildi."
+            ));
         }
 
 
@@ -118,26 +150,18 @@ namespace TelimAPI.API.Controllers
         {
             if (User?.Identity?.IsAuthenticated != true)
             {
-                return Unauthorized(new { Message = "İstifadəçi daxil olmayıb." });
+                return Unauthorized(ApiResponses.Fail<object>("İstifadəçi daxil olmayıb"));
             }
 
-            
-            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
-            var emailClaim = User.FindFirst(ClaimTypes.Email);
-            var roleClaim = User.FindFirst(ClaimTypes.Role);
-
-            if (userIdClaim == null)
-            {
-                return NotFound(new { Message = "İstifadəçi ID tapılmadı." });
-            }
-
-            return Ok(new
-            {
-                UserId = userIdClaim?.Value,
-                Email = emailClaim?.Value,
-                Role = roleClaim?.Value,
-                Message = "Cari istifadəçi məlumatları uğurla alındı."
-            });
+            return Ok(ApiResponses.Success(
+                new CurrentUserDto
+                {
+                    UserId = User.FindFirstValue(ClaimTypes.NameIdentifier),
+                    Email = User.FindFirstValue(ClaimTypes.Email),
+                    Role = User.FindFirstValue(ClaimTypes.Role)
+                },
+                "Cari istifadəçi məlumatları alındı"
+            ));
         }
 
         [HttpPost("RefreshToken")]
@@ -146,19 +170,23 @@ namespace TelimAPI.API.Controllers
             
             var result = await _authService.RefreshTokenAsync(request.RefreshToken);
 
-            if (result.Succeeded)
+            if (!result.Succeeded)
             {
-                
-                return Ok(new
-                {
-                    AccessToken = result.AccessToken,
-                    RefreshToken = result.RefreshToken,
-                    Message = "Tokenlər uğurla yeniləndi."
-                });
+                return Unauthorized(ApiResponses.Fail<object>(
+                    "Token yenilənmədi",
+                    result.Errors
+                ));
             }
 
-            
-            return Unauthorized(new { Errors = result.Errors });
+
+            return Ok(ApiResponses.Success(
+                new LoginResponseDto
+                {
+                    AccessToken = result.AccessToken,
+                    RefreshToken = result.RefreshToken
+                },
+                "Tokenlər yeniləndi"
+            ));
         }
 
         [Authorize]
@@ -168,14 +196,17 @@ namespace TelimAPI.API.Controllers
            
             var success = await _authService.RevokeRefreshTokenAsync(request.RefreshToken);
 
-            if (success)
+            if (!success)
             {
-                
-                return Ok(new { Message = "Çıxış uğurlu oldu. Refresh Token ləğv edildi." });
+                return BadRequest(ApiResponses.Fail<object>(
+                    message: "Çıxış zamanı xəta baş verdi."
+                ));
             }
 
-            
-            return BadRequest(new { Message = "Çıxış zamanı xəta baş verdi." });
+
+            return Ok(ApiResponses.Success<object>(
+                message: "Çıxış uğurlu oldu. Refresh Token ləğv edildi."
+            ));
         }
     }
 }

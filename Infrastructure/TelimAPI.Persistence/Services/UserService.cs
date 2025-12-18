@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using System.Security.Claims;
+using TelimAPI.Application.Common.Results;
 using TelimAPI.Application.DTOs.User;
 using TelimAPI.Application.Repositories;
 using TelimAPI.Application.Services;
@@ -21,128 +22,123 @@ namespace TelimAPI.Persistence.Services
             _httpContextAccessor = httpContextAccessor;
         }
 
-        public async Task<UserTrainingsDto> GetUserTrainingsAsync()
+        public async Task<Result<UserTrainingsDto>> GetUserTrainingsAsync()
         {
             var userIdClaim = _httpContextAccessor.HttpContext?.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
-            if (userIdClaim == null)
-                throw new Exception("User is not authenticated");
+            if (string.IsNullOrEmpty(userIdClaim))
+                return Result<UserTrainingsDto>.Failure("İstifadəçi tapılmadı və ya sessiya bitib.");
 
-            Guid userId = Guid.Parse(userIdClaim);
+            if (!Guid.TryParse(userIdClaim, out Guid userId))
+                return Result<UserTrainingsDto>.Failure("İstifadəçi ID formatı yanlışdır.");
 
-            
             var user = await _userRepository.GetByIdAsync(userId);
             if (user == null)
-                throw new Exception("User not found");
+                return Result<UserTrainingsDto>.Failure("İstifadəçi bazada tapılmadı.");
 
-            
-            var trainings = await _trainingRepository.GetAllAsync();
+            var allTrainings = await _trainingRepository.GetAllAsync();
 
-            
-            var userTrainings = trainings
-                .Where(t => t.Participants.Any(p => p.UserId == userId))
+            var userTrainings = allTrainings
+                .Where(t => t.Participants != null && t.Participants.Any(p => p.UserId == userId) && t.Status != Domain.Enums.TrainingStatus.Draft)
                 .Select(t => new TrainingDetailDto
                 {
                     Title = t.Title,
                     Description = t.Description,
-                    Courts = t.TrainingCourts.Select(tc => tc.Court.Name).ToList(),
-                    Departments = t.TrainingDepartments.Select(td => td.Department.Name).ToList(),
-                    ParticipantsCount = t.Participants.Count,
+                    Courts = t.TrainingCourts?.Select(tc => tc.Court?.Name).Where(name => name != null).ToList() ?? new List<string>(),
+                    Departments = t.TrainingDepartments?.Select(td => td.Department?.Name).Where(name => name != null).ToList() ?? new List<string>(),
+                    ParticipantsCount = t.Participants?.Count ?? 0,
                     IsJoined = t.Participants.FirstOrDefault(p => p.UserId == userId)?.IsJoined ?? false
                 })
                 .ToList();
 
-            
-            return new UserTrainingsDto
+            var resultDto = new UserTrainingsDto
             {
-                UserName = user.Name,
+                UserName = $"{user.Name} {user.Surname}".Trim(),
                 Trainings = userTrainings
             };
+
+            return Result<UserTrainingsDto>.Success(resultDto);
         }
 
-        public async Task JoinTrainingAsync(Guid trainingId, Guid userId)
+        public async Task<Result> JoinTrainingAsync(Guid trainingId, Guid userId)
         {
             
             var training = await _trainingRepository.GetByIdAsync(trainingId);
             if (training == null)
-                throw new Exception("Training not found.");
+            {
+                return Result.Failure("Təlim tapılmadı.");
+            }
 
-            //if (training.EndDate > DateTime.UtcNow)
-            //    throw new Exception("It is too late to join this training");
-
-            var now = DateTime.UtcNow; 
             
+            // if (DateTime.UtcNow > training.StartDate)
+            //     return Result.Failure("Təlim artıq başlayıb, qoşulmaq mümkün deyil.");
 
-
-
+            
             var existingParticipant = await _trainingRepository.GetParticipantByTrainingAndUserAsync(trainingId, userId);
 
             if (existingParticipant != null)
             {
-
-
-               
+                
                 if (existingParticipant.IsJoined)
                 {
-                    throw new Exception("You have already joined this training.");
+                    return Result.Failure("Siz artıq bu təlimə qoşulmusunuz.");
                 }
-                else
+
+               
+                existingParticipant.IsJoined = true;
+                await _trainingRepository.UpdateParticipantAsync(existingParticipant);
+            }
+            else
+            {
+                
+                var newParticipant = new TrainingParticipant
                 {
+                    TrainingId = trainingId,
+                    UserId = userId,
+                    IsJoined = true
+                };
 
-                    existingParticipant.IsJoined = true;
-
-
-                    await _trainingRepository.UpdateParticipantAsync(existingParticipant);
-                    return;
-                }
+                await _trainingRepository.AddParticipantAsync(newParticipant);
             }
 
             
-            var newParticipant = new TrainingParticipant
-            {
+            await _trainingRepository.SaveAsync();
 
-                TrainingId = trainingId,
-                UserId = userId,
-                IsJoined = true
-                
-            };
-
-            
-            await _trainingRepository.AddParticipantAsync(newParticipant);
+            return Result.Success();
         }
-        public async Task SubmitTrainingFeedbackAsync(SubmitFeedbackRequest request, Guid userId)
+        public async Task<Result> SubmitTrainingFeedbackAsync(SubmitFeedbackRequest request, Guid userId)
         {
             
             var participant = await _trainingRepository.GetParticipantByTrainingAndUserAsync(request.TrainingId, userId);
 
             if (participant == null || !participant.IsJoined)
             {
-                
-                throw new Exception("You must be an active participant of this training to submit feedback.");
+                return Result.Failure("Rəy bildirmək üçün bu təlimin aktiv iştirakçısı olmalısınız.");
             }
-
 
             
             var existingFeedback = await _trainingRepository.GetFeedbackByParticipantIdAsync(participant.Id);
 
             if (existingFeedback != null)
             {
-                throw new Exception("You have already submitted feedback for this training.");
+                return Result.Failure("Siz artıq bu təlim üçün rəy bildirmisiniz.");
             }
 
             
             var newFeedback = new TrainingFeedback
             {
-                
                 TrainingParticipantId = participant.Id,
                 TrainingRating = request.TrainingRating,
                 TrainerRating = request.TrainerRating,
-                Comment = request.Comment
-               
+                Comment = request.Comment,
+                CreatedDate = DateTime.UtcNow 
             };
 
             
             await _trainingRepository.AddFeedbackAsync(newFeedback);
+            await _trainingRepository.SaveAsync();
+
+            return Result.Success();
         }
 
 

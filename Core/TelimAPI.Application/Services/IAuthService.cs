@@ -15,6 +15,6 @@ namespace TelimAPI.Application.Services
         Task<bool> RevokeRefreshTokenAsync(string refreshToken);
         Task<bool> IsInRoleAsync(string email, string roleName);
         Task<AuthResult> ForgotPasswordAsync(ForgotPasswordRequestDto dto, string resetPasswordApiUrl);
-        Task<AuthResult> ResetPasswordAsync(ResetPasswordDto dto);
+        Task<AuthResult> ResetPasswordAsync(ResetPasswordDto dto, string token);
     }
 }

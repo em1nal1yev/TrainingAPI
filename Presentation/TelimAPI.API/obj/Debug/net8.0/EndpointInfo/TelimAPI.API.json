@@ -165,6 +165,15 @@
         "tags": [
           "Auth"
         ],
+        "parameters": [
+          {
+            "name": "token",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
         "requestBody": {
           "content": {
             "application/json": {
@@ -821,10 +830,6 @@
         "type": "object",
         "properties": {
           "username": {
-            "type": "string",
-            "nullable": true
-          },
-          "token": {
             "type": "string",
             "nullable": true
           },

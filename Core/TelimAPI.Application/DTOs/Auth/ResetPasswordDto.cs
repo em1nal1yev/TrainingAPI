@@ -10,8 +10,7 @@ namespace TelimAPI.Application.DTOs.Auth
     public class ResetPasswordDto
     {
         public string Username { get; set; }
-
-        public string Token { get; set; }
+        
 
         [Required(ErrorMessage = "Yeni şifrə tələb olunur.")]
         [DataType(DataType.Password)]
