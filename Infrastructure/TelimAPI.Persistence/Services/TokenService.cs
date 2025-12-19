@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
@@ -10,16 +11,19 @@ using System.Text;
 using System.Threading.Tasks;
 using TelimAPI.Application.Services;
 using TelimAPI.Domain.Entities;
+using TelimAPI.Persistence.Options;
 
 namespace TelimAPI.Persistence.Services
 {
     public class TokenService:ITokenService
     {
         private readonly IConfiguration _configuration;
+        private readonly JwtSettings _jwtSettings;
 
-        public TokenService(IConfiguration configrat)
+        public TokenService(IConfiguration configrat, IOptions<JwtSettings> jwtOptions)
         {
             _configuration = configrat;
+            _jwtSettings = jwtOptions.Value;
         }
 
         public string CreateAccessToken(User user, IList<string> roles)
@@ -36,12 +40,12 @@ namespace TelimAPI.Persistence.Services
                 claims.Add(new Claim(ClaimTypes.Role, role));
             }
 
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JwtSettings:Key"]));
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtSettings.Key));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
             var token = new JwtSecurityToken(
-                issuer: _configuration["JwtSettings:Issuer"],
-                audience: _configuration["JwtSettings:Audience"],
+                issuer: _jwtSettings.Issuer,
+                audience: _jwtSettings.Audience,
                 claims: claims,
                 expires: DateTime.UtcNow.AddHours(2),
                 signingCredentials: creds);

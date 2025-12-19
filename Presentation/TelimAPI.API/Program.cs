@@ -14,6 +14,7 @@ using TelimAPI.Infrastructure;
 using TelimAPI.Infrastructure.Options;
 using TelimAPI.Persistence;
 using TelimAPI.Persistence.Contexts;
+using TelimAPI.Persistence.Options;
 using TelimAPI.Persistence.Services.BackgroundServices;
 namespace TelimAPI.API
 {
@@ -33,6 +34,9 @@ namespace TelimAPI.API
             builder.Services.Configure<EmailSettings>(
                 builder.Configuration.GetSection("EmailSettings"));
 
+            builder.Services.Configure<JwtSettings>(
+                builder.Configuration.GetSection("JwtSettings"));
+
             //builder.Services.AddDistributedMemoryCache(); 
             //builder.Services.AddSession(options =>
             //{
@@ -40,7 +44,7 @@ namespace TelimAPI.API
             //    options.Cookie.HttpOnly = true;
             //    options.Cookie.IsEssential = true;
             //});
-            
+
 
             builder.Services.AddIdentity<User, IdentityRole<Guid>>(options =>
             {
@@ -55,26 +59,37 @@ namespace TelimAPI.API
                 options.TokenLifespan = TimeSpan.FromHours(1); 
             });
 
-            builder.Services.AddAuthentication(options =>
+            var jwtSettings = builder.Configuration
+            .GetSection("JwtSettings")
+            .Get<JwtSettings>();
+
+
+            builder.Services
+            .AddAuthentication(options =>
             {
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                 options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
             })
-.AddJwtBearer(options =>
-{
-    options.TokenValidationParameters = new TokenValidationParameters
-    {
-        ValidateIssuer = true,
-        ValidateAudience = true,
-        ValidateLifetime = true,
-        ValidateIssuerSigningKey = true,
-        ValidIssuer = builder.Configuration["JwtSettings:Issuer"],
-        ValidAudience = builder.Configuration["JwtSettings:Audience"],
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JwtSettings:Key"])),
-        RoleClaimType = ClaimTypes.Role,
-        NameClaimType = JwtRegisteredClaimNames.Sub
-    };
-});
+            .AddJwtBearer(options =>
+            {
+                options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+
+            ValidIssuer = jwtSettings.Issuer,
+            ValidAudience = jwtSettings.Audience,
+
+            IssuerSigningKey = new SymmetricSecurityKey(
+                Encoding.UTF8.GetBytes(jwtSettings.Key)
+            ),
+
+            RoleClaimType = ClaimTypes.Role,
+            NameClaimType = JwtRegisteredClaimNames.Sub
+        };
+    });
 
             builder.Services.AddAuthorization();
 
