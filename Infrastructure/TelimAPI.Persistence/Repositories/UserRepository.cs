@@ -38,6 +38,7 @@ namespace TelimAPI.Persistence.Repositories
         public async Task<User?> GetByIdAsync(Guid id)
         {
             return await _context.Users
+                .AsNoTracking()
                 .Include(u => u.Department)
                 .Include(u => u.Court)
                 .Include(u => u.TrainingParticipants)

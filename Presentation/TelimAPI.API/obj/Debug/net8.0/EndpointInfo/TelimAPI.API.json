@@ -5,6 +5,122 @@
     "version": "v1"
   },
   "paths": {
+    "/api/Attendance/AddSessionAttendance": {
+      "post": {
+        "tags": [
+          "Attendance"
+        ],
+        "parameters": [
+          {
+            "name": "sessionId",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/SessionAttendanceDto"
+                }
+              }
+            },
+            "text/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/SessionAttendanceDto"
+                }
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/SessionAttendanceDto"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Attendance/GetTrainingAttendance": {
+      "get": {
+        "tags": [
+          "Attendance"
+        ],
+        "parameters": [
+          {
+            "name": "trainingId",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Attendance/GetHighAttendance": {
+      "get": {
+        "tags": [
+          "Attendance"
+        ],
+        "parameters": [
+          {
+            "name": "trainingId",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Attendance/GetLowAttendance": {
+      "get": {
+        "tags": [
+          "Attendance"
+        ],
+        "parameters": [
+          {
+            "name": "trainingId",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/api/Auth/Register": {
       "post": {
         "tags": [
@@ -36,41 +152,19 @@
         }
       }
     },
-    "/api/Auth/RegisterAdmin": {
+    "/api/Auth/RegisterAdminTrainer": {
       "post": {
         "tags": [
           "Auth"
         ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/RegisterDto"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/RegisterDto"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/RegisterDto"
-              }
+        "parameters": [
+          {
+            "name": "role",
+            "in": "query",
+            "schema": {
+              "type": "string"
             }
           }
-        },
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/api/Auth/RegisterTrainer": {
-      "post": {
-        "tags": [
-          "Auth"
         ],
         "requestBody": {
           "content": {
@@ -274,104 +368,10 @@
         }
       }
     },
-    "/api/Trainings/get-all": {
-      "get": {
-        "tags": [
-          "Trainings"
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/api/Trainings/get-by-{id}": {
-      "get": {
-        "tags": [
-          "Trainings"
-        ],
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "uuid"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/api/Trainings/expired": {
-      "get": {
-        "tags": [
-          "Trainings"
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/api/Trainings/ongoingTrainings": {
-      "get": {
-        "tags": [
-          "Trainings"
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/api/Trainings/drafts": {
-      "get": {
-        "tags": [
-          "Trainings"
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/api/Trainings/{id}/approve": {
-      "put": {
-        "tags": [
-          "Trainings"
-        ],
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "uuid"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/api/Trainings/create-session": {
+    "/api/Session/CreateTrainingSession": {
       "post": {
         "tags": [
-          "Trainings"
+          "Session"
         ],
         "requestBody": {
           "content": {
@@ -399,10 +399,10 @@
         }
       }
     },
-    "/api/Trainings/GetSessions": {
+    "/api/Session/GetTrainingSessionsByTrainingId": {
       "get": {
         "tags": [
-          "Trainings"
+          "Session"
         ],
         "parameters": [
           {
@@ -421,50 +421,21 @@
         }
       }
     },
-    "/api/Trainings/{sessionId}/attendance": {
-      "post": {
+    "/api/Session/GetSessionDetails": {
+      "get": {
         "tags": [
-          "Trainings"
+          "Session"
         ],
         "parameters": [
           {
             "name": "sessionId",
-            "in": "path",
-            "required": true,
+            "in": "query",
             "schema": {
               "type": "string",
               "format": "uuid"
             }
           }
         ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/SessionAttendanceDto"
-                }
-              }
-            },
-            "text/json": {
-              "schema": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/SessionAttendanceDto"
-                }
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/SessionAttendanceDto"
-                }
-              }
-            }
-          }
-        },
         "responses": {
           "200": {
             "description": "OK"
@@ -472,16 +443,27 @@
         }
       }
     },
-    "/api/Trainings/sessions/{sessionId}/details": {
+    "/api/Trainings/GetAll": {
+      "get": {
+        "tags": [
+          "Trainings"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Trainings/GetById": {
       "get": {
         "tags": [
           "Trainings"
         ],
         "parameters": [
           {
-            "name": "sessionId",
-            "in": "path",
-            "required": true,
+            "name": "id",
+            "in": "query",
             "schema": {
               "type": "string",
               "format": "uuid"
@@ -495,16 +477,51 @@
         }
       }
     },
-    "/api/Trainings/{trainingId}/attendance": {
+    "/api/Trainings/GetExpired": {
       "get": {
+        "tags": [
+          "Trainings"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Trainings/GetOngoingWithUsers": {
+      "get": {
+        "tags": [
+          "Trainings"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Trainings/GetDrafts": {
+      "get": {
+        "tags": [
+          "Trainings"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Trainings/Approve": {
+      "put": {
         "tags": [
           "Trainings"
         ],
         "parameters": [
           {
-            "name": "trainingId",
-            "in": "path",
-            "required": true,
+            "name": "id",
+            "in": "query",
             "schema": {
               "type": "string",
               "format": "uuid"
@@ -518,53 +535,7 @@
         }
       }
     },
-    "/api/Trainings/{trainingId}/high-attendance": {
-      "get": {
-        "tags": [
-          "Trainings"
-        ],
-        "parameters": [
-          {
-            "name": "trainingId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "uuid"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/api/Trainings/{trainingId}/low-attendance": {
-      "get": {
-        "tags": [
-          "Trainings"
-        ],
-        "parameters": [
-          {
-            "name": "trainingId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "uuid"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/api/Trainings/create": {
+    "/api/Trainings/Create": {
       "post": {
         "tags": [
           "Trainings"
@@ -595,7 +566,7 @@
         }
       }
     },
-    "/api/Trainings/update": {
+    "/api/Trainings/Update": {
       "put": {
         "tags": [
           "Trainings"
@@ -626,7 +597,7 @@
         }
       }
     },
-    "/api/Trainings/delete{id}": {
+    "/api/Trainings/Delete": {
       "delete": {
         "tags": [
           "Trainings"
@@ -634,8 +605,7 @@
         "parameters": [
           {
             "name": "id",
-            "in": "path",
-            "required": true,
+            "in": "query",
             "schema": {
               "type": "string",
               "format": "uuid"
@@ -649,7 +619,7 @@
         }
       }
     },
-    "/api/User/trainings": {
+    "/api/User/GetUserTrainings": {
       "get": {
         "tags": [
           "User"
@@ -661,7 +631,7 @@
         }
       }
     },
-    "/api/User/trainings/join": {
+    "/api/User/JoinTraining": {
       "post": {
         "tags": [
           "User"
@@ -692,7 +662,7 @@
         }
       }
     },
-    "/api/User/trainings/feedback": {
+    "/api/User/SubmitFeedback": {
       "post": {
         "tags": [
           "User"

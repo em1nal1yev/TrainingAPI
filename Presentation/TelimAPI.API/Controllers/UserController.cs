@@ -9,7 +9,7 @@ using TelimAPI.Application.Services;
 
 namespace TelimAPI.API.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/[controller]/[action]")]
     [ApiController]
     public class UserController : ControllerBase
     {
@@ -20,7 +20,7 @@ namespace TelimAPI.API.Controllers
             _userService = userService;
         }
 
-        [HttpGet("trainings")]
+        [HttpGet]
         [Authorize]
         public async Task<IActionResult> GetUserTrainings()
         {
@@ -40,7 +40,7 @@ namespace TelimAPI.API.Controllers
             ));
         }
 
-        [HttpPost("trainings/join")]
+        [HttpPost]
         [Authorize]
         public async Task<IActionResult> JoinTraining([FromBody] JoinTrainingRequest request)
         {
@@ -66,7 +66,7 @@ namespace TelimAPI.API.Controllers
                 message: "Təlimə uğurla qoşuldunuz."
             ));
         }
-        [HttpPost("trainings/feedback")]
+        [HttpPost]
         [Authorize]
         public async Task<IActionResult> SubmitFeedback([FromBody] SubmitFeedbackRequest request)
         {

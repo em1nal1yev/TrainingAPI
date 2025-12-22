@@ -1,5 +1,74 @@
 [
   {
+    "ContainingType": "TelimAPI.API.Controllers.AttendanceController",
+    "Method": "AddSessionAttendance",
+    "RelativePath": "api/Attendance/AddSessionAttendance",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "sessionId",
+        "Type": "System.Guid",
+        "IsRequired": false
+      },
+      {
+        "Name": "attendanceDtos",
+        "Type": "System.Collections.Generic.List\u00601[[TelimAPI.Application.DTOs.Training.SessionAttendanceDto, TelimAPI.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "TelimAPI.API.Controllers.AttendanceController",
+    "Method": "GetHighAttendance",
+    "RelativePath": "api/Attendance/GetHighAttendance",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "trainingId",
+        "Type": "System.Guid",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "TelimAPI.API.Controllers.AttendanceController",
+    "Method": "GetLowAttendance",
+    "RelativePath": "api/Attendance/GetLowAttendance",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "trainingId",
+        "Type": "System.Guid",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "TelimAPI.API.Controllers.AttendanceController",
+    "Method": "GetTrainingAttendance",
+    "RelativePath": "api/Attendance/GetTrainingAttendance",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "trainingId",
+        "Type": "System.Guid",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "TelimAPI.API.Controllers.AuthController",
     "Method": "ForgotPassword",
     "RelativePath": "api/Auth/ForgotPassword",
@@ -75,8 +144,8 @@
   },
   {
     "ContainingType": "TelimAPI.API.Controllers.AuthController",
-    "Method": "RegisterAdmin",
-    "RelativePath": "api/Auth/RegisterAdmin",
+    "Method": "RegisterAdminTrainer",
+    "RelativePath": "api/Auth/RegisterAdminTrainer",
     "HttpMethod": "POST",
     "IsController": true,
     "Order": 0,
@@ -85,22 +154,11 @@
         "Name": "dto",
         "Type": "TelimAPI.Application.DTOs.Auth.RegisterDto",
         "IsRequired": true
-      }
-    ],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "TelimAPI.API.Controllers.AuthController",
-    "Method": "RegisterTrainer",
-    "RelativePath": "api/Auth/RegisterTrainer",
-    "HttpMethod": "POST",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
+      },
       {
-        "Name": "dto",
-        "Type": "TelimAPI.Application.DTOs.Auth.RegisterDto",
-        "IsRequired": true
+        "Name": "role",
+        "Type": "System.String",
+        "IsRequired": false
       }
     ],
     "ReturnTypes": []
@@ -143,110 +201,9 @@
     "ReturnTypes": []
   },
   {
-    "ContainingType": "TelimAPI.API.Controllers.TrainingsController",
-    "Method": "Approve",
-    "RelativePath": "api/Trainings/{id}/approve",
-    "HttpMethod": "PUT",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "id",
-        "Type": "System.Guid",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "TelimAPI.API.Controllers.TrainingsController",
-    "Method": "AddSessionAttendance",
-    "RelativePath": "api/Trainings/{sessionId}/attendance",
-    "HttpMethod": "POST",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "sessionId",
-        "Type": "System.Guid",
-        "IsRequired": true
-      },
-      {
-        "Name": "attendanceDtos",
-        "Type": "System.Collections.Generic.List\u00601[[TelimAPI.Application.DTOs.Training.SessionAttendanceDto, TelimAPI.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "TelimAPI.API.Controllers.TrainingsController",
-    "Method": "GetTrainingAttendance",
-    "RelativePath": "api/Trainings/{trainingId}/attendance",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "trainingId",
-        "Type": "System.Guid",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "TelimAPI.API.Controllers.TrainingsController",
-    "Method": "GetHighAttendance",
-    "RelativePath": "api/Trainings/{trainingId}/high-attendance",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "trainingId",
-        "Type": "System.Guid",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "TelimAPI.API.Controllers.TrainingsController",
-    "Method": "GetLowAttendance",
-    "RelativePath": "api/Trainings/{trainingId}/low-attendance",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "trainingId",
-        "Type": "System.Guid",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "TelimAPI.API.Controllers.TrainingsController",
-    "Method": "Create",
-    "RelativePath": "api/Trainings/create",
-    "HttpMethod": "POST",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "dto",
-        "Type": "TelimAPI.Application.DTOs.Training.TrainingCreateDto",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "TelimAPI.API.Controllers.TrainingsController",
+    "ContainingType": "TelimAPI.API.Controllers.SessionController",
     "Method": "CreateTrainingSession",
-    "RelativePath": "api/Trainings/create-session",
+    "RelativePath": "api/Session/CreateTrainingSession",
     "HttpMethod": "POST",
     "IsController": true,
     "Order": 0,
@@ -260,71 +217,25 @@
     "ReturnTypes": []
   },
   {
-    "ContainingType": "TelimAPI.API.Controllers.TrainingsController",
-    "Method": "Delete",
-    "RelativePath": "api/Trainings/delete{id}",
-    "HttpMethod": "DELETE",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "id",
-        "Type": "System.Guid",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "TelimAPI.API.Controllers.TrainingsController",
-    "Method": "GetDrafts",
-    "RelativePath": "api/Trainings/drafts",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "TelimAPI.API.Controllers.TrainingsController",
-    "Method": "GetExpired",
-    "RelativePath": "api/Trainings/expired",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "TelimAPI.API.Controllers.TrainingsController",
-    "Method": "GetAll",
-    "RelativePath": "api/Trainings/get-all",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "TelimAPI.API.Controllers.TrainingsController",
-    "Method": "GetById",
-    "RelativePath": "api/Trainings/get-by-{id}",
+    "ContainingType": "TelimAPI.API.Controllers.SessionController",
+    "Method": "GetSessionDetails",
+    "RelativePath": "api/Session/GetSessionDetails",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
     "Parameters": [
       {
-        "Name": "id",
+        "Name": "sessionId",
         "Type": "System.Guid",
-        "IsRequired": true
+        "IsRequired": false
       }
     ],
     "ReturnTypes": []
   },
   {
-    "ContainingType": "TelimAPI.API.Controllers.TrainingsController",
+    "ContainingType": "TelimAPI.API.Controllers.SessionController",
     "Method": "GetTrainingSessionsByTrainingId",
-    "RelativePath": "api/Trainings/GetSessions",
+    "RelativePath": "api/Session/GetTrainingSessionsByTrainingId",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
@@ -339,8 +250,56 @@
   },
   {
     "ContainingType": "TelimAPI.API.Controllers.TrainingsController",
-    "Method": "GetOngoingWithUsers",
-    "RelativePath": "api/Trainings/ongoingTrainings",
+    "Method": "Approve",
+    "RelativePath": "api/Trainings/Approve",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Guid",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "TelimAPI.API.Controllers.TrainingsController",
+    "Method": "Create",
+    "RelativePath": "api/Trainings/Create",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "dto",
+        "Type": "TelimAPI.Application.DTOs.Training.TrainingCreateDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "TelimAPI.API.Controllers.TrainingsController",
+    "Method": "Delete",
+    "RelativePath": "api/Trainings/Delete",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Guid",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "TelimAPI.API.Controllers.TrainingsController",
+    "Method": "GetAll",
+    "RelativePath": "api/Trainings/GetAll",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
@@ -349,24 +308,54 @@
   },
   {
     "ContainingType": "TelimAPI.API.Controllers.TrainingsController",
-    "Method": "GetSessionDetails",
-    "RelativePath": "api/Trainings/sessions/{sessionId}/details",
+    "Method": "GetById",
+    "RelativePath": "api/Trainings/GetById",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
     "Parameters": [
       {
-        "Name": "sessionId",
+        "Name": "id",
         "Type": "System.Guid",
-        "IsRequired": true
+        "IsRequired": false
       }
     ],
     "ReturnTypes": []
   },
   {
     "ContainingType": "TelimAPI.API.Controllers.TrainingsController",
+    "Method": "GetDrafts",
+    "RelativePath": "api/Trainings/GetDrafts",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "TelimAPI.API.Controllers.TrainingsController",
+    "Method": "GetExpired",
+    "RelativePath": "api/Trainings/GetExpired",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "TelimAPI.API.Controllers.TrainingsController",
+    "Method": "GetOngoingWithUsers",
+    "RelativePath": "api/Trainings/GetOngoingWithUsers",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "TelimAPI.API.Controllers.TrainingsController",
     "Method": "Update",
-    "RelativePath": "api/Trainings/update",
+    "RelativePath": "api/Trainings/Update",
     "HttpMethod": "PUT",
     "IsController": true,
     "Order": 0,
@@ -382,7 +371,7 @@
   {
     "ContainingType": "TelimAPI.API.Controllers.UserController",
     "Method": "GetUserTrainings",
-    "RelativePath": "api/User/trainings",
+    "RelativePath": "api/User/GetUserTrainings",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
@@ -391,24 +380,8 @@
   },
   {
     "ContainingType": "TelimAPI.API.Controllers.UserController",
-    "Method": "SubmitFeedback",
-    "RelativePath": "api/User/trainings/feedback",
-    "HttpMethod": "POST",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "request",
-        "Type": "TelimAPI.Application.DTOs.User.SubmitFeedbackRequest",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "TelimAPI.API.Controllers.UserController",
     "Method": "JoinTraining",
-    "RelativePath": "api/User/trainings/join",
+    "RelativePath": "api/User/JoinTraining",
     "HttpMethod": "POST",
     "IsController": true,
     "Order": 0,
@@ -416,6 +389,22 @@
       {
         "Name": "request",
         "Type": "TelimAPI.Application.DTOs.User.JoinTrainingRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "TelimAPI.API.Controllers.UserController",
+    "Method": "SubmitFeedback",
+    "RelativePath": "api/User/SubmitFeedback",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "request",
+        "Type": "TelimAPI.Application.DTOs.User.SubmitFeedbackRequest",
         "IsRequired": true
       }
     ],

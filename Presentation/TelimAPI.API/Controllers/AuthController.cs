@@ -8,7 +8,7 @@ using TelimAPI.Application.Services;
 
 namespace TelimAPI.API.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/[controller]/[action]")]
     [ApiController]
     public class AuthController : ControllerBase
     {
@@ -19,8 +19,7 @@ namespace TelimAPI.API.Controllers
             _authService = authService;
         }
 
-        [HttpPost("Register")]
-        [AllowAnonymous]
+        [HttpPost]
         public async Task<IActionResult> Register([FromBody] RegisterDto dto)
         {
             var result = await _authService.RegisterUserAsync(dto, "User");
@@ -36,11 +35,11 @@ namespace TelimAPI.API.Controllers
             ));
         }
 
-        [HttpPost("RegisterAdmin")]
+        [HttpPost]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> RegisterAdmin([FromBody] RegisterDto dto)
+        public async Task<IActionResult> RegisterAdminTrainer([FromBody] RegisterDto dto, string role)
         {
-            var result = await _authService.RegisterUserAsync(dto, "Admin");
+            var result = await _authService.RegisterUserAsync(dto, role);
 
             if (!result.Succeeded)
             {
@@ -54,24 +53,7 @@ namespace TelimAPI.API.Controllers
             ));
         }
 
-        [HttpPost("RegisterTrainer")]
-        [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> RegisterTrainer([FromBody] RegisterDto dto)
-        {
-            var result = await _authService.RegisterUserAsync(dto, "Trainer");
-            if (!result.Succeeded)
-            {
-                return BadRequest(ApiResponses.Fail<object>(
-                    "Əməliyyat uğursuz oldu",
-                    result.Errors
-                ));
-            }
-            return Ok(ApiResponses.Success<object>(
-                message: "Qeydiyyat uğurla tamamlandı. İndi daxil ola bilərsiniz."
-            ));
-        }
-
-        [HttpPost("Login")]
+        [HttpPost]
         public async Task<IActionResult> Login([FromBody] LoginDto dto)
         {
             var result = await _authService.LoginUserAsync(dto);
@@ -94,8 +76,8 @@ namespace TelimAPI.API.Controllers
         }
 
 
-        [AllowAnonymous]
-        [HttpPost("ForgotPassword")]
+        
+        [HttpPost]
         public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordRequestDto dto)
         {
             
@@ -118,8 +100,8 @@ namespace TelimAPI.API.Controllers
             ));
         }
 
-        [AllowAnonymous]
-        [HttpPost("ResetPassword")]
+        
+        [HttpPost]
         public async Task<IActionResult> ResetPassword(string token, [FromBody] ResetPasswordDto dto)
         {
             
@@ -144,7 +126,7 @@ namespace TelimAPI.API.Controllers
         }
 
 
-        [HttpGet("GetCurrentUser")]
+        [HttpGet]
         [Authorize]
         public IActionResult GetCurrentUser()
         {
@@ -164,7 +146,7 @@ namespace TelimAPI.API.Controllers
             ));
         }
 
-        [HttpPost("RefreshToken")]
+        [HttpPost]
         public async Task<IActionResult> RefreshToken([FromBody] RefreshTokenRequest request)
         {
             
@@ -190,7 +172,7 @@ namespace TelimAPI.API.Controllers
         }
 
         [Authorize]
-        [HttpPost("RevokeRefreshToken")]
+        [HttpPost]
         public async Task<IActionResult> RevokeRefreshToken([FromBody] RefreshTokenRequest request)
         {
            
