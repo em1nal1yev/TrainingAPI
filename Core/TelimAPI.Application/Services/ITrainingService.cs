@@ -12,7 +12,7 @@ namespace TelimAPI.Application.Services
     public interface ITrainingService
     {
         Task<List<TrainingGetDto>> GetAllAsync();
-        Task<TrainingGetDto?> GetByIdAsync(Guid id);
+        Task<Result<TrainingGetDto>?> GetByIdAsync(Guid id);
         Task<List<TrainingGetDto>> GetExpiredAsync();
         Task<List<TrainingGetDto>> GetDraftsAsync();
         Task<List<TrainingOngoingWithUsersDto>> GetOngoingAsync();

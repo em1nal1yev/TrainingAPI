@@ -63,6 +63,7 @@ namespace TelimAPI.API.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Trainer, Admin")]
         public async Task<IActionResult> GetHighAttendance(Guid trainingId)
         {
             Result<List<HighAttendanceDto>> result = await _trainingService.GetHighAttendanceAsync(trainingId);
@@ -80,6 +81,7 @@ namespace TelimAPI.API.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Trainer, Admin")]
         public async Task<IActionResult> GetLowAttendance(Guid trainingId)
         {
             var result = await _trainingService.GetLowAttendanceAsync(trainingId);

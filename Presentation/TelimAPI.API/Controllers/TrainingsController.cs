@@ -33,10 +33,16 @@ namespace TelimAPI.API.Controllers
         [HttpGet]
         public async Task<IActionResult> GetById(Guid id)
         {
-            var training = await _trainingService.GetByIdAsync(id);
-            if (training == null) return NotFound(ApiResponses.Fail<object>("Training not found"));
-            return Ok(ApiResponses.Success(training, "Training ugurla getirildi"));
+            Result result = await _trainingService.GetByIdAsync(id);
+
+            if (!result.Succeeded)
+            {
+                return NotFound(ApiResponses.Fail<object>("training tapilmadi", result.Errors));
+            }
+
+            return Ok(ApiResponses.Success(result, "Training uğurla gətirildi"));
         }
+
         [Authorize(Roles = "Trainer, Admin")]
         [HttpGet]
         public async Task<IActionResult> GetExpired()

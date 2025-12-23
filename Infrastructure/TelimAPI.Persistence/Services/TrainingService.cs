@@ -46,15 +46,16 @@ namespace TelimAPI.Persistence.Services
             )).ToList();
         }
 
-        public async Task<TrainingGetDto?> GetByIdAsync(Guid id)
+        public async Task<Result<TrainingGetDto>?> GetByIdAsync(Guid id)
         {
             var training = await _trainingRepository.GetByIdAsync(id);
             if (training == null)
             {
-                return null;
+                return Result<TrainingGetDto>.Failure("Training id yanlisdir.");
             }
 
-            return new TrainingGetDto(
+            
+            var trainingDto = new TrainingGetDto(
                 training.Id,
                 training.Title,
                 training.Description,
@@ -64,6 +65,7 @@ namespace TelimAPI.Persistence.Services
                 training.TrainingDepartments?.Select(d => d.Department.Name ?? "").ToList()
             );
 
+            return Result<TrainingGetDto>.Success(trainingDto);
         }
         public async Task<Result> CreateAsync(TrainingCreateDto dto)
         {
@@ -168,9 +170,9 @@ namespace TelimAPI.Persistence.Services
             var allDepartments = await _departmentRepository.GetAllAsync();
             var allUsers = await _userRepository.GetAllAsync();
 
-            // --- MƏHKƏMƏ (COURT) MƏNTİQİ ---
+            
             List<Court> effectiveCourts;
-            if (dto.CourtIds != null) // null deyilsə dəyişiklik var
+            if (dto.CourtIds != null) 
             {
                 effectiveCourts = dto.CourtIds.Count == 0
                     ? allCourts
@@ -182,18 +184,18 @@ namespace TelimAPI.Persistence.Services
                     training.TrainingCourts.Add(new TrainingCourt { CourtId = court.Id, TrainingId = training.Id });
                 }
             }
-            else // null-dırsa mövcud olanlar qalır
+            else
             {
                 var currentCourtIds = training.TrainingCourts.Select(tc => tc.CourtId).ToList();
                 effectiveCourts = allCourts.Where(c => currentCourtIds.Contains(c.Id)).ToList();
             }
 
-            // --- DEPARTAMENT MƏNTİQİ ---
+            
             List<Department> selectedDepartments;
             var courtIdsForFiltering = effectiveCourts.Select(c => c.Id).ToList();
             var filteredDepartmentsByCourt = allDepartments.Where(d => courtIdsForFiltering.Contains(d.CourtId)).ToList();
 
-            if (dto.DepartmentIds != null) // null deyilsə dəyişiklik var
+            if (dto.DepartmentIds != null) 
             {
                 selectedDepartments = dto.DepartmentIds.Count == 0
                     ? filteredDepartmentsByCourt
@@ -205,7 +207,7 @@ namespace TelimAPI.Persistence.Services
                     training.TrainingDepartments.Add(new TrainingDepartment { DepartmentId = dep.Id, TrainingId = training.Id });
                 }
             }
-            else // DepartamentIds null-dırsa
+            else 
             {
                 if (dto.CourtIds != null) 
                 {
@@ -563,7 +565,6 @@ namespace TelimAPI.Persistence.Services
 
                 foreach (var participant in participants)
                 {
-                    // Bu sessiya üçün həmin istifadəçinin davamiyyəti varmı?
                     var attendance = session.Attendances?
                         .FirstOrDefault(a => a.UserId == participant.UserId);
 
@@ -583,6 +584,11 @@ namespace TelimAPI.Persistence.Services
 
         public async Task<Result<List<HighAttendanceDto>>> GetHighAttendanceAsync(Guid trainingId)
         {
+            var training = await _trainingRepository.GetByIdAsync(trainingId);
+            if (training == null)
+            {
+                return Result<List<HighAttendanceDto>>.Failure("Telim tapilmadi");
+            }
 
             var participants = await _trainingRepository.GetJoinedParticipantsByTrainingIdAsync(trainingId);
             if (!participants.Any())
@@ -625,6 +631,11 @@ namespace TelimAPI.Persistence.Services
 
         public async Task<Result<List<HighAttendanceDto>>> GetLowAttendanceAsync(Guid trainingId)
         {
+            var training = await _trainingRepository.GetByIdAsync(trainingId);
+            if (training == null)
+            {
+                return Result<List<HighAttendanceDto>>.Failure("Telim tapilmadi");
+            }
 
             var participants = await _trainingRepository.GetJoinedParticipantsByTrainingIdAsync(trainingId);
             var sessions = await _trainingRepository.GetSessionsByTrainingIdAsync(trainingId);

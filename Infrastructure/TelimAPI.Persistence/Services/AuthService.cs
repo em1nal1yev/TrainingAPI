@@ -4,10 +4,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TelimAPI.Application.Common.Results;
 using TelimAPI.Application.DTOs.Auth;
 using TelimAPI.Application.Repositories;
 using TelimAPI.Application.Services;
 using TelimAPI.Domain.Entities;
+using TelimAPI.Persistence.Repositories;
 
 namespace TelimAPI.Persistence.Services
 {
@@ -20,7 +22,9 @@ namespace TelimAPI.Persistence.Services
         private readonly ITokenService _tokenService;
         private readonly IRefreshTokenRepository _refreshTokenRepository;
         private readonly IEmailService _emailService;
-        public AuthService(UserManager<User> userManager, SignInManager<User> signInManager, RoleManager<IdentityRole<Guid>> roleManager, ITokenService tokenService, IRefreshTokenRepository refreshTokenRepository, IEmailService emailService)
+        private readonly ICourtRepository _courtRepository;
+        private readonly IDepartmentRepository _departmentRepository;
+        public AuthService(UserManager<User> userManager, SignInManager<User> signInManager, RoleManager<IdentityRole<Guid>> roleManager, ITokenService tokenService, IRefreshTokenRepository refreshTokenRepository, IEmailService emailService, ICourtRepository courtRepository, IDepartmentRepository departmentRepository)
         {
             _userManager = userManager;
             _signInManager = signInManager;
@@ -28,11 +32,35 @@ namespace TelimAPI.Persistence.Services
             _tokenService = tokenService;
             _refreshTokenRepository = refreshTokenRepository;
             _emailService = emailService;
+            _courtRepository = courtRepository;
+            _departmentRepository = departmentRepository;
         }
 
 
         public async Task<AuthResult> RegisterUserAsync(RegisterDto dto, string roleName)
         {
+
+
+            var court = await _courtRepository.GetByIdAsync(dto.CourtId);
+            if (court == null)
+            {
+                return new AuthResult
+                {
+                    Succeeded = false,
+                    Errors = new List<string>() { "department id yanlisdir." }
+                };
+            }
+
+            var department = await _departmentRepository.GetByIdAsync(dto.DepartmentId);
+            if (department == null)
+            {
+                return new AuthResult
+                {
+                    Succeeded = false,
+                    Errors = new List<string>() { "court id yanlisdir." }
+                };
+            }
+
 
             var existingUser = await _userManager.FindByEmailAsync(dto.Email);
 
