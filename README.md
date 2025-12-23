@@ -141,13 +141,3 @@ User – Limited access
 
 
 
-🧪 Testing
-
-Unit tests for services using xUnit
-
-Integration tests for controllers and DB layer
-
-Run tests:
-
-dotnet test
-
