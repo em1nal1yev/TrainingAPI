@@ -30,9 +30,9 @@
               "Title": "TrainingsController.cs",
               "DocumentMoniker": "C:\\Users\\User.DESKTOP-U18JVHB\\Desktop\\Projects\\TrainingAPI\\Presentation\\TelimAPI.API\\Controllers\\TrainingsController.cs",
               "RelativeDocumentMoniker": "Presentation\\TelimAPI.API\\Controllers\\TrainingsController.cs",
-              "ToolTip": "C:\\Users\\User.DESKTOP-U18JVHB\\Desktop\\Projects\\TrainingAPI\\Presentation\\TelimAPI.API\\Controllers\\TrainingsController.cs*",
-              "RelativeToolTip": "Presentation\\TelimAPI.API\\Controllers\\TrainingsController.cs*",
-              "ViewState": "AgIAABgAAAAAAAAAAAAswCcAAABdAAAAAAAAAA==",
+              "ToolTip": "C:\\Users\\User.DESKTOP-U18JVHB\\Desktop\\Projects\\TrainingAPI\\Presentation\\TelimAPI.API\\Controllers\\TrainingsController.cs",
+              "RelativeToolTip": "Presentation\\TelimAPI.API\\Controllers\\TrainingsController.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA0AAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-12-23T07:37:30.47Z",
               "EditorCaption": ""
@@ -47,8 +47,7 @@
               "RelativeToolTip": "Infrastructure\\TelimAPI.Persistence\\Services\\TrainingService.cs",
               "ViewState": "AgIAAC4AAAAAAAAAAAAlwEQAAAAJAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-12-23T07:34:40.544Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-12-23T07:34:40.544Z"
             },
             {
               "$type": "Document",
@@ -60,8 +59,7 @@
               "RelativeToolTip": "Infrastructure\\TelimAPI.Persistence\\Services\\AuthService.cs",
               "ViewState": "AgIAAGwAAAAAAAAAAAAQwGMAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-12-23T06:20:39.083Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-12-23T06:20:39.083Z"
             }
           ]
         }
