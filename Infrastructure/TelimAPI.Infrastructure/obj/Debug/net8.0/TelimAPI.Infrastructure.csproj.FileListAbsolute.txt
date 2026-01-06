@@ -19,8 +19,10 @@ C:\Users\User.DESKTOP-U18JVHB\Desktop\Projects\TrainingAPI\Infrastructure\TelimA
 C:\Users\User.DESKTOP-U18JVHB\Desktop\Projects\TrainingAPI\Infrastructure\TelimAPI.Infrastructure\bin\Debug\net8.0\TelimAPI.Infrastructure.dll
 C:\Users\User.DESKTOP-U18JVHB\Desktop\Projects\TrainingAPI\Infrastructure\TelimAPI.Infrastructure\bin\Debug\net8.0\TelimAPI.Infrastructure.pdb
 C:\Users\User.DESKTOP-U18JVHB\Desktop\Projects\TrainingAPI\Infrastructure\TelimAPI.Infrastructure\bin\Debug\net8.0\TelimAPI.Application.dll
+C:\Users\User.DESKTOP-U18JVHB\Desktop\Projects\TrainingAPI\Infrastructure\TelimAPI.Infrastructure\bin\Debug\net8.0\TelimAPI.Contracts.dll
 C:\Users\User.DESKTOP-U18JVHB\Desktop\Projects\TrainingAPI\Infrastructure\TelimAPI.Infrastructure\bin\Debug\net8.0\TelimAPI.Domain.dll
 C:\Users\User.DESKTOP-U18JVHB\Desktop\Projects\TrainingAPI\Infrastructure\TelimAPI.Infrastructure\bin\Debug\net8.0\TelimAPI.Application.pdb
+C:\Users\User.DESKTOP-U18JVHB\Desktop\Projects\TrainingAPI\Infrastructure\TelimAPI.Infrastructure\bin\Debug\net8.0\TelimAPI.Contracts.pdb
 C:\Users\User.DESKTOP-U18JVHB\Desktop\Projects\TrainingAPI\Infrastructure\TelimAPI.Infrastructure\bin\Debug\net8.0\TelimAPI.Domain.pdb
 C:\Users\User.DESKTOP-U18JVHB\Desktop\Projects\TrainingAPI\Infrastructure\TelimAPI.Infrastructure\obj\Debug\net8.0\TelimAPI.Infrastructure.csproj.AssemblyReference.cache
 C:\Users\User.DESKTOP-U18JVHB\Desktop\Projects\TrainingAPI\Infrastructure\TelimAPI.Infrastructure\obj\Debug\net8.0\TelimAPI.Infrastructure.GeneratedMSBuildEditorConfig.editorconfig

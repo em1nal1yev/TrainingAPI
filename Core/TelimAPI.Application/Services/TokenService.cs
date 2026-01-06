@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System;
@@ -13,7 +14,7 @@ using TelimAPI.Application.Services;
 using TelimAPI.Domain.Entities;
 using TelimAPI.Persistence.Options;
 
-namespace TelimAPI.Persistence.Services
+namespace TelimAPI.Application.Services
 {
     public class TokenService:ITokenService
     {

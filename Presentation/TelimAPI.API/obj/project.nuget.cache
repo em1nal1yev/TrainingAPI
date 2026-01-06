@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "+gxIViKEb3o=",
+  "dgSpecHash": "8ZWHXK1CVmk=",
   "success": true,
   "projectFilePath": "C:\\Users\\User.DESKTOP-U18JVHB\\Desktop\\Projects\\TrainingAPI\\Presentation\\TelimAPI.API\\TelimAPI.API.csproj",
   "expectedPackageFiles": [
@@ -8,6 +8,7 @@
     "C:\\Users\\User.DESKTOP-U18JVHB\\.nuget\\packages\\azure.identity\\1.11.4\\azure.identity.1.11.4.nupkg.sha512",
     "C:\\Users\\User.DESKTOP-U18JVHB\\.nuget\\packages\\bouncycastle.cryptography\\2.6.1\\bouncycastle.cryptography.2.6.1.nupkg.sha512",
     "C:\\Users\\User.DESKTOP-U18JVHB\\.nuget\\packages\\humanizer.core\\2.14.1\\humanizer.core.2.14.1.nupkg.sha512",
+    "C:\\Users\\User.DESKTOP-U18JVHB\\.nuget\\packages\\jose-jwt\\5.2.0\\jose-jwt.5.2.0.nupkg.sha512",
     "C:\\Users\\User.DESKTOP-U18JVHB\\.nuget\\packages\\mailkit\\4.14.1\\mailkit.4.14.1.nupkg.sha512",
     "C:\\Users\\User.DESKTOP-U18JVHB\\.nuget\\packages\\microsoft.aspnetcore.authentication\\2.3.0\\microsoft.aspnetcore.authentication.2.3.0.nupkg.sha512",
     "C:\\Users\\User.DESKTOP-U18JVHB\\.nuget\\packages\\microsoft.aspnetcore.authentication.abstractions\\2.3.0\\microsoft.aspnetcore.authentication.abstractions.2.3.0.nupkg.sha512",

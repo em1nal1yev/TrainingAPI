@@ -73,6 +73,14 @@
           }
         }
       },
+      "jose-jwt/5.2.0": {
+        "runtime": {
+          "lib/net6.0/jose-jwt.dll": {
+            "assemblyVersion": "5.2.0.0",
+            "fileVersion": "5.2.0.0"
+          }
+        }
+      },
       "MailKit/4.14.1": {
         "dependencies": {
           "MimeKit": "4.14.0",
@@ -1445,11 +1453,27 @@
       },
       "TelimAPI.Application/1.0.0": {
         "dependencies": {
+          "Microsoft.AspNetCore.Identity": "2.3.1",
           "Microsoft.Extensions.Hosting": "8.0.1",
-          "TelimAPI.Domain": "1.0.0"
+          "Microsoft.IdentityModel.Tokens": "7.1.2",
+          "System.IdentityModel.Tokens.Jwt": "7.1.2",
+          "TelimAPI.Contracts": "1.0.0",
+          "TelimAPI.Domain": "1.0.0",
+          "jose-jwt": "5.2.0"
         },
         "runtime": {
           "TelimAPI.Application.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
+          }
+        }
+      },
+      "TelimAPI.Contracts/1.0.0": {
+        "dependencies": {
+          "TelimAPI.Domain": "1.0.0"
+        },
+        "runtime": {
+          "TelimAPI.Contracts.dll": {
             "assemblyVersion": "1.0.0.0",
             "fileVersion": "1.0.0.0"
           }
@@ -1483,7 +1507,8 @@
           "Microsoft.AspNetCore.Identity.EntityFrameworkCore": "8.0.21",
           "Microsoft.EntityFrameworkCore": "8.0.21",
           "Microsoft.EntityFrameworkCore.SqlServer": "8.0.21",
-          "TelimAPI.Application": "1.0.0"
+          "TelimAPI.Application": "1.0.0",
+          "TelimAPI.Domain": "1.0.0"
         },
         "runtime": {
           "TelimAPI.Persistence.dll": {
@@ -1527,6 +1552,13 @@
       "sha512": "sha512-lQKvtaTDOXnoVJ20ibTuSIOf2i0uO0MPbDhd1jm238I+U/2ZnRENj0cktKZhtchBMtCUSRQ5v4xBCUbKNmyVMw==",
       "path": "humanizer.core/2.14.1",
       "hashPath": "humanizer.core.2.14.1.nupkg.sha512"
+    },
+    "jose-jwt/5.2.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-wCpQXj+i7qJpS6QC/dlNJM2AtJ0OGL1hbml/Lo0K5JzN1+HtvUVKCP4f9KvcwE9vLLQdaeSPjuRe+LPDja6xsA==",
+      "path": "jose-jwt/5.2.0",
+      "hashPath": "jose-jwt.5.2.0.nupkg.sha512"
     },
     "MailKit/4.14.1": {
       "type": "package",
@@ -2397,6 +2429,11 @@
       "hashPath": "system.windows.extensions.6.0.0.nupkg.sha512"
     },
     "TelimAPI.Application/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "TelimAPI.Contracts/1.0.0": {
       "type": "project",
       "serviceable": false,
       "sha512": ""

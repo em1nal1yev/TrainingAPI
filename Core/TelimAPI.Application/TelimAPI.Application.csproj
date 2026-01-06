@@ -7,15 +7,16 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="jose-jwt" Version="5.2.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.3.1" />
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.1" />
+    <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="7.1.2" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="7.1.2" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\TelimAPI.Contracts\TelimAPI.Contracts.csproj" />
     <ProjectReference Include="..\TelimAPI.Domain\TelimAPI.Domain.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Common\Models\" />
   </ItemGroup>
 
 </Project>

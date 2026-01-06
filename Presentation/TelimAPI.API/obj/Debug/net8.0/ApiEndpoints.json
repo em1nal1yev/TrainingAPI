@@ -14,7 +14,7 @@
       },
       {
         "Name": "attendanceDtos",
-        "Type": "System.Collections.Generic.List\u00601[[TelimAPI.Application.DTOs.Training.SessionAttendanceDto, TelimAPI.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "Type": "System.Collections.Generic.List\u00601[[TelimAPI.Application.DTOs.Training.SessionAttendanceDto, TelimAPI.Contracts, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
         "IsRequired": true
       }
     ],

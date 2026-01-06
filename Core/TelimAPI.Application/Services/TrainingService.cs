@@ -67,6 +67,7 @@ namespace TelimAPI.Persistence.Services
 
             return Result<TrainingGetDto>.Success(trainingDto);
         }
+
         public async Task<Result> CreateAsync(TrainingCreateDto dto)
         {
             try
@@ -261,6 +262,89 @@ namespace TelimAPI.Persistence.Services
             return Result.Success();
         }
 
+        public async Task<List<TrainingGetDto>> GetExpiredAsync()
+        {
+            var trainings = await _trainingRepository.GetExpiredAsync();
+
+            return trainings.Select(t => new TrainingGetDto(
+                t.Id,
+                t.Title,
+                t.Description,
+                t.StartDate,
+                t.EndDate,
+                t.TrainingCourts?.Select(c => c.Court.Name ?? "").ToList(),
+                t.TrainingDepartments?.Select(d => d.Department.Name ?? "").ToList()
+            )).ToList();
+        }
+
+        public async Task<List<TrainingGetDto>> GetDraftsAsync()
+        {
+            var trainings = await _trainingRepository.GetDraftsAsync();
+
+            return trainings.Select(t => new TrainingGetDto(
+                t.Id,
+                t.Title,
+                t.Description,
+                t.StartDate,
+                t.EndDate,
+                t.TrainingCourts?.Select(c => c.Court.Name ?? "").ToList(),
+                t.TrainingDepartments?.Select(d => d.Department.Name ?? "").ToList()
+            )).ToList();
+        }
+
+        public async Task<List<TrainingOngoingWithUsersDto>> GetOngoingAsync()
+        {
+            var trainings = await _trainingRepository.GetOngoingAsync();
+
+            return trainings.Select(t => new TrainingOngoingWithUsersDto
+            {
+                Id = t.Id,
+                Title = t.Title,
+                Users = t.Participants
+        .Where(p => p.IsJoined)
+        .Select(p => new UserSimpleDto
+        {
+            Id = p.UserId,
+            Name = p.User.Name
+        }).ToList()
+            }).ToList();
+        }
+
+        public async Task<Result> ApproveAsync(Guid id)
+        {
+            var training = await _trainingRepository.GetByIdAsync(id);
+
+            if (training == null)
+            {
+                return new Result
+                {
+                    Succeeded = false,
+                    Errors = new List<string> { "Təlim tapılmadı" }
+                };
+            }
+                
+
+            if (training.Status != TrainingStatus.Draft)
+            {
+                return new Result
+                {
+                    Succeeded = false,
+                    Errors = new List<string> { "Təlim 'Draft' statusunda deyil, təsdiqlənə bilməz" }
+                };
+            }
+                
+
+            training.Status = TrainingStatus.Pending;
+
+            await _trainingRepository.SaveAsync();
+            return new Result { Succeeded = true };
+        }
+
+
+
+
+
+
         public async Task<Result<List<TrainingSessionGetDto>>> GetSessionsByTrainingIdAsync(Guid trainingId)
         {
             var training = await _trainingRepository.GetByIdAsync(trainingId);
@@ -417,8 +501,6 @@ namespace TelimAPI.Persistence.Services
 
         }
 
-
-
         public async Task<Result<SessionDetailsDto>> GetSessionDetailsWithParticipantsAsync(Guid sessionId)
         {
             
@@ -455,84 +537,6 @@ namespace TelimAPI.Persistence.Services
             };
 
             return Result<SessionDetailsDto>.Success(sessionDetailsDto);
-        }
-
-        public async Task<List<TrainingGetDto>> GetExpiredAsync()
-        {
-            var trainings = await _trainingRepository.GetExpiredAsync();
-
-            return trainings.Select(t => new TrainingGetDto(
-                t.Id,
-                t.Title,
-                t.Description,
-                t.StartDate,
-                t.EndDate,
-                t.TrainingCourts?.Select(c => c.Court.Name ?? "").ToList(),
-                t.TrainingDepartments?.Select(d => d.Department.Name ?? "").ToList()
-            )).ToList();
-        }
-
-        public async Task<List<TrainingGetDto>> GetDraftsAsync()
-        {
-            var trainings = await _trainingRepository.GetDraftsAsync();
-
-            return trainings.Select(t => new TrainingGetDto(
-                t.Id,
-                t.Title,
-                t.Description,
-                t.StartDate,
-                t.EndDate,
-                t.TrainingCourts?.Select(c => c.Court.Name ?? "").ToList(),
-                t.TrainingDepartments?.Select(d => d.Department.Name ?? "").ToList()
-            )).ToList();
-        }
-
-        public async Task<List<TrainingOngoingWithUsersDto>> GetOngoingAsync()
-        {
-            var trainings = await _trainingRepository.GetOngoingAsync();
-
-            return trainings.Select(t => new TrainingOngoingWithUsersDto
-            {
-                Id = t.Id,
-                Title = t.Title,
-                Users = t.Participants
-        .Where(p => p.IsJoined)
-        .Select(p => new UserSimpleDto
-        {
-            Id = p.UserId,
-            Name = p.User.Name
-        }).ToList()
-            }).ToList();
-        }
-
-        public async Task<Result> ApproveAsync(Guid id)
-        {
-            var training = await _trainingRepository.GetByIdAsync(id);
-
-            if (training == null)
-            {
-                return new Result
-                {
-                    Succeeded = false,
-                    Errors = new List<string> { "Təlim tapılmadı" }
-                };
-            }
-                
-
-            if (training.Status != TrainingStatus.Draft)
-            {
-                return new Result
-                {
-                    Succeeded = false,
-                    Errors = new List<string> { "Təlim 'Draft' statusunda deyil, təsdiqlənə bilməz" }
-                };
-            }
-                
-
-            training.Status = TrainingStatus.Pending;
-
-            await _trainingRepository.SaveAsync();
-            return new Result { Succeeded = true };
         }
 
         public async Task<Result<TrainingAttendanceSummaryDto>> GetTrainingAttendancesAsync(Guid trainingId)

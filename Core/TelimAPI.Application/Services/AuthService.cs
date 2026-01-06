@@ -9,12 +9,11 @@ using TelimAPI.Application.DTOs.Auth;
 using TelimAPI.Application.Repositories;
 using TelimAPI.Application.Services;
 using TelimAPI.Domain.Entities;
-using TelimAPI.Persistence.Repositories;
 
 namespace TelimAPI.Persistence.Services
 {
 
-    internal class AuthService : IAuthService
+    public class AuthService : IAuthService
     {
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;

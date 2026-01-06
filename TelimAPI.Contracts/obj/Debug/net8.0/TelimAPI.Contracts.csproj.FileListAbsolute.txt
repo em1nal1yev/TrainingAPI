@@ -1,0 +1,16 @@
+C:\Users\User.DESKTOP-U18JVHB\Desktop\Projects\TrainingAPI\TelimAPI.Contracts\bin\Debug\net8.0\TelimAPI.Contracts.deps.json
+C:\Users\User.DESKTOP-U18JVHB\Desktop\Projects\TrainingAPI\TelimAPI.Contracts\bin\Debug\net8.0\TelimAPI.Contracts.dll
+C:\Users\User.DESKTOP-U18JVHB\Desktop\Projects\TrainingAPI\TelimAPI.Contracts\bin\Debug\net8.0\TelimAPI.Contracts.pdb
+C:\Users\User.DESKTOP-U18JVHB\Desktop\Projects\TrainingAPI\TelimAPI.Contracts\bin\Debug\net8.0\TelimAPI.Domain.dll
+C:\Users\User.DESKTOP-U18JVHB\Desktop\Projects\TrainingAPI\TelimAPI.Contracts\bin\Debug\net8.0\TelimAPI.Domain.pdb
+C:\Users\User.DESKTOP-U18JVHB\Desktop\Projects\TrainingAPI\TelimAPI.Contracts\obj\Debug\net8.0\TelimAPI.Contracts.csproj.AssemblyReference.cache
+C:\Users\User.DESKTOP-U18JVHB\Desktop\Projects\TrainingAPI\TelimAPI.Contracts\obj\Debug\net8.0\TelimAPI.Contracts.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\User.DESKTOP-U18JVHB\Desktop\Projects\TrainingAPI\TelimAPI.Contracts\obj\Debug\net8.0\TelimAPI.Contracts.AssemblyInfoInputs.cache
+C:\Users\User.DESKTOP-U18JVHB\Desktop\Projects\TrainingAPI\TelimAPI.Contracts\obj\Debug\net8.0\TelimAPI.Contracts.AssemblyInfo.cs
+C:\Users\User.DESKTOP-U18JVHB\Desktop\Projects\TrainingAPI\TelimAPI.Contracts\obj\Debug\net8.0\TelimAPI.Contracts.csproj.CoreCompileInputs.cache
+C:\Users\User.DESKTOP-U18JVHB\Desktop\Projects\TrainingAPI\TelimAPI.Contracts\obj\Debug\net8.0\TelimAPI.Contracts.sourcelink.json
+C:\Users\User.DESKTOP-U18JVHB\Desktop\Projects\TrainingAPI\TelimAPI.Contracts\obj\Debug\net8.0\TelimAPI.781AF5C1.Up2Date
+C:\Users\User.DESKTOP-U18JVHB\Desktop\Projects\TrainingAPI\TelimAPI.Contracts\obj\Debug\net8.0\TelimAPI.Contracts.dll
+C:\Users\User.DESKTOP-U18JVHB\Desktop\Projects\TrainingAPI\TelimAPI.Contracts\obj\Debug\net8.0\refint\TelimAPI.Contracts.dll
+C:\Users\User.DESKTOP-U18JVHB\Desktop\Projects\TrainingAPI\TelimAPI.Contracts\obj\Debug\net8.0\TelimAPI.Contracts.pdb
+C:\Users\User.DESKTOP-U18JVHB\Desktop\Projects\TrainingAPI\TelimAPI.Contracts\obj\Debug\net8.0\ref\TelimAPI.Contracts.dll

@@ -73,6 +73,15 @@
           }
         }
       },
+      "jose-jwt/5.2.0": {
+        "type": "package",
+        "compile": {
+          "lib/net6.0/jose-jwt.dll": {}
+        },
+        "runtime": {
+          "lib/net6.0/jose-jwt.dll": {}
+        }
+      },
       "MailKit/4.14.1": {
         "type": "package",
         "dependencies": {
@@ -2522,14 +2531,32 @@
         "type": "project",
         "framework": ".NETCoreApp,Version=v8.0",
         "dependencies": {
+          "Microsoft.AspNetCore.Identity": "2.3.1",
           "Microsoft.Extensions.Hosting": "8.0.1",
-          "TelimAPI.Domain": "1.0.0"
+          "Microsoft.IdentityModel.Tokens": "7.1.2",
+          "System.IdentityModel.Tokens.Jwt": "7.1.2",
+          "TelimAPI.Contracts": "1.0.0",
+          "TelimAPI.Domain": "1.0.0",
+          "jose-jwt": "5.2.0"
         },
         "compile": {
           "bin/placeholder/TelimAPI.Application.dll": {}
         },
         "runtime": {
           "bin/placeholder/TelimAPI.Application.dll": {}
+        }
+      },
+      "TelimAPI.Contracts/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v8.0",
+        "dependencies": {
+          "TelimAPI.Domain": "1.0.0"
+        },
+        "compile": {
+          "bin/placeholder/TelimAPI.Contracts.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/TelimAPI.Contracts.dll": {}
         }
       },
       "TelimAPI.Domain/1.0.0": {
@@ -2566,7 +2593,8 @@
           "Microsoft.AspNetCore.Identity.EntityFrameworkCore": "8.0.21",
           "Microsoft.EntityFrameworkCore": "8.0.21",
           "Microsoft.EntityFrameworkCore.SqlServer": "8.0.21",
-          "TelimAPI.Application": "1.0.0"
+          "TelimAPI.Application": "1.0.0",
+          "TelimAPI.Domain": "1.0.0"
         },
         "compile": {
           "bin/placeholder/TelimAPI.Persistence.dll": {}
@@ -2652,6 +2680,25 @@
         "lib/netstandard2.0/Humanizer.dll",
         "lib/netstandard2.0/Humanizer.xml",
         "logo.png"
+      ]
+    },
+    "jose-jwt/5.2.0": {
+      "sha512": "wCpQXj+i7qJpS6QC/dlNJM2AtJ0OGL1hbml/Lo0K5JzN1+HtvUVKCP4f9KvcwE9vLLQdaeSPjuRe+LPDja6xsA==",
+      "type": "package",
+      "path": "jose-jwt/5.2.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "LICENSE",
+        "README.md",
+        "jose-jwt.5.2.0.nupkg.sha512",
+        "jose-jwt.nuspec",
+        "lib/net40/jose-jwt.dll",
+        "lib/net461/jose-jwt.dll",
+        "lib/net472/jose-jwt.dll",
+        "lib/net6.0/jose-jwt.dll",
+        "lib/netstandard1.4/jose-jwt.dll",
+        "lib/netstandard2.1/jose-jwt.dll"
       ]
     },
     "MailKit/4.14.1": {
@@ -6392,6 +6439,11 @@
       "type": "project",
       "path": "../../Core/TelimAPI.Application/TelimAPI.Application.csproj",
       "msbuildProject": "../../Core/TelimAPI.Application/TelimAPI.Application.csproj"
+    },
+    "TelimAPI.Contracts/1.0.0": {
+      "type": "project",
+      "path": "../../TelimAPI.Contracts/TelimAPI.Contracts.csproj",
+      "msbuildProject": "../../TelimAPI.Contracts/TelimAPI.Contracts.csproj"
     },
     "TelimAPI.Domain/1.0.0": {
       "type": "project",
