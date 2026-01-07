@@ -30,20 +30,24 @@ namespace TelimAPI.Persistence.Services
             _idValidator = idValidator;
         }
 
-        public async Task<List<TrainingGetDto>> GetAllAsync()
+        public async Task<Result<List<TrainingGetDto>>> GetAllAsync()
         {
             var trainings = await _trainingRepository.GetAllAsync();
-            var filtered = trainings.Where(x => x.Status != TrainingStatus.Draft);
 
-            return filtered.Select(t => new TrainingGetDto(
-                t.Id,
-                t.Title,
-                t.Description,
-                t.StartDate,
-                t.EndDate,
-                t.TrainingCourts?.Select(c => c.Court.Name ?? "").ToList(),
-                t.TrainingDepartments?.Select(d => d.Department.Name ?? "").ToList()
-            )).ToList();
+            var filtered = trainings
+                .Where(x => x.Status != TrainingStatus.Draft)
+                .Select(t => new TrainingGetDto(
+                    t.Id,
+                    t.Title,
+                    t.Description,
+                    t.StartDate,
+                    t.EndDate,
+                    t.TrainingCourts?.Select(c => c.Court.Name ?? "").ToList(),
+                    t.TrainingDepartments?.Select(d => d.Department.Name ?? "").ToList()
+                ))
+                .ToList();
+
+            return Result<List<TrainingGetDto>>.Success(filtered);
         }
 
         public async Task<Result<TrainingGetDto>?> GetByIdAsync(Guid id)
@@ -262,11 +266,12 @@ namespace TelimAPI.Persistence.Services
             return Result.Success();
         }
 
-        public async Task<List<TrainingGetDto>> GetExpiredAsync()
+        public async Task<Result<List<TrainingGetDto>>> GetExpiredAsync()
         {
             var trainings = await _trainingRepository.GetExpiredAsync();
 
-            return trainings.Select(t => new TrainingGetDto(
+
+            var data = trainings.Select(t => new TrainingGetDto(
                 t.Id,
                 t.Title,
                 t.Description,
@@ -275,13 +280,15 @@ namespace TelimAPI.Persistence.Services
                 t.TrainingCourts?.Select(c => c.Court.Name ?? "").ToList(),
                 t.TrainingDepartments?.Select(d => d.Department.Name ?? "").ToList()
             )).ToList();
+
+            return Result<List<TrainingGetDto>>.Success(data);
         }
 
-        public async Task<List<TrainingGetDto>> GetDraftsAsync()
+        public async Task<Result<List<TrainingGetDto>>> GetDraftsAsync()
         {
             var trainings = await _trainingRepository.GetDraftsAsync();
 
-            return trainings.Select(t => new TrainingGetDto(
+            var data = trainings.Select(t => new TrainingGetDto(
                 t.Id,
                 t.Title,
                 t.Description,
@@ -290,24 +297,27 @@ namespace TelimAPI.Persistence.Services
                 t.TrainingCourts?.Select(c => c.Court.Name ?? "").ToList(),
                 t.TrainingDepartments?.Select(d => d.Department.Name ?? "").ToList()
             )).ToList();
+
+            return Result<List<TrainingGetDto>>.Success(data);
         }
 
-        public async Task<List<TrainingOngoingWithUsersDto>> GetOngoingAsync()
+        public async Task<Result<List<TrainingOngoingWithUsersDto>>> GetOngoingAsync()
         {
             var trainings = await _trainingRepository.GetOngoingAsync();
 
-            return trainings.Select(t => new TrainingOngoingWithUsersDto
+            var data = trainings.Select(t => new TrainingOngoingWithUsersDto
             {
                 Id = t.Id,
                 Title = t.Title,
                 Users = t.Participants
-        .Where(p => p.IsJoined)
-        .Select(p => new UserSimpleDto
-        {
-            Id = p.UserId,
-            Name = p.User.Name
-        }).ToList()
+                .Where(p => p.IsJoined)
+                .Select(p => new UserSimpleDto
+                {
+                    Id = p.UserId,
+                    Name = p.User.Name
+                }).ToList()
             }).ToList();
+            return Result<List<TrainingOngoingWithUsersDto>>.Success(data);
         }
 
         public async Task<Result> ApproveAsync(Guid id)

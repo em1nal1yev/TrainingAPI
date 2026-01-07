@@ -25,6 +25,7 @@
     <ProjectReference Include="..\..\Core\TelimAPI.Application\TelimAPI.Application.csproj" />
     <ProjectReference Include="..\..\Infrastructure\TelimAPI.Infrastructure\TelimAPI.Infrastructure.csproj" />
     <ProjectReference Include="..\..\Infrastructure\TelimAPI.Persistence\TelimAPI.Persistence.csproj" />
+    <ProjectReference Include="..\..\TelimAPI.Contracts\TelimAPI.Contracts.csproj" />
   </ItemGroup>
 
 </Project>

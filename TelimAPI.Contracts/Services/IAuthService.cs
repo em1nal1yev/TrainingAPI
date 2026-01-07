@@ -3,18 +3,18 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TelimAPI.Application.Common.Results;
 using TelimAPI.Application.DTOs.Auth;
 
 namespace TelimAPI.Application.Services
 {
     public interface IAuthService
     {
-        Task<AuthResult> RegisterUserAsync(RegisterDto model, string roleName);
-        Task<AuthResult> LoginUserAsync(LoginDto model);
-        Task<AuthResult> RefreshTokenAsync(string refreshToken);
-        Task<bool> RevokeRefreshTokenAsync(string refreshToken);
-        Task<bool> IsInRoleAsync(string email, string roleName);
-        Task<AuthResult> ForgotPasswordAsync(ForgotPasswordRequestDto dto, string resetPasswordApiUrl);
-        Task<AuthResult> ResetPasswordAsync(ResetPasswordDto dto, string token);
+        Task<Result> RegisterUserAsync(RegisterDto model, string roleName);
+        Task<Result<LoginResponseDto>> LoginUserAsync(LoginDto model);
+        Task<Result<LoginResponseDto>> RefreshTokenAsync(string refreshToken);
+        Task<Result> RevokeRefreshTokenAsync(string refreshToken);
+        Task<Result> ForgotPasswordAsync(ForgotPasswordRequestDto dto, string resetPasswordApiUrl);
+        Task<Result> ResetPasswordAsync(ResetPasswordDto dto, string token);
     }
 }

@@ -294,18 +294,6 @@
         }
       }
     },
-    "/api/Auth/GetCurrentUser": {
-      "get": {
-        "tags": [
-          "Auth"
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
     "/api/Auth/RefreshToken": {
       "post": {
         "tags": [
@@ -399,7 +387,7 @@
         }
       }
     },
-    "/api/Session/GetTrainingSessionsByTrainingId": {
+    "/api/Session/GetTrainingSessionsByTrainingId/{trainingId}": {
       "get": {
         "tags": [
           "Session"
@@ -407,7 +395,8 @@
         "parameters": [
           {
             "name": "trainingId",
-            "in": "query",
+            "in": "path",
+            "required": true,
             "schema": {
               "type": "string",
               "format": "uuid"
@@ -421,7 +410,7 @@
         }
       }
     },
-    "/api/Session/GetSessionDetails": {
+    "/api/Session/GetSessionDetails/details/{sessionId}": {
       "get": {
         "tags": [
           "Session"
@@ -429,7 +418,8 @@
         "parameters": [
           {
             "name": "sessionId",
-            "in": "query",
+            "in": "path",
+            "required": true,
             "schema": {
               "type": "string",
               "format": "uuid"

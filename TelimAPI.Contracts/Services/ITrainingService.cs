@@ -11,11 +11,11 @@ namespace TelimAPI.Application.Services
 {
     public interface ITrainingService
     {
-        Task<List<TrainingGetDto>> GetAllAsync();
+        Task<Result<List<TrainingGetDto>>> GetAllAsync();
         Task<Result<TrainingGetDto>?> GetByIdAsync(Guid id);
-        Task<List<TrainingGetDto>> GetExpiredAsync();
-        Task<List<TrainingGetDto>> GetDraftsAsync();
-        Task<List<TrainingOngoingWithUsersDto>> GetOngoingAsync();
+        Task<Result<List<TrainingGetDto>>> GetExpiredAsync();
+        Task<Result<List<TrainingGetDto>>> GetDraftsAsync();
+        Task<Result<List<TrainingOngoingWithUsersDto>>> GetOngoingAsync();
         Task<Result> ApproveAsync(Guid id);
         Task<Result<List<TrainingSessionGetDto>>> GetSessionsByTrainingIdAsync(Guid trainingId);
         Task<Result<TrainingSessionGetDto>> CreateSessionAsync(TrainingSessionCreateDto sessionDto);

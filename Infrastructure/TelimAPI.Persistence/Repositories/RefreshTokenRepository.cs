@@ -10,7 +10,7 @@ using TelimAPI.Persistence.Contexts;
 
 namespace TelimAPI.Persistence.Repositories
 {
-    public class RefreshTokenRepository : IRefreshTokenRepository
+    internal class RefreshTokenRepository : IRefreshTokenRepository
     {
         private readonly AppDbContext _context;
 

@@ -11,7 +11,7 @@ using TelimAPI.Persistence.Contexts;
 
 namespace TelimAPI.Persistence.Repositories
 {
-    public class TrainingRepository : ITrainingRepository
+    internal class TrainingRepository : ITrainingRepository
     {
         private readonly AppDbContext _context;
         public TrainingRepository(AppDbContext context)

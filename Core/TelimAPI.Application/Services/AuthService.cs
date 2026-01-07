@@ -36,41 +36,16 @@ namespace TelimAPI.Persistence.Services
         }
 
 
-        public async Task<AuthResult> RegisterUserAsync(RegisterDto dto, string roleName)
+        public async Task<Result> RegisterUserAsync(RegisterDto dto, string roleName)
         {
-
-
             var court = await _courtRepository.GetByIdAsync(dto.CourtId);
-            if (court == null)
-            {
-                return new AuthResult
-                {
-                    Succeeded = false,
-                    Errors = new List<string>() { "department id yanlisdir." }
-                };
-            }
+            if (court == null) return Result.Failure("Məhkəmə (court) tapılmadı.");
 
             var department = await _departmentRepository.GetByIdAsync(dto.DepartmentId);
-            if (department == null)
-            {
-                return new AuthResult
-                {
-                    Succeeded = false,
-                    Errors = new List<string>() { "court id yanlisdir." }
-                };
-            }
-
+            if (department == null) return Result.Failure("Şöbə (department) tapılmadı.");
 
             var existingUser = await _userManager.FindByEmailAsync(dto.Email);
-
-            if (existingUser != null)
-            {
-                return new AuthResult
-                {
-                    Succeeded = false,
-                    Errors = new List<string> { "Bu e-poçt ünvanı artıq qeydiyyatdan keçib." }
-                };
-            }
+            if (existingUser != null) return Result.Failure("Bu e-poçt ünvanı artıq qeydiyyatdan keçib.");
 
             var user = new User
             {
@@ -84,207 +59,102 @@ namespace TelimAPI.Persistence.Services
             };
 
             var result = await _userManager.CreateAsync(user, dto.Password);
+            if (!result.Succeeded)
+                return Result.Failure(result.Errors.Select(e => e.Description).ToList());
 
-            if (result.Succeeded)
-            {
-                
-                if (!await _roleManager.RoleExistsAsync(roleName))
-                {
-                    await _roleManager.CreateAsync(new IdentityRole<Guid>(roleName));
-                }
+            if (!await _roleManager.RoleExistsAsync(roleName))
+                await _roleManager.CreateAsync(new IdentityRole<Guid>(roleName));
 
-                
-                await _userManager.AddToRoleAsync(user, roleName);
-            }
+            await _userManager.AddToRoleAsync(user, roleName);
 
-            return new AuthResult
-            {
-                Succeeded = result.Succeeded,
-                Errors = result.Errors.Select(e => e.Description).ToList()
-            };
+            return Result.Success();
         }
 
-        public async Task<AuthResult> LoginUserAsync(LoginDto dto)
+        public async Task<Result<LoginResponseDto>> LoginUserAsync(LoginDto dto)
         {
-
             var user = await _userManager.FindByEmailAsync(dto.Email);
             if (user == null || !await _userManager.CheckPasswordAsync(user, dto.Password))
-            {
-                return new AuthResult
-                {
-                    Succeeded = false,
-                    Errors = new List<string> { "Yanlış e-poçt və ya şifrə." }
-                };
-            }
+                return Result<LoginResponseDto>.Failure("Yanlış e-poçt və ya şifrə.");
 
             var roles = await _userManager.GetRolesAsync(user);
             var accessToken = _tokenService.CreateAccessToken(user, roles);
             var refreshTokenEntity = _tokenService.CreateRefreshToken(user.Id);
+
             await _refreshTokenRepository.AddAsync(refreshTokenEntity);
-            return new AuthResult
+
+            return Result<LoginResponseDto>.Success(new LoginResponseDto
             {
-                Succeeded = true,
                 AccessToken = accessToken,
                 RefreshToken = refreshTokenEntity.Token
-            };
+            });
         }
 
-        public async Task<AuthResult> RefreshTokenAsync(string refreshToken)
+        public async Task<Result<LoginResponseDto>> RefreshTokenAsync(string refreshToken)
         {
             var existingRefreshToken = await _refreshTokenRepository.GetByTokenAsync(refreshToken);
 
-            
             if (existingRefreshToken == null || existingRefreshToken.IsRevoked || existingRefreshToken.Expires < DateTime.UtcNow)
-            {
-                return new AuthResult
-                {
-                    Succeeded = false,
-                    Errors = new List<string> { "Etibarsız və ya vaxtı bitmiş Refresh Token." }
-                };
-            }
-
-
+                return Result<LoginResponseDto>.Failure("Etibarsız və ya vaxtı bitmiş Refresh Token.");
 
             var user = existingRefreshToken.User;
-
-            if (user == null)
-            {
-                return new AuthResult
-                {
-                    Succeeded = false,
-                    Errors = new List<string> { "Refresh Token-ə bağlı istifadəçi tapılmadı." }
-                };
-            }
+            if (user == null) return Result<LoginResponseDto>.Failure("İstifadəçi tapılmadı.");
 
             existingRefreshToken.IsRevoked = true;
             await _refreshTokenRepository.UpdateAsync(existingRefreshToken);
 
-            
             var roles = await _userManager.GetRolesAsync(user);
             var newAccessToken = _tokenService.CreateAccessToken(user, roles);
             var newRefreshTokenEntity = _tokenService.CreateRefreshToken(user.Id);
 
-           
             await _refreshTokenRepository.AddAsync(newRefreshTokenEntity);
 
-            
-            return new AuthResult
+            return Result<LoginResponseDto>.Success(new LoginResponseDto
             {
-                Succeeded = true,
                 AccessToken = newAccessToken,
                 RefreshToken = newRefreshTokenEntity.Token
-            };
+            });
         }
 
-        public async Task<bool> RevokeRefreshTokenAsync(string refreshToken)
+        public async Task<Result> RevokeRefreshTokenAsync(string refreshToken)
         {
-            
             var existingRefreshToken = await _refreshTokenRepository.GetByTokenAsync(refreshToken);
-
-            
-            if (existingRefreshToken == null || existingRefreshToken.IsRevoked)
+            if (existingRefreshToken != null && !existingRefreshToken.IsRevoked)
             {
-                return true;
+                existingRefreshToken.IsRevoked = true;
+                await _refreshTokenRepository.UpdateAsync(existingRefreshToken);
             }
-
-            
-            existingRefreshToken.IsRevoked = true;
-            await _refreshTokenRepository.UpdateAsync(existingRefreshToken);
-
-           
-            return true;
+            return Result.Success();
         }
 
-
-
-        public async Task<bool> IsInRoleAsync(string email, string roleName)
+        public async Task<Result> ForgotPasswordAsync(ForgotPasswordRequestDto dto, string resetPasswordApiUrl)
         {
-            var user = await _userManager.FindByEmailAsync(email);
-            if (user == null) return false;
-            return await _userManager.IsInRoleAsync(user, roleName);
-        }
-
-        public async Task<AuthResult> ForgotPasswordAsync(ForgotPasswordRequestDto dto, string resetPasswordApiUrl)
-        {
-
             var user = await _userManager.FindByNameAsync(dto.Username);
+            if (user == null) return Result.Success(); // Təhlükəsizlik üçün uğurlu qaytarırıq
 
-            if (user == null)
-            {
-                
-                return new AuthResult
-                {
-                    Succeeded = true
-                };
-
-            }
-
-            
             var token = await _userManager.GeneratePasswordResetTokenAsync(user);
-
-            
             var encodedToken = System.Web.HttpUtility.UrlEncode(token);
-
-            //?
             var resetUrl = $"{resetPasswordApiUrl}?Token={encodedToken}";
 
-            
             try
             {
-                
-                await _emailService.SendAsync(
-                    user.Email,
-                    "Şifrə Bərpası",
-                    $"Şifrənizi bərpa etmək üçün bu linkə daxil olun: {resetUrl}"
-                );
+                await _emailService.SendAsync(user.Email, "Şifrə Bərpası", $"Link: {resetUrl}");
+                return Result.Success();
             }
             catch (Exception ex)
             {
-                
-                return new AuthResult
-                {
-                    Succeeded = false,
-                    Errors = new List<string> { $"Email göndərilmədi: {ex.Message}" }
-                };
+                return Result.Failure($"Email göndərilmədi: {ex.Message}");
             }
-
-            return new AuthResult
-            {
-                Succeeded = true
-            };
         }
 
-        public async Task<AuthResult> ResetPasswordAsync(ResetPasswordDto dto, string token)
+        public async Task<Result> ResetPasswordAsync(ResetPasswordDto dto, string token)
         {
-            
             var user = await _userManager.FindByNameAsync(dto.Username);
+            if (user == null) return Result.Failure("İstifadəçi tapılmadı.");
 
-            if (user == null)
-            {
-                return new AuthResult
-                {
-                    Succeeded = false,
-                    Errors = new List<string> { "İstifadəçi tapılmadı." }
-                };
-            }
-
-            
             var result = await _userManager.ResetPasswordAsync(user, token, dto.NewPassword);
-
-            if (result.Succeeded)
-            {
-                return new AuthResult
-                {
-                    Succeeded = true
-                };
-            }
-
-
-            return new AuthResult
-            {
-                Succeeded = false,
-                Errors = result.Errors.Select(e => e.Description).ToList()
-            };
+            return result.Succeeded
+                ? Result.Success()
+                : Result.Failure(result.Errors.Select(e => e.Description).ToList());
         }
     }
 }

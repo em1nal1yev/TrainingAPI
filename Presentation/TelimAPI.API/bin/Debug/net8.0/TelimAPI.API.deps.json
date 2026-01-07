@@ -15,6 +15,7 @@
           "Microsoft.EntityFrameworkCore.Tools": "8.0.21",
           "Swashbuckle.AspNetCore": "6.6.2",
           "TelimAPI.Application": "1.0.0",
+          "TelimAPI.Contracts": "1.0.0",
           "TelimAPI.Infrastructure": "1.0.0",
           "TelimAPI.Persistence": "1.0.0"
         },

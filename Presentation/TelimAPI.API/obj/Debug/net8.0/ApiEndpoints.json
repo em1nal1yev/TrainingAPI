@@ -86,16 +86,6 @@
   },
   {
     "ContainingType": "TelimAPI.API.Controllers.AuthController",
-    "Method": "GetCurrentUser",
-    "RelativePath": "api/Auth/GetCurrentUser",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "TelimAPI.API.Controllers.AuthController",
     "Method": "Login",
     "RelativePath": "api/Auth/Login",
     "HttpMethod": "POST",
@@ -219,7 +209,7 @@
   {
     "ContainingType": "TelimAPI.API.Controllers.SessionController",
     "Method": "GetSessionDetails",
-    "RelativePath": "api/Session/GetSessionDetails",
+    "RelativePath": "api/Session/GetSessionDetails/details/{sessionId}",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
@@ -227,7 +217,7 @@
       {
         "Name": "sessionId",
         "Type": "System.Guid",
-        "IsRequired": false
+        "IsRequired": true
       }
     ],
     "ReturnTypes": []
@@ -235,7 +225,7 @@
   {
     "ContainingType": "TelimAPI.API.Controllers.SessionController",
     "Method": "GetTrainingSessionsByTrainingId",
-    "RelativePath": "api/Session/GetTrainingSessionsByTrainingId",
+    "RelativePath": "api/Session/GetTrainingSessionsByTrainingId/{trainingId}",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
@@ -243,7 +233,7 @@
       {
         "Name": "trainingId",
         "Type": "System.Guid",
-        "IsRequired": false
+        "IsRequired": true
       }
     ],
     "ReturnTypes": []

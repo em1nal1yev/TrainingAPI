@@ -12,7 +12,7 @@ namespace TelimAPI.API.Controllers
     [Route("api/[controller]/[action]")]
     [ApiController]
 
-    public class TrainingsController : ControllerBase
+    public class TrainingsController : BaseController
     {
         private readonly ITrainingService _trainingService;
 
@@ -23,123 +23,66 @@ namespace TelimAPI.API.Controllers
 
 
         [HttpGet]
-
-        public async Task<IActionResult> GetAll()
+        public Task<IActionResult> GetAll()
         {
-            var trainings = await _trainingService.GetAllAsync();
-            return Ok(ApiResponses.Success(trainings, "Bütün təlimlər uğurla gətirildi."));
+            return ExecuteAsync(() => _trainingService.GetAllAsync());
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetById(Guid id)
+        public Task<IActionResult> GetById(Guid id)
         {
-            Result result = await _trainingService.GetByIdAsync(id);
-
-            if (!result.Succeeded)
-            {
-                return NotFound(ApiResponses.Fail<object>("training tapilmadi", result.Errors));
-            }
-
-            return Ok(ApiResponses.Success(result, "Training uğurla gətirildi"));
+            return ExecuteAsync(() => _trainingService.GetByIdAsync(id));
         }
+
 
         [Authorize(Roles = "Trainer, Admin")]
         [HttpGet]
-        public async Task<IActionResult> GetExpired()
+        public Task<IActionResult> GetExpired()
         {
-            var data = await _trainingService.GetExpiredAsync();
-            return Ok(ApiResponses.Success(data, "expired trainings grt succesfully"));
+            return ExecuteAsync(() => _trainingService.GetExpiredAsync());
         }
+
         [Authorize(Roles = "Admin")]
         [HttpGet]
-        public async Task<IActionResult> GetOngoingWithUsers()
+        public Task<IActionResult> GetOngoingWithUsers()
         {
-            var result = await _trainingService.GetOngoingAsync();
-            return Ok(ApiResponses.Success(result,"ON going trainings get succesfully"));
+            return ExecuteAsync(() => _trainingService.GetOngoingAsync());
         }
+
+
         [Authorize(Roles = "Admin")]
         [HttpGet]
-        public async Task<IActionResult> GetDrafts()
+        public Task<IActionResult> GetDrafts()
         {
-            var result = await _trainingService.GetDraftsAsync();
-            return Ok(ApiResponses.Success(result,"Drafts get successfully"));
+            return ExecuteAsync(() => _trainingService.GetDraftsAsync());
         }
+
         [Authorize(Roles = "Admin")]
         [HttpPut]
-        public async Task<IActionResult> Approve(Guid id)
+        public Task<IActionResult> Approve(Guid id)
         {
-            Result result = await _trainingService.ApproveAsync(id);
-
-            if (!result.Succeeded)
-            {
-                return BadRequest(ApiResponses.Fail<object>(
-                    message: "Təsdiqləmə prosesi zamanı xəta baş verdi",
-                    errors: result.Errors 
-                ));
-            }
-
-            return Ok(ApiResponses.Success<object>(message: "Təlim uğurla təsdiqə göndərildi."));
+            return ExecuteAsync(() => _trainingService.ApproveAsync(id));
         }
 
+        [Authorize(Roles = "Trainer, Admin")]
         [HttpPost]
-        [Authorize(Roles = "Trainer, Admin")]
-        public async Task<IActionResult> Create([FromBody] TrainingCreateDto dto)
+        public Task<IActionResult> Create([FromBody] TrainingCreateDto dto)
         {
-            if (!ModelState.IsValid)
-            {
-                var errors = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage).ToList();
-                return BadRequest(ApiResponses.Fail<object>("Məlumatlar tam deyil.", errors));
-            }
-
-            Result result = await _trainingService.CreateAsync(dto);
-
-            if (!result.Succeeded)
-            {
-                return BadRequest(ApiResponses.Fail<object>(
-                    message: "Təlim yaradılarkən xəta baş verdi.",
-                    errors: result.Errors
-                ));
-            }
-
-            return Ok(ApiResponses.Success<object>(
-                message: "Təlim və iştirakçı siyahısı uğurla yaradıldı."
-            ));
+            return ExecuteAsync(() => _trainingService.CreateAsync(dto));
         }
 
+        [Authorize(Roles = "Trainer, Admin")]
         [HttpPut]
-        [Authorize(Roles = "Trainer, Admin")]
-        public async Task<IActionResult> Update([FromBody] TrainingUpdateDto dto)
+        public Task<IActionResult> Update([FromBody] TrainingUpdateDto dto)
         {
-            Result result = await _trainingService.UpdateAsync(dto);
-
-            if (!result.Succeeded)
-            {
-                return BadRequest(ApiResponses.Fail<object>(
-                    message: "Yeniləmə zamanı xəta baş verdi.",
-                    errors: result.Errors));
-            }
-
-            return Ok(ApiResponses.Success<object>(message: "Təlim məlumatları uğurla yeniləndi."));
+            return ExecuteAsync(() => _trainingService.UpdateAsync(dto));
         }
 
-        [HttpDelete]
         [Authorize(Roles = "Trainer, Admin")]
-        public async Task<IActionResult> Delete(Guid id)
+        [HttpDelete]
+        public Task<IActionResult> Delete(Guid id)
         {
-            var result = await _trainingService.DeleteAsync(id);
-
-            if (!result.Succeeded)
-            {
-                
-                return NotFound(ApiResponses.Fail<object>(
-                    message: "Silmə əməliyyatı uğursuz oldu.",
-                    errors: result.Errors
-                ));
-            }
-
-            return Ok(ApiResponses.Success<object>(
-                message: "Təlim uğurla silindi."
-            ));
+            return ExecuteAsync(() => _trainingService.DeleteAsync(id));
         }
 
     }

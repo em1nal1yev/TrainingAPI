@@ -10,7 +10,7 @@ using TelimAPI.Persistence.Contexts;
 
 namespace TelimAPI.Persistence.Repositories
 {
-    public class DepartmentRepository : IDepartmentRepository
+    internal class DepartmentRepository : IDepartmentRepository
     {
         private readonly AppDbContext _context;
 

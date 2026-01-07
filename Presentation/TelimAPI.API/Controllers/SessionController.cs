@@ -10,7 +10,7 @@ namespace TelimAPI.API.Controllers
 {
     [Route("api/[controller]/[action]")]
     [ApiController]
-    public class SessionController : ControllerBase
+    public class SessionController : BaseController
     {
         private readonly ITrainingService _trainingService;
 
@@ -18,63 +18,22 @@ namespace TelimAPI.API.Controllers
         {
             _trainingService = trainingService;
         }
-
-        [Authorize(Roles = "Trainer, Admin")]
         [HttpPost]
         public async Task<IActionResult> CreateTrainingSession([FromBody] TrainingSessionCreateDto dto)
         {
-
-            Result<TrainingSessionGetDto> result = await _trainingService.CreateSessionAsync(dto);
-
-            if (!result.Succeeded)
-            {
-                return BadRequest(ApiResponses.Fail<object>(
-                    "Sessiya yaradılarkən xəta baş verdi",
-                    result.Errors));
-            }
-
-            return CreatedAtAction(
-                nameof(GetTrainingSessionsByTrainingId),
-                new { trainingId = result.Data.Id },
-                ApiResponses.Success(result.Data, "Sessiya uğurla yaradıldı.")
-            );
+            return await ExecuteAsync(() => _trainingService.CreateSessionAsync(dto));
         }
 
-        [HttpGet]
+        [HttpGet("{trainingId}")]
         public async Task<IActionResult> GetTrainingSessionsByTrainingId(Guid trainingId)
         {
-            Result<List<TrainingSessionGetDto>> result = await _trainingService.GetSessionsByTrainingIdAsync(trainingId);
-            if (!result.Succeeded)
-            {
-                return BadRequest(ApiResponses.Fail<object>(
-                    "Sessiyaları gətirərkən xəta baş verdi",
-                    result.Errors
-                ));
-            }
-            return Ok(ApiResponses.Success(
-                result.Data,
-                "Sessiyalar uğurla gətirildi."
-            ));
+            return await ExecuteAsync(() => _trainingService.GetSessionsByTrainingIdAsync(trainingId));
         }
-        
-        [HttpGet]
-        [Authorize(Roles = "Trainer, Admin")]
+
+        [HttpGet("details/{sessionId}")]
         public async Task<IActionResult> GetSessionDetails(Guid sessionId)
         {
-            var result = await _trainingService.GetSessionDetailsWithParticipantsAsync(sessionId);
-
-            if (!result.Succeeded)
-            {
-
-                return NotFound(ApiResponses.Fail<object>(
-                    message: "Sessiya detalları gətirilərkən xəta baş verdi.",
-                    errors: result.Errors
-                ));
-            }
-            return Ok(ApiResponses.Success(
-                data: result.Data,
-                message: "Sessiya detalları uğurla alındı."
-            ));
+            return await ExecuteAsync(() => _trainingService.GetSessionDetailsWithParticipantsAsync(sessionId));
         }
 
     }
